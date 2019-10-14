@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CiccioSoft.Collections", "CiccioSoft.Collections\CiccioSoft.Collections.csproj", "{42055819-15AB-47FD-838A-226D41D911A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CiccioSoft.Collections.Test", "CiccioSoft.Collections.Test\CiccioSoft.Collections.Test.csproj", "{D4039985-161E-4B6E-BE8F-5327E5884548}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42055819-15AB-47FD-838A-226D41D911A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42055819-15AB-47FD-838A-226D41D911A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42055819-15AB-47FD-838A-226D41D911A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42055819-15AB-47FD-838A-226D41D911A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4039985-161E-4B6E-BE8F-5327E5884548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4039985-161E-4B6E-BE8F-5327E5884548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4039985-161E-4B6E-BE8F-5327E5884548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4039985-161E-4B6E-BE8F-5327E5884548}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0186A1BE-204F-4E7D-935A-8EF8409AE4C6}
+	EndGlobalSection
+EndGlobal

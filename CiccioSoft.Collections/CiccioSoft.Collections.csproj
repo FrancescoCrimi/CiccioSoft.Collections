@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.2.1</Version>
+    <Authors>Francesco Crimi</Authors>
+    <Company>CiccioSoft</Company>
+    <RootNamespace>CiccioSoft.Collections.Generic</RootNamespace>
+  </PropertyGroup>
+
+</Project>
