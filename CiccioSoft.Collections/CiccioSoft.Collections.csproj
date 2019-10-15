@@ -3,10 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.2.1</Version>
+    <Version>1.0.0</Version>
     <Authors>Francesco Crimi</Authors>
     <Company>CiccioSoft</Company>
     <RootNamespace>CiccioSoft.Collections.Generic</RootNamespace>
+    <NeutralLanguage />
+    <Description>Generic IList and ISet implementations that implement INotifyCollectionChanged and IBindinList</Description>
+    <PackageLicenseExpression />
+    <PackageLicenseFile>LICENSE.TXT</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections</PackageProjectUrl>
+    <PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +21,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.TXT">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
