@@ -21,7 +21,7 @@ This library contains generic IList and ISet implementations that implement INot
   implement `ISet<T>`, INotifyCollectionChanged, INotifyPropertyChanged, `IReadOnlyCollection<T>` to use with WPF or UWP
 
 ### `CiccioList<T>`
-  implement `IList<T>`, IBindinList, IRaiseItemChangedEvents, INotifyCollectionChanged, INotifyPropertyChanged, `IReadOnlyList<T>` (like System.Collections.ObjectModel.ObservableCollection) to use with WinForms, WPF and UWP
+  implement `IList<T>`, IBindinList, IRaiseItemChangedEvents, INotifyCollectionChanged, INotifyPropertyChanged, `IReadOnlyList<T>` to use with WinForms, WPF and UWP
 
 ### `CiccioSet<T>`
   implement `ISet<T>`, IBindinList, IRaiseItemChangedEvents, INotifyCollectionChanged, INotifyPropertyChanged, `IReadOnlyCollection<T>` to use with WinForm, WPF and UWP
