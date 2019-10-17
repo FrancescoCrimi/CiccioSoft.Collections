@@ -13,7 +13,7 @@
     <PackageLicenseFile>LICENSE.TXT</PackageLicenseFile>
     <RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
     <PackageProjectUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections</PackageProjectUrl>
-    <PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;;</PackageTags>
+    <PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;; WinForms; WPF; UWP;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
