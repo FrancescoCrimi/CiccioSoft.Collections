@@ -3,7 +3,7 @@
 
 Author: Francesco Crimi <br>
 License: MIT <br>
-Nuget: <br>
+[![Nuget](https://img.shields.io/nuget/v/CiccioSoft.Collections)](https://www.nuget.org/packages/CiccioSoft.Collections/) <br>
 
 This library contains generic IList and ISet implementations that implement INotifyCollectionChanged and IBindinList interface, see below
 
