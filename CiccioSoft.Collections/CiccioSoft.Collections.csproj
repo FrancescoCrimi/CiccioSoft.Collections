@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1</Version>
+    <Version>2.0.0</Version>
     <Authors>Francesco Crimi</Authors>
     <Company>CiccioSoft</Company>
     <RootNamespace>CiccioSoft.Collections.Generic</RootNamespace>
@@ -14,8 +14,8 @@
     <RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
     <PackageProjectUrl>https://francescocrimi.github.io/CiccioSoft.Collections/</PackageProjectUrl>
     <PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;; WinForms; WPF; UWP;</PackageTags>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
