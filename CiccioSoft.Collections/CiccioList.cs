@@ -19,14 +19,23 @@ namespace CiccioSoft.Collections.Generic
     public class CiccioList<T> : Collection<T>, IBindingList, IRaiseItemChangedEvents, INotifyCollectionChanged, INotifyPropertyChanged, IReadOnlyList<T>
     {
         private SimpleMonitor _monitor;
+
         [NonSerialized]
         private int _blockReentrancyCount;
 
-        private bool raiseItemChangedEvents;
+        private bool raiseItemChangedEvents; // Do not rename (binary serialization)
+
         [NonSerialized]
-        private PropertyDescriptorCollection itemTypeProperties;
+        private PropertyDescriptorCollection _itemTypeProperties;
+
         [NonSerialized]
-        private int lastChangeIndex = -1;
+        private PropertyChangedEventHandler _propertyChangedEventHandler;
+
+        [NonSerialized]
+        private ListChangedEventHandler _onListChanged;
+
+        [NonSerialized]
+        private int _lastChangeIndex = -1;
 
 
         #region Constructors
@@ -50,10 +59,6 @@ namespace CiccioSoft.Collections.Generic
 
         #endregion
 
-
-        public bool IsReadOnly => Items.IsReadOnly;
-
-
         #region Collection<T> overrides
 
         protected override void ClearItems()
@@ -61,16 +66,16 @@ namespace CiccioSoft.Collections.Generic
             CheckReentrancy();
             if (raiseItemChangedEvents)
             {
-                foreach (T item in this.Items)
+                foreach (T item in Items)
                 {
                     UnhookPropertyChanged(item);
                 }
             }
             base.ClearItems();
-            OnPropertyChanged("Count");
-            OnPropertyChanged("Item[]");
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            OnListChanged(ListChangedType.Reset, -1);
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionReset();
+            FireListChanged(ListChangedType.Reset, -1);
         }
 
         protected override void InsertItem(int index, T item)
@@ -78,69 +83,87 @@ namespace CiccioSoft.Collections.Generic
             CheckReentrancy();
             base.InsertItem(index, item);
             if (raiseItemChangedEvents)
+            {
                 HookPropertyChanged(item);
-            OnPropertyChanged("Count");
-            OnPropertyChanged("Item[]");
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
-            OnListChanged(ListChangedType.ItemAdded, index);
+            }
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
+            FireListChanged(ListChangedType.ItemAdded, index);
         }
 
         protected override void RemoveItem(int index)
         {
             CheckReentrancy();
             if (raiseItemChangedEvents)
+            {
                 UnhookPropertyChanged(this[index]);
+            }
             T removedItem = this[index];
             base.RemoveItem(index);
-            OnPropertyChanged("Count");
-            OnPropertyChanged("Item[]");
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, index));
-            OnListChanged(ListChangedType.ItemDeleted, index);
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(NotifyCollectionChangedAction.Remove, removedItem, index);
+            FireListChanged(ListChangedType.ItemDeleted, index);
         }
 
         protected override void SetItem(int index, T item)
         {
             CheckReentrancy();
             if (raiseItemChangedEvents)
+            {
                 UnhookPropertyChanged(this[index]);
+            }
             T originalItem = this[index];
             base.SetItem(index, item);
-            if (this.raiseItemChangedEvents)
+            if (raiseItemChangedEvents)
+            {
                 HookPropertyChanged(item);
-            OnPropertyChanged("Item[]");
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, originalItem, index));
-            OnListChanged(ListChangedType.ItemChanged, index);
+            }
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(NotifyCollectionChangedAction.Replace, originalItem, item, index);
+            FireListChanged(ListChangedType.ItemChanged, index);
         }
 
         #endregion Collection<T> overrides
 
-
         #region INotifyPropertyChanged
 
         [field: NonSerialized]
-        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string propertyName)
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            add => PropertyChanged += value;
+            remove => PropertyChanged -= value;
         }
 
-        #endregion
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
 
+        private void OnCountPropertyChanged() => OnPropertyChanged(EventArgsCache.CountPropertyChanged);
+
+        private void OnIndexerPropertyChanged() => OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+
+        #endregion
 
         #region INotifyCollectionChanged
 
         [field: NonSerialized]
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public virtual event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (CollectionChanged != null)
+            NotifyCollectionChangedEventHandler handler = CollectionChanged;
+            if (handler != null)
             {
+                // Not calling BlockReentrancy() here to avoid the SimpleMonitor allocation.
                 _blockReentrancyCount++;
                 try
                 {
-                    CollectionChanged(this, e);
+                    handler(this, e);
                 }
                 finally
                 {
@@ -159,120 +182,170 @@ namespace CiccioSoft.Collections.Generic
         {
             if (_blockReentrancyCount > 0)
             {
-                if ((CollectionChanged != null) && (CollectionChanged.GetInvocationList().Length > 1))
+                if (CollectionChanged?.GetInvocationList().Length > 1)
                     throw new InvalidOperationException("ObservableCollection Reentrancy Not Allowed");
             }
         }
+
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index));
+        }
+
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
+        }
+
+        private void OnCollectionReset() => OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
 
         private SimpleMonitor EnsureMonitorInitialized()
         {
             return _monitor ?? (_monitor = new SimpleMonitor(this));
         }
 
-        [Serializable]
-        private sealed class SimpleMonitor : IDisposable
+        #endregion
+
+        #region ListChanged event
+
+        public event ListChangedEventHandler ListChanged
         {
-            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
+            add => _onListChanged += value;
+            remove => _onListChanged -= value;
+        }
 
-            [NonSerialized]
-            internal CiccioList<T> _collection;
+        protected virtual void OnListChanged(ListChangedEventArgs e)
+            => _onListChanged?.Invoke(this, e);
 
-            public SimpleMonitor(CiccioList<T> collection)
-            {
-                //Debug.Assert(collection != null);
-                _collection = collection;
-            }
+        private void ResetBindings()
+            => FireListChanged(ListChangedType.Reset, -1);
 
-            public void Dispose() => _collection._blockReentrancyCount--;
+        private void FireListChanged(ListChangedType type, int index)
+        {
+            OnListChanged(new ListChangedEventArgs(type, index));
         }
 
         #endregion
 
-
-        #region IBindingList
-
-        [field: NonSerialized]
-        public event ListChangedEventHandler ListChanged;
-
-        private void OnListChanged(ListChangedType type, int index)
-        {
-            ListChanged?.Invoke(this, new ListChangedEventArgs(type, index));
-        }
+        #region Property Change Support
 
         private void HookPropertyChanged(T item)
         {
-            INotifyPropertyChanged inpc = (item as INotifyPropertyChanged);
-            if (null != inpc)
-                inpc.PropertyChanged += Child_PropertyChanged;
+            if (item is INotifyPropertyChanged inpc)
+            {
+                if (_propertyChangedEventHandler == null)
+                {
+                    _propertyChangedEventHandler = new PropertyChangedEventHandler(Child_PropertyChanged);
+                }
+                inpc.PropertyChanged += _propertyChangedEventHandler;
+            }
         }
 
         private void UnhookPropertyChanged(T item)
         {
-            INotifyPropertyChanged inpc = (item as INotifyPropertyChanged);
-            if (null != inpc)
-                inpc.PropertyChanged -= Child_PropertyChanged;
+            if (item is INotifyPropertyChanged inpc && _propertyChangedEventHandler != null)
+            {
+                inpc.PropertyChanged -= _propertyChangedEventHandler;
+            }
         }
 
         private void Child_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender == null || e == null || string.IsNullOrEmpty(e.PropertyName))
-                OnListChanged(ListChangedType.Reset, -1);
+            {
+                ResetBindings();
+            }
             else
             {
                 T item;
+
                 try
                 {
                     item = (T)sender;
                 }
                 catch (InvalidCastException)
                 {
-                    OnListChanged(ListChangedType.Reset, -1);
+                    ResetBindings();
                     return;
                 }
-                int pos = lastChangeIndex;
+
+                int pos = _lastChangeIndex;
+
                 if (pos < 0 || pos >= Count || !this[pos].Equals(item))
                 {
-                    pos = this.IndexOf(item);
-                    lastChangeIndex = pos;
+                    pos = IndexOf(item);
+                    _lastChangeIndex = pos;
                 }
+
                 if (pos == -1)
                 {
-                    Debug.Fail("Item is no longer in our list but we are still getting change notifications.");
                     UnhookPropertyChanged(item);
-                    OnListChanged(ListChangedType.Reset, -1);
+                    ResetBindings();
                 }
                 else
                 {
-                    if (null == this.itemTypeProperties)
+                    if (null == _itemTypeProperties)
                     {
-                        itemTypeProperties = TypeDescriptor.GetProperties(typeof(T));
-                        Debug.Assert(itemTypeProperties != null);
+                        _itemTypeProperties = TypeDescriptor.GetProperties(typeof(T));
+                        Debug.Assert(_itemTypeProperties != null);
                     }
-                    PropertyDescriptor pd = itemTypeProperties.Find(e.PropertyName, true);
+                    PropertyDescriptor pd = _itemTypeProperties.Find(e.PropertyName, true);
                     ListChangedEventArgs args = new ListChangedEventArgs(ListChangedType.ItemChanged, pos, pd);
-                    ListChanged?.Invoke(this, args);
+                    OnListChanged(args);
                 }
             }
         }
 
-        object IBindingList.AddNew() => throw new NotSupportedException();
-        bool IBindingList.AllowNew  => false;
-        bool IBindingList.AllowEdit => true;
-        bool IBindingList.AllowRemove => true;
-        bool IBindingList.SupportsChangeNotification => true;
-        bool IBindingList.SupportsSearching => false;
-        bool IBindingList.SupportsSorting => false;
-        bool IBindingList.IsSorted => false;
-        PropertyDescriptor IBindingList.SortProperty => null;
-        ListSortDirection IBindingList.SortDirection => ListSortDirection.Ascending;
-        void IBindingList.ApplySort(PropertyDescriptor prop, ListSortDirection direction) => throw new NotSupportedException();
-        void IBindingList.RemoveSort() => throw new NotSupportedException();
-        int IBindingList.Find(PropertyDescriptor prop, object key) => throw new NotSupportedException();
-        void IBindingList.AddIndex(PropertyDescriptor prop) { }
-        void IBindingList.RemoveIndex(PropertyDescriptor prop) { }
-
         #endregion
 
+        #region IBindingList
+
+        object IBindingList.AddNew() => throw new NotSupportedException();
+
+        bool IBindingList.AllowNew => false;
+
+        bool IBindingList.AllowEdit => true;
+
+        bool IBindingList.AllowRemove => true;
+
+        bool IBindingList.SupportsChangeNotification => true;
+
+        bool IBindingList.SupportsSearching => false;
+
+        bool IBindingList.SupportsSorting => false;
+
+        bool IBindingList.IsSorted => false;
+
+        PropertyDescriptor IBindingList.SortProperty => null;
+
+        ListSortDirection IBindingList.SortDirection => ListSortDirection.Ascending;
+
+        void IBindingList.ApplySort(PropertyDescriptor prop, ListSortDirection direction)
+        {
+            throw new NotSupportedException();
+        }
+
+        void IBindingList.RemoveSort()
+        {
+            throw new NotSupportedException();
+        }
+
+        int IBindingList.Find(PropertyDescriptor prop, object key)
+        {
+            throw new NotSupportedException();
+        }
+
+        void IBindingList.AddIndex(PropertyDescriptor prop)
+        {
+            // Not supported
+        }
+
+        void IBindingList.RemoveIndex(PropertyDescriptor prop)
+        {
+            // Not supported
+        }
+
+        #endregion
 
         #region IRaiseItemChangedEvents
 
@@ -297,5 +370,24 @@ namespace CiccioSoft.Collections.Generic
                 _monitor._collection = this;
             }
         }
+
+        [Serializable]
+        private sealed class SimpleMonitor : IDisposable
+        {
+            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
+
+            [NonSerialized]
+            internal CiccioList<T> _collection;
+
+            public SimpleMonitor(CiccioList<T> collection)
+            {
+                Debug.Assert(collection != null);
+                _collection = collection;
+            }
+
+            public void Dispose() => _collection._blockReentrancyCount--;
+        }
+
+        public bool IsReadOnly => Items.IsReadOnly;
     }
 }

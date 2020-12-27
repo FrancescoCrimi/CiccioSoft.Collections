@@ -20,8 +20,8 @@ namespace CiccioSoft.Collections.Generic
     public class ObservableSet<T> : ISet<T>, INotifyCollectionChanged, INotifyPropertyChanged, IReadOnlyCollection<T>
     {
         private HashSet<T> items;
-
         private SimpleMonitor _monitor;
+
         [NonSerialized]
         private int _blockReentrancyCount;
 
@@ -34,10 +34,6 @@ namespace CiccioSoft.Collections.Generic
 
         #endregion
 
-
-        public ISet<T> Items => items;
-
-
         #region ISet
 
         public int Count => items.Count;
@@ -46,22 +42,29 @@ namespace CiccioSoft.Collections.Generic
 
         public bool Add(T item)
         {
-            if (items.Contains(item)) return false;
             CheckReentrancy();
-            items.Add(item);
-            int index = items.ToList().IndexOf(item);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
-            return true;
+            bool retValue = items.Add(item);
+            if (retValue)
+            {
+                int index = items.ToList().IndexOf(item);
+                OnCountPropertyChanged();
+                OnIndexerPropertyChanged();
+                OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
+            }
+            return retValue;
         }
 
         public void Clear()
         {
-            if (items.Count == 0) return;
+            if (items.Count == 0)
+            {
+                return;
+            }
             CheckReentrancy();
             items.Clear();
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionReset();
         }
 
         public bool Contains(T item) => items.Contains(item);
@@ -72,12 +75,16 @@ namespace CiccioSoft.Collections.Generic
         {
             var copy = new HashSet<T>(items, items.Comparer);
             copy.ExceptWith(other);
-            if (copy.Count == items.Count) return;
+            if (copy.Count == items.Count)
+            {
+                return;
+            }
             CheckReentrancy();
             var removed = items.Where(i => !copy.Contains(i)).ToList();
             items = copy;
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Array.Empty<object>(), removed));
         }
 
         public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
@@ -86,12 +93,16 @@ namespace CiccioSoft.Collections.Generic
         {
             var copy = new HashSet<T>(items, items.Comparer);
             copy.IntersectWith(other);
-            if (copy.Count == items.Count) return;
+            if (copy.Count == items.Count)
+            {
+                return;
+            }
             CheckReentrancy();
             var removed = items.Where(i => !copy.Contains(i)).ToList();
             items = copy;
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, Array.Empty<object>(), removed));
         }
 
         public bool IsProperSubsetOf(IEnumerable<T> other) => items.IsProperSubsetOf(other);
@@ -106,12 +117,16 @@ namespace CiccioSoft.Collections.Generic
 
         public bool Remove(T item)
         {
-            if (!items.Contains(item)) return false;
+            if (!items.Contains(item))
+            {
+                return false;
+            }
             int index = items.ToList().IndexOf(item);
             CheckReentrancy();
             items.Remove(item);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(NotifyCollectionChangedAction.Remove, item, index);
             return true;
         }
 
@@ -123,23 +138,32 @@ namespace CiccioSoft.Collections.Generic
             copy.SymmetricExceptWith(other);
             var removed = items.Where(i => !copy.Contains(i)).ToList();
             var added = copy.Where(i => !items.Contains(i)).ToList();
-            if (removed.Count == 0 && added.Count == 0) return;
+            if (removed.Count == 0 
+                && added.Count == 0)
+            {
+                return;
+            }
             CheckReentrancy();
             items = copy;
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, added, removed));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
         }
 
         public void UnionWith(IEnumerable<T> other)
         {
             var copy = new HashSet<T>(items, items.Comparer);
             copy.UnionWith(other);
-            if (copy.Count == items.Count) return;
+            if (copy.Count == items.Count)
+            {
+                return;
+            }
             var added = copy.Where(i => !items.Contains(i)).ToList();
             CheckReentrancy();
             items = copy;
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
-            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, added, Array.Empty<object>()));
         }
 
         void ICollection<T>.Add(T item) => Add(item);
@@ -148,17 +172,17 @@ namespace CiccioSoft.Collections.Generic
 
         #endregion
 
-
         #region INotifyCollectionChanged
 
         [field: NonSerialized]
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public virtual event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             NotifyCollectionChangedEventHandler handler = CollectionChanged;
             if (handler != null)
             {
+                // Not calling BlockReentrancy() here to avoid the SimpleMonitor allocation.
                 _blockReentrancyCount++;
                 try
                 {
@@ -171,6 +195,12 @@ namespace CiccioSoft.Collections.Generic
             }
         }
 
+        protected IDisposable BlockReentrancy()
+        {
+            _blockReentrancyCount++;
+            return EnsureMonitorInitialized();
+        }
+
         protected void CheckReentrancy()
         {
             if (_blockReentrancyCount > 0)
@@ -180,49 +210,46 @@ namespace CiccioSoft.Collections.Generic
             }
         }
 
-        protected IDisposable BlockReentrancy()
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int index)
         {
-            _blockReentrancyCount++;
-            return EnsureMonitorInitialized();
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index));
         }
+
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
+        }
+
+        private void OnCollectionReset() => OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
 
         private SimpleMonitor EnsureMonitorInitialized()
         {
             return _monitor ?? (_monitor = new SimpleMonitor(this));
         }
 
-        [Serializable]
-        private sealed class SimpleMonitor : IDisposable
-        {
-            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
-
-            [NonSerialized]
-            internal ObservableSet<T> _collection;
-
-            public SimpleMonitor(ObservableSet<T> collection)
-            {
-                //Debug.Assert(collection != null);
-                _collection = collection;
-            }
-
-            public void Dispose() => _collection._blockReentrancyCount--;
-        }
-
         #endregion
-
 
         #region INotifyPropertyChanged
 
         [field: NonSerialized]
-        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(PropertyChangedEventArgs e)
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        {
+            add => PropertyChanged += value;
+            remove => PropertyChanged -= value;
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
 
-        #endregion
+        private void OnCountPropertyChanged() => OnPropertyChanged(EventArgsCache.CountPropertyChanged);
 
+        private void OnIndexerPropertyChanged() => OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+
+        #endregion
 
         [OnSerializing]
         private void OnSerializing(StreamingContext context)
@@ -240,5 +267,24 @@ namespace CiccioSoft.Collections.Generic
                 _monitor._collection = this;
             }
         }
+
+        [Serializable]
+        private sealed class SimpleMonitor : IDisposable
+        {
+            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
+
+            [NonSerialized]
+            internal ObservableSet<T> _collection;
+
+            public SimpleMonitor(ObservableSet<T> collection)
+            {
+                Debug.Assert(collection != null);
+                _collection = collection;
+            }
+
+            public void Dispose() => _collection._blockReentrancyCount--;
+        }
+
+        protected ISet<T> Items => items;
     }
 }

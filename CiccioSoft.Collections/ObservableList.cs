@@ -19,20 +19,25 @@ namespace CiccioSoft.Collections.Generic
     public class ObservableList<T> : Collection<T>, INotifyCollectionChanged, INotifyPropertyChanged, IReadOnlyList<T>
     {
         private SimpleMonitor _monitor;
+
         [NonSerialized]
         private int _blockReentrancyCount;
 
         #region Constructors
 
-        public ObservableList() : base() { }
-        public ObservableList(IEnumerable<T> collection) : base(new List<T>(collection)) { }
-        public ObservableList(int capacity) : base(new List<T>(capacity)) { }
+        public ObservableList() : base()
+        {
+        }
 
-        #endregion Constructors
+        public ObservableList(IEnumerable<T> collection) : base(new List<T>(collection))
+        {
+        }
 
+        public ObservableList(int capacity) : base(new List<T>(capacity))
+        {
+        }
 
-        public bool IsReadOnly => Items.IsReadOnly;
-
+        #endregion
 
         #region Collection<T> overrides
 
@@ -40,9 +45,9 @@ namespace CiccioSoft.Collections.Generic
         {
             CheckReentrancy();
             base.ClearItems();
-            OnPropertyChanged("Count");
-            OnPropertyChanged("Item[]");
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionReset();
         }
 
         protected override void RemoveItem(int index)
@@ -50,18 +55,18 @@ namespace CiccioSoft.Collections.Generic
             CheckReentrancy();
             T removedItem = this[index];
             base.RemoveItem(index);
-            OnPropertyChanged("Count");
-            OnPropertyChanged("Item[]");
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, index));
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(NotifyCollectionChangedAction.Remove, removedItem, index);
         }
 
         protected override void InsertItem(int index, T item)
         {
             CheckReentrancy();
             base.InsertItem(index, item);
-            OnPropertyChanged("Count");
-            OnPropertyChanged("Item[]");
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
         }
 
         protected override void SetItem(int index, T item)
@@ -69,26 +74,49 @@ namespace CiccioSoft.Collections.Generic
             CheckReentrancy();
             T originalItem = this[index];
             base.SetItem(index, item);
-            OnPropertyChanged("Item[]");
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, originalItem, index));
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(NotifyCollectionChangedAction.Replace, originalItem, item, index);
         }
 
         #endregion
 
+        #region INotifyPropertyChanged
+
+        [field: NonSerialized]
+        protected virtual event PropertyChangedEventHandler PropertyChanged;
+
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        {
+            add => PropertyChanged += value;
+            remove => PropertyChanged -= value;
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
+
+        private void OnCountPropertyChanged() => OnPropertyChanged(EventArgsCache.CountPropertyChanged);
+
+        private void OnIndexerPropertyChanged() => OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+
+        #endregion
 
         #region INotifyCollectionChanged
 
         [field: NonSerialized]
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public virtual event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (CollectionChanged != null)
+            NotifyCollectionChangedEventHandler handler = CollectionChanged;
+            if (handler != null)
             {
+                // Not calling BlockReentrancy() here to avoid the SimpleMonitor allocation.
                 _blockReentrancyCount++;
                 try
                 {
-                    CollectionChanged(this, e);
+                    handler(this, e);
                 }
                 finally
                 {
@@ -112,43 +140,24 @@ namespace CiccioSoft.Collections.Generic
             }
         }
 
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index));
+        }
+
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object oldItem, object newItem, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
+        }
+
+        private void OnCollectionReset() => OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+
         private SimpleMonitor EnsureMonitorInitialized()
         {
             return _monitor ?? (_monitor = new SimpleMonitor(this));
         }
 
-        [Serializable]
-        private sealed class SimpleMonitor : IDisposable
-        {
-            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
-
-            [NonSerialized]
-            internal ObservableList<T> _collection;
-
-            public SimpleMonitor(ObservableList<T> collection)
-            {
-                //Debug.Assert(collection != null);
-                _collection = collection;
-            }
-
-            public void Dispose() => _collection._blockReentrancyCount--;
-        }
-
         #endregion
-
-
-        #region INotifyPropertyChanged
-
-        [field: NonSerialized]
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
 
         [OnSerializing]
         private void OnSerializing(StreamingContext context)
@@ -166,5 +175,23 @@ namespace CiccioSoft.Collections.Generic
                 _monitor._collection = this;
             }
         }
+
+        [Serializable]
+        private sealed class SimpleMonitor : IDisposable
+        {
+            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
+
+            [NonSerialized]
+            internal ObservableList<T> _collection;
+
+            public SimpleMonitor(ObservableList<T> collection)
+            {
+                _collection = collection;
+            }
+
+            public void Dispose() => _collection._blockReentrancyCount--;
+        }
+
+        public bool IsReadOnly => Items.IsReadOnly;
     }
 }

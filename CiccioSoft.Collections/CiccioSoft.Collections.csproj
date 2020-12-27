@@ -12,17 +12,15 @@
     <PackageLicenseExpression />
     <PackageLicenseFile>LICENSE.TXT</PackageLicenseFile>
     <RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections</PackageProjectUrl>
+    <PackageProjectUrl>https://francescocrimi.github.io/CiccioSoft.Collections/</PackageProjectUrl>
     <PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;; WinForms; WPF; UWP;</PackageTags>
     <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <FileVersion>1.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <Compile Remove="HashSet.cs" />
+    <Compile Remove="ObservableHashSet.cs" />
   </ItemGroup>
 
   <ItemGroup>
