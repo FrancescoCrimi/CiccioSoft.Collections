@@ -19,11 +19,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="HashSet.cs" />
-    <Compile Remove="ObservableHashSet.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\LICENSE.TXT">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

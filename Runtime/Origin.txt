@@ -1,0 +1,21 @@
+﻿Origin source files
+
+https://github.com/dotnet/runtime
+
+src/libraries/System.ObjectModel/src/System/Collections/ObjectModel/ObservableCollection.cs
+src/libraries/System.ObjectModel/src/System/Collections/ObjectModel/ReadOnlyObservableCollection.cs
+src/libraries/System.ObjectModel/src/System/Collections/Generic/DebugView.cs
+
+src/libraries/System.ComponentModel.TypeConverter/src/System/ComponentModel/BindingList.cs
+
+src/libraries/System.Private.CoreLib/src/System/Collections/ObjectModel/ReadOnlyCollection.cs
+
+src/libraries/System.Private.CoreLib/src/System/Collections/Generic/ICollectionDebugView.cs
+src/libraries/System.Private.CoreLib/src/System/Array.Enumerators.cs
+src/libraries/System.Private.CoreLib/src/System/ThrowHelper.cs
+src/libraries/Common/src/System/SR.cs
+
+
+https://github.com/dotnet/efcore
+
+src/EFCore/ChangeTracking/ObservableHashSet.cs
