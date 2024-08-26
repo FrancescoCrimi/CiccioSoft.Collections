@@ -183,7 +183,7 @@ namespace CiccioSoft.Collections.Generic
             if (_blockReentrancyCount > 0)
             {
                 if (CollectionChanged?.GetInvocationList().Length > 1)
-                    throw new InvalidOperationException("ObservableCollection Reentrancy Not Allowed");
+                    throw new InvalidOperationException("Cannot change CiccioList during a CollectionChanged event.");
             }
         }
 
