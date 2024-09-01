@@ -34,6 +34,7 @@
 // multiple times for different instantiation.
 //
 
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,7 +48,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Serialization;
 
-namespace System
+namespace CiccioSoft
 {
     [StackTraceHidden]
     internal static class ThrowHelper

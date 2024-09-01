@@ -24,4 +24,10 @@
     <ProjectReference Include="..\Runtime\Runtime.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="List\" />
+    <Folder Include="Common\" />
+    <Folder Include="HashSet\" />
+  </ItemGroup>
+
 </Project>

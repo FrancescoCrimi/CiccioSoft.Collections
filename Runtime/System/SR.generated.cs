@@ -8,17 +8,17 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace System.Private.CoreLib
+namespace CiccioSoft.Collections.Resources
 {
     internal static class Strings { }
 }
 
-namespace System
+namespace CiccioSoft
 {
     internal static partial class SR
     {
         private static global::System.Resources.ResourceManager s_resourceManager;
-        internal static global::System.Resources.ResourceManager ResourceManager => s_resourceManager ?? (s_resourceManager = new global::System.Resources.ResourceManager(typeof(System.Private.CoreLib.Strings)));
+        internal static global::System.Resources.ResourceManager ResourceManager => s_resourceManager ?? (s_resourceManager = new global::System.Resources.ResourceManager(typeof(CiccioSoft.Collections.Resources.Strings)));
 
         /// <summary>Cannot create an abstract class.</summary>
         internal static string @Acc_CreateAbst => GetResourceString("Acc_CreateAbst");

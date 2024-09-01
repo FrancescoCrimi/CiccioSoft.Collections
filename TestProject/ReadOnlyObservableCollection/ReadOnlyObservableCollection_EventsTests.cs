@@ -1,13 +1,14 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+//using CiccioSoft.Collections.Generic;
 using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using Xunit;
 
-namespace CiccioSoft.Collections.Generic.Tests
+namespace CiccioSoft.Collections.Tests.ReadOnlyObservableCollection
 {
     /// <summary>
     /// Tests that the INotifyCollectionChanged and IPropertyChanged events are fired

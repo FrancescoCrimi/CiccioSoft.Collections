@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
-namespace System
+namespace CiccioSoft
 {
     //internal sealed class ArrayEnumerator : IEnumerator, ICloneable
     //{
