@@ -28,10 +28,6 @@ namespace CiccioSoft.Collections
 
         #region Constructors
 
-        //static ObservableCollection()
-        //{
-        //}
-
         /// <summary>
         /// Initializes a new instance of ObservableCollection that is empty and has default initial capacity.
         /// </summary>
@@ -50,7 +46,8 @@ namespace CiccioSoft.Collections
         /// same order they are read by the enumerator of the collection.
         /// </remarks>
         /// <exception cref="ArgumentNullException"> collection is a null reference </exception>
-        public ObservableCollection(IEnumerable<T> collection) : base(new List<T>(collection ?? throw new ArgumentNullException(nameof(collection))))
+        public ObservableCollection(IEnumerable<T> collection)
+            : base(new List<T>(collection ?? throw new ArgumentNullException(nameof(collection))))
         {
         }
 
@@ -64,7 +61,8 @@ namespace CiccioSoft.Collections
         /// same order they are read by the enumerator of the list.
         /// </remarks>
         /// <exception cref="ArgumentNullException"> list is a null reference </exception>
-        public ObservableCollection(List<T> list) : base(new List<T>(list ?? throw new ArgumentNullException(nameof(list))))
+        public ObservableCollection(List<T> list)
+            : base(new List<T>(list ?? throw new ArgumentNullException(nameof(list))))
         {
         }
 
@@ -247,7 +245,8 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-        private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
+
+        #region Serializable
 
         [OnSerializing]
         private void OnSerializing(StreamingContext context)
@@ -266,6 +265,13 @@ namespace CiccioSoft.Collections
             }
         }
 
+        #endregion
+
+
+        #region Private
+
+        private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
+
         // this class helps prevent reentrant calls
         [Serializable]
         private sealed class SimpleMonitor : IDisposable
@@ -283,12 +289,7 @@ namespace CiccioSoft.Collections
 
             public void Dispose() => _collection._blockReentrancyCount--;
         }
-    }
 
-    internal static class EventArgsCache
-    {
-        internal static readonly PropertyChangedEventArgs CountPropertyChanged = new PropertyChangedEventArgs("Count");
-        internal static readonly PropertyChangedEventArgs IndexerPropertyChanged = new PropertyChangedEventArgs("Item[]");
-        internal static readonly NotifyCollectionChangedEventArgs ResetCollectionChanged = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+        #endregion
     }
 }

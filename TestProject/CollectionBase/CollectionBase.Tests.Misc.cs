@@ -33,7 +33,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void BasicInsert(T[] items, T item, int index, int repeat)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
 
                 for (int i = 0; i < repeat; i++)
                 {
@@ -63,7 +63,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void InsertValidations(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 int[] bad = new int[] { items.Length + 1, items.Length + 2, int.MaxValue, -1, -2, int.MinValue };
                 for (int i = 0; i < bad.Length; i++)
                 {
@@ -73,7 +73,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void NonGenericIListBasicInsert(T[] items, T item, int index, int repeat)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
 
                 for (int i = 0; i < repeat; i++)
@@ -103,7 +103,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void NonGenericIListInsertValidations(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
                 int[] bad = new int[] { items.Length + 1, items.Length + 2, int.MaxValue, -1, -2, int.MinValue };
                 for (int i = 0; i < bad.Length; i++)
@@ -429,7 +429,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void BasicContains(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
 
                 for (int i = 0; i < items.Length; i++)
                 {
@@ -439,7 +439,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void NonExistingValues(T[] itemsX, T[] itemsY)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(itemsX));
+                CollectionBase<T> list = new CollectionBase<T>(itemsX);
 
                 for (int i = 0; i < itemsY.Length; i++)
                 {
@@ -449,7 +449,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void RemovedValues(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 for (int i = 0; i < items.Length; i++)
                 {
                     list.Remove(items[i]);
@@ -459,7 +459,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void AddRemoveValues(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 for (int i = 0; i < items.Length; i++)
                 {
                     list.Add(items[i]);
@@ -471,7 +471,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void MultipleValues(T[] items, int times)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
 
                 for (int i = 0; i < times; i++)
                 {
@@ -485,21 +485,21 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
                 }
                 Assert.False(list.Contains(items[items.Length / 2])); //"Should not contain item"
             }
-            public void ContainsNullWhenReference(IList<T> items, T value)
+            public void ContainsNullWhenReference(T[] items, T value)
             {
                 if ((object)value != null)
                 {
                     throw new ArgumentException("invalid argument passed to testcase");
                 }
 
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 list.Add(value);
                 Assert.True(list.Contains(value)); //"Should contain item."
             }
 
             public void NonGenericIListBasicContains(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
 
                 for (int i = 0; i < items.Length; i++)
@@ -510,7 +510,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void NonGenericIListNonExistingValues(T[] itemsX, T[] itemsY)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(itemsX));
+                CollectionBase<T> list = new CollectionBase<T>(itemsX);
                 IList _ilist = list;
 
                 for (int i = 0; i < itemsY.Length; i++)
@@ -521,7 +521,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void NonGenericIListRemovedValues(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
                 for (int i = 0; i < items.Length; i++)
                 {
@@ -532,7 +532,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void NonGenericIListAddRemoveValues(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
                 for (int i = 0; i < items.Length; i++)
                 {
@@ -545,7 +545,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void NonGenericIListMultipleValues(T[] items, int times)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
 
                 for (int i = 0; i < times; i++)
@@ -568,7 +568,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
                     throw new ArgumentException("invalid argument passed to testcase");
                 }
 
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
                 list.Add(value);
                 Assert.True(_ilist.Contains(value)); //"Should contain item."
@@ -606,14 +606,14 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
             }
             public void ClearNonEmptyList(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 list.Clear();
                 Assert.Equal(0, list.Count); //"Should be equal to 0."
             }
 
             public void ClearMultipleTimesNonEmptyList(T[] items, int times)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 for (int i = 0; i < times; i++)
                 {
                     list.Clear();
@@ -642,7 +642,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
             }
             public void NonGenericIListClearNonEmptyList(T[] items)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
                 _ilist.Clear();
                 Assert.Equal(0, list.Count); //"Should be equal to 0."
@@ -650,7 +650,7 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
 
             public void NonGenericIListClearMultipleTimesNonEmptyList(T[] items, int times)
             {
-                CollectionBase<T> list = new CollectionBase<T>(new List<T>(items));
+                CollectionBase<T> list = new CollectionBase<T>(items);
                 IList _ilist = list;
                 for (int i = 0; i < times; i++)
                 {
@@ -1053,7 +1053,6 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
             StringDriver.NonGenericIListContainsNullWhenReference(stringArr1, null);
             StringDriver.NonGenericIListContainsTestParams();
         }
-
 
         [Fact]
         public static void ClearTests()

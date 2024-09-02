@@ -46,23 +46,23 @@ namespace CiccioSoft.Collections.Tests.CollectionBase
             Assert.Throws<ArgumentOutOfRangeException>(() => new CollectionBase<T>(capacity));
         }
 
-        //[Theory]
-        //[MemberData(nameof(EnumerableTestData))]
-        //public void Constructor_IEnumerable(EnumerableType enumerableType, int listLength, int enumerableLength, int numberOfMatchingElements, int numberOfDuplicateElements)
-        //{
-        //    _ = listLength;
-        //    _ = numberOfMatchingElements;
-        //    IEnumerable<T> enumerable = CreateEnumerable(enumerableType, null, enumerableLength, 0, numberOfDuplicateElements);
-        //    CollectionBase<T> list = new CollectionBase<T>(enumerable);
-        //    List<T> expected = enumerable.ToList();
+        [Theory]
+        [MemberData(nameof(EnumerableTestData))]
+        public void Constructor_IEnumerable(EnumerableType enumerableType, int listLength, int enumerableLength, int numberOfMatchingElements, int numberOfDuplicateElements)
+        {
+            _ = listLength;
+            _ = numberOfMatchingElements;
+            IEnumerable<T> enumerable = CreateEnumerable(enumerableType, null, enumerableLength, 0, numberOfDuplicateElements);
+            CollectionBase<T> list = new CollectionBase<T>(enumerable);
+            List<T> expected = enumerable.ToList();
 
-        //    Assert.Equal(enumerableLength, list.Count); //"Number of items in list do not match the number of items given."
+            Assert.Equal(enumerableLength, list.Count); //"Number of items in list do not match the number of items given."
 
-        //    for (int i = 0; i < enumerableLength; i++)
-        //        Assert.Equal(expected[i], list[i]); //"Expected object in item array to be the same as in the list"
+            for (int i = 0; i < enumerableLength; i++)
+                Assert.Equal(expected[i], list[i]); //"Expected object in item array to be the same as in the list"
 
-        //    Assert.False(((IList<T>)list).IsReadOnly); //"List should not be readonly"
-        //}
+            Assert.False(((IList<T>)list).IsReadOnly); //"List should not be readonly"
+        }
 
         [Fact]
         public void Constructo_NullIEnumerable_ThrowsArgumentNullException()

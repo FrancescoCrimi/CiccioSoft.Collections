@@ -1,15 +1,13 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-//using CiccioSoft.Collections.Generic;
 using System;
-//using System.Collections.Generic;
-//using System.ComponentModel;
+using System.Collections.Generic;
 using Xunit;
 
 namespace CiccioSoft.Collections.Tests.BindingList
 {
-    public partial class BindingListTest
+    public partial class BindingList_Test
     {
         [Fact]
         public void Ctor_Default()
@@ -29,7 +27,7 @@ namespace CiccioSoft.Collections.Tests.BindingList
             Assert.True(iBindingList.SupportsChangeNotification);
             Assert.False(iBindingList.SupportsSearching);
             Assert.False(iBindingList.SupportsSorting);
-            Assert.True(((System.ComponentModel.IRaiseItemChangedEvents)list).RaisesItemChangedEvents);
+            Assert.False(((System.ComponentModel.IRaiseItemChangedEvents)list).RaisesItemChangedEvents);
         }
 
         [Fact]
@@ -52,7 +50,7 @@ namespace CiccioSoft.Collections.Tests.BindingList
             Assert.True(iBindingList.SupportsChangeNotification);
             Assert.False(iBindingList.SupportsSearching);
             Assert.False(iBindingList.SupportsSorting);
-            Assert.True(((System.ComponentModel.IRaiseItemChangedEvents)bindingList).RaisesItemChangedEvents);
+            Assert.False(((System.ComponentModel.IRaiseItemChangedEvents)bindingList).RaisesItemChangedEvents);
         }
 
         [Fact]
@@ -75,7 +73,7 @@ namespace CiccioSoft.Collections.Tests.BindingList
             Assert.True(iBindingList.SupportsChangeNotification);
             Assert.False(iBindingList.SupportsSearching);
             Assert.False(iBindingList.SupportsSorting);
-            Assert.True(((System.ComponentModel.IRaiseItemChangedEvents)bindingList).RaisesItemChangedEvents);
+            Assert.False(((System.ComponentModel.IRaiseItemChangedEvents)bindingList).RaisesItemChangedEvents);
         }
 
         [Fact]
@@ -98,7 +96,7 @@ namespace CiccioSoft.Collections.Tests.BindingList
             Assert.True(iBindingList.SupportsChangeNotification);
             Assert.False(iBindingList.SupportsSearching);
             Assert.False(iBindingList.SupportsSorting);
-            Assert.True(((System.ComponentModel.IRaiseItemChangedEvents)bindingList).RaisesItemChangedEvents);
+            Assert.False(((System.ComponentModel.IRaiseItemChangedEvents)bindingList).RaisesItemChangedEvents);
         }
 
         //[Fact]
@@ -665,7 +663,7 @@ namespace CiccioSoft.Collections.Tests.BindingList
         {
             var item1 = new Item();
             var item2 = new Item();
-            var list = new System.Collections.Generic.List<Item> { item1, item2, null };
+            var list = new List<Item> { item1, item2, null };
             var bindingList = new BindingList<Item>(list);
             Assert.Equal(1, item1.InvocationList.Length);
             Assert.Equal(1, item2.InvocationList.Length);
@@ -830,7 +828,7 @@ namespace CiccioSoft.Collections.Tests.BindingList
             Assert.True(calledListChanged);
         }
 
-        public static System.Collections.Generic.IEnumerable<object[]> InvalidEventArgs_TestData()
+        public static IEnumerable<object[]> InvalidEventArgs_TestData()
         {
             yield return new object[] { null };
             yield return new object[] { new System.ComponentModel.PropertyChangedEventArgs(null) };

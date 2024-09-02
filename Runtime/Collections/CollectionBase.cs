@@ -29,7 +29,15 @@ namespace CiccioSoft.Collections
             {
                 ThrowHelper.ThrowArgumentNullException(ExceptionArgument.list);
             }
-            items = list;
+
+            if (list is T[])
+            {
+                items = new List<T>(list);
+            }
+            else
+            {
+                items = list;
+            }
         }
 
         public CollectionBase(int capacity)
@@ -37,10 +45,10 @@ namespace CiccioSoft.Collections
             items = new List<T>(capacity);
         }
 
-        //public CollectionBase(IEnumerable<T> enumerable)
-        //{
-        //    items = new List<T>(enumerable);
-        //}
+        public CollectionBase(IEnumerable<T> enumerable)
+        {
+            items = new List<T>(enumerable);
+        }
 
         #endregion
 
@@ -415,11 +423,6 @@ namespace CiccioSoft.Collections
 
         public ReadOnlyCollection<T> AsReadOnly()
             => new ReadOnlyCollection<T>(this);
-
-        //// Copies this List into array, which must be of a
-        //// compatible array type.
-        //public void CopyTo(T[] array)
-        //    => CopyTo(array, 0);
 
         protected IList<T> Items => items;
     }

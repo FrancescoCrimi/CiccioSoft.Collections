@@ -27,7 +27,7 @@
   <ItemGroup>
     <Folder Include="List\" />
     <Folder Include="Common\" />
-    <Folder Include="HashSet\" />
+    <Folder Include="System\ComponentModel\" />
   </ItemGroup>
 
 </Project>

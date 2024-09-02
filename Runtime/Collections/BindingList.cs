@@ -14,6 +14,8 @@ namespace CiccioSoft.Collections
     public class BindingList<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T> :
         Collection<T>, IBindingList, IRaiseItemChangedEvents
     {
+        private bool raiseItemChangedEvents; // Do not rename (binary serialization)
+
         [NonSerialized]
         private PropertyDescriptorCollection? _itemTypeProperties;
 
@@ -46,6 +48,9 @@ namespace CiccioSoft.Collections
             // Check for INotifyPropertyChanged
             if (typeof(INotifyPropertyChanged).IsAssignableFrom(typeof(T)))
             {
+                // Supports INotifyPropertyChanged
+                raiseItemChangedEvents = true;
+
                 // Loop thru the items already in the collection and hook their change notification.
                 foreach (T item in Items)
                 {
@@ -56,29 +61,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-        #region ListChanged event
-
-        /// <summary>
-        /// Event that reports changes to the list or to items in the list.
-        /// </summary>
-        public event ListChangedEventHandler ListChanged
-        {
-            add => _onListChanged += value;
-            remove => _onListChanged -= value;
-        }
-
-        /// <summary>
-        /// Raises the ListChanged event.
-        /// </summary>
-        protected virtual void OnListChanged(ListChangedEventArgs e) => _onListChanged?.Invoke(this, e);
-
-        // Private helper method
-        private void FireListChanged(ListChangedType type, int index)
-        {
-            OnListChanged(new ListChangedEventArgs(type, index));
-        }
-
-        #endregion
 
         #region Collection<T> overrides
 
@@ -87,9 +69,12 @@ namespace CiccioSoft.Collections
 
         protected override void ClearItems()
         {
-            foreach (T item in Items)
+            if (raiseItemChangedEvents)
             {
-                UnhookPropertyChanged(item);
+                foreach (T item in Items)
+                {
+                    UnhookPropertyChanged(item);
+                }
             }
 
             base.ClearItems();
@@ -102,14 +87,20 @@ namespace CiccioSoft.Collections
         {
             base.InsertItem(index, item);
 
-            HookPropertyChanged(item);
+            if (raiseItemChangedEvents)
+            {
+                HookPropertyChanged(item);
+            }
 
             FireListChanged(ListChangedType.ItemAdded, index);
         }
 
         protected override void RemoveItem(int index)
         {
-            UnhookPropertyChanged(this[index]);
+            if (raiseItemChangedEvents)
+            {
+                UnhookPropertyChanged(this[index]);
+            }
 
             base.RemoveItem(index);
             FireListChanged(ListChangedType.ItemDeleted, index);
@@ -119,64 +110,48 @@ namespace CiccioSoft.Collections
             Justification = "BindingList ctor is marked with RequiresUnreferencedCode.")]
         protected override void SetItem(int index, T item)
         {
-            UnhookPropertyChanged(this[index]);
+            if (raiseItemChangedEvents)
+            {
+                UnhookPropertyChanged(this[index]);
+            }
 
             base.SetItem(index, item);
 
-            HookPropertyChanged(item);
+            if (raiseItemChangedEvents)
+            {
+                HookPropertyChanged(item);
+            }
 
             FireListChanged(ListChangedType.ItemChanged, index);
         }
 
         #endregion
 
-        #region IBindingList interface
 
-        public T AddNew() => throw new NotSupportedException();
+        #region ListChanged event
 
-        object? IBindingList.AddNew() => throw new NotSupportedException();
-
-        public bool AllowNew => false;
-
-        bool IBindingList.AllowNew => false;
-
-        public bool AllowEdit => true;
-
-        bool IBindingList.AllowEdit => AllowEdit;
-
-        public bool AllowRemove => true;
-
-        bool IBindingList.AllowRemove => AllowRemove;
-
-        bool IBindingList.SupportsChangeNotification => true;
-
-        bool IBindingList.SupportsSearching => false;
-
-        bool IBindingList.SupportsSorting => false;
-
-        bool IBindingList.IsSorted => false;
-
-        PropertyDescriptor? IBindingList.SortProperty => null;
-
-        ListSortDirection IBindingList.SortDirection => ListSortDirection.Ascending;
-
-        void IBindingList.ApplySort(PropertyDescriptor prop, ListSortDirection direction) => throw new NotSupportedException();
-
-        void IBindingList.RemoveSort() => throw new NotSupportedException();
-
-        int IBindingList.Find(PropertyDescriptor prop, object key) => throw new NotSupportedException();
-
-        void IBindingList.AddIndex(PropertyDescriptor prop)
+        /// <summary>
+        /// Event that reports changes to the list or to items in the list.
+        /// </summary>
+        public event ListChangedEventHandler ListChanged
         {
-            // Not supported
+            add => _onListChanged += value;
+            remove => _onListChanged -= value;
         }
 
-        void IBindingList.RemoveIndex(PropertyDescriptor prop)
+        // Private helper method
+        private void FireListChanged(ListChangedType type, int index)
         {
-            // Not supported
+            OnListChanged(new ListChangedEventArgs(type, index));
         }
+
+        /// <summary>
+        /// Raises the ListChanged event.
+        /// </summary>
+        private void OnListChanged(ListChangedEventArgs e) => _onListChanged?.Invoke(this, e);
 
         #endregion
+
 
         #region Property Change Support
 
@@ -269,6 +244,56 @@ namespace CiccioSoft.Collections
 
         #endregion
 
+
+        #region IBindingList interface
+
+        public T AddNew() => throw new NotSupportedException();
+
+        object? IBindingList.AddNew() => throw new NotSupportedException();
+
+        public bool AllowNew => false;
+
+        bool IBindingList.AllowNew => false;
+
+        public bool AllowEdit => true;
+
+        bool IBindingList.AllowEdit => AllowEdit;
+
+        public bool AllowRemove => true;
+
+        bool IBindingList.AllowRemove => AllowRemove;
+
+        bool IBindingList.SupportsChangeNotification => true;
+
+        bool IBindingList.SupportsSearching => false;
+
+        bool IBindingList.SupportsSorting => false;
+
+        bool IBindingList.IsSorted => false;
+
+        PropertyDescriptor? IBindingList.SortProperty => null;
+
+        ListSortDirection IBindingList.SortDirection => ListSortDirection.Ascending;
+
+        void IBindingList.ApplySort(PropertyDescriptor prop, ListSortDirection direction) => throw new NotSupportedException();
+
+        void IBindingList.RemoveSort() => throw new NotSupportedException();
+
+        int IBindingList.Find(PropertyDescriptor prop, object key) => throw new NotSupportedException();
+
+        void IBindingList.AddIndex(PropertyDescriptor prop)
+        {
+            // Not supported
+        }
+
+        void IBindingList.RemoveIndex(PropertyDescriptor prop)
+        {
+            // Not supported
+        }
+
+        #endregion
+
+
         #region IRaiseItemChangedEvents interface
 
         /// <summary>
@@ -276,7 +301,7 @@ namespace CiccioSoft.Collections
         /// of type ItemChanged as a result of property changes on individual list items
         /// unless those items support INotifyPropertyChanged.
         /// </summary>
-        bool IRaiseItemChangedEvents.RaisesItemChangedEvents => true;
+        bool IRaiseItemChangedEvents.RaisesItemChangedEvents => raiseItemChangedEvents;
 
         #endregion
     }
