@@ -8,12 +8,12 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.ObservableList
+namespace CiccioSoft.Collections.Tests.CiccioList
 {
     /// <summary>
-    /// Tests the public properties and constructor in ObservableCollection<T>.
+    /// Tests the public properties and constructor in CiccioList<T>.
     /// </summary>
-    public partial class ConstructorAndPropertyTests
+    public partial class CiccioList_As_ObservableCollection
     {
         /// <summary>
         /// Tests that the parameterless constructor works.
@@ -21,7 +21,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [Fact]
         public static void ParameterlessConstructorTest()
         {
-            var col = new ObservableList<string>();
+            var col = new CiccioList<string>();
             Assert.Equal(0, col.Count);
             Assert.Empty(col);
         }
@@ -33,7 +33,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [MemberData(nameof(Collections))]
         public static void IEnumerableConstructorTest(IEnumerable<string> collection)
         {
-            var actual = new ObservableList<string>(collection);
+            var actual = new CiccioList<string>(collection);
             Assert.Equal(collection, actual);
         }
 
@@ -41,7 +41,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [MemberData(nameof(Collections))]
         public static void IEnumerableConstructorTest_MakesCopy(IEnumerable<string> collection)
         {
-            var oc = new ObservableListSubclass<string>(collection);
+            var oc = new ObservableCollectionSubclass<string>(collection);
             Assert.NotNull(oc.InnerList);
             Assert.NotSame(collection, oc.InnerList);
         }
@@ -68,7 +68,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [Fact]
         public static void IEnumerableConstructorTest_Empty()
         {
-            var col = new ObservableList<string>(new string[] { });
+            var col = new CiccioList<string>(new string[] { });
             Assert.Equal(0, col.Count);
             Assert.Empty(col);
         }
@@ -79,7 +79,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [Fact]
         public static void IEnumerableConstructorTest_Negative()
         {
-            AssertExtensions.Throws<ArgumentNullException>("collection", () => new ObservableList<string>((IEnumerable<string>)null));
+            AssertExtensions.Throws<ArgumentNullException>("collection", () => new CiccioList<string>((IEnumerable<string>)null));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [Fact]
         public static void ItemTestSet()
         {
-            var col = new ObservableList<Guid>(new[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() });
+            var col = new CiccioList<Guid>(new[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() });
             for (int i = 0; i < col.Count; ++i)
             {
                 Guid guid = Guid.NewGuid();
@@ -106,7 +106,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [InlineData(3, int.MaxValue)]
         public static void ItemTestSet_Negative_InvalidIndex(int size, int index)
         {
-            var col = new ObservableList<int>(new int[size]);
+            var col = new CiccioList<int>(new int[size]);
             AssertExtensions.Throws<ArgumentOutOfRangeException>("index", () => col[index]);
         }
 
@@ -114,7 +114,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [Fact]
         public static void IsReadOnlyTest()
         {
-            var col = new ObservableList<Guid>(new[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() });
+            var col = new CiccioList<Guid>(new[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() });
             Assert.False(((ICollection<Guid>)col).IsReadOnly);
         }
 
@@ -122,7 +122,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [ActiveIssue("https://github.com/dotnet/runtime/issues/57588", typeof(PlatformDetection), nameof(PlatformDetection.IsBuiltWithAggressiveTrimming), nameof(PlatformDetection.IsBrowser))]
         public static void DebuggerAttributeTests()
         {
-            ObservableList<int> col = new ObservableList<int>(new[] {1, 2, 3, 4});
+            CiccioList<int> col = new CiccioList<int>(new[] {1, 2, 3, 4});
             DebuggerAttributes.ValidateDebuggerDisplayReferences(col);
             DebuggerAttributeInfo info = DebuggerAttributes.ValidateDebuggerTypeProxyProperties(col);
             PropertyInfo itemProperty = info.Properties.Single(pr => pr.GetCustomAttribute<DebuggerBrowsableAttribute>().State == DebuggerBrowsableState.RootHidden);
@@ -134,13 +134,13 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [ActiveIssue("https://github.com/dotnet/runtime/issues/57588", typeof(PlatformDetection), nameof(PlatformDetection.IsBuiltWithAggressiveTrimming), nameof(PlatformDetection.IsBrowser))]
         public static void DebuggerAttribute_NullCollection_ThrowsArgumentNullException()
         {
-            TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => DebuggerAttributes.ValidateDebuggerTypeProxyProperties(typeof(ObservableList<int>), null));
+            TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => DebuggerAttributes.ValidateDebuggerTypeProxyProperties(typeof(CiccioList<int>), null));
             ArgumentNullException argumentNullException = Assert.IsType<ArgumentNullException>(ex.InnerException);
         }
 
-        private partial class ObservableListSubclass<T> : ObservableList<T>
+        private partial class ObservableCollectionSubclass<T> : CiccioList<T>
         {
-            public ObservableListSubclass(IEnumerable<T> collection) : base(collection) { }
+            public ObservableCollectionSubclass(IEnumerable<T> collection) : base(collection) { }
 
             public List<T> InnerList => (List<T>)base.items;
         }
@@ -151,14 +151,14 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         [Fact]
         public static void ListConstructorTest_Negative()
         {
-            AssertExtensions.Throws<ArgumentNullException>("list", () => new ObservableCollection<string>((List<string>)null));
+            AssertExtensions.Throws<ArgumentNullException>("collection", () => new CiccioList<string>((List<string>)null));
         }
 
         [Fact]
         public static void ListConstructorTest()
         {
             List<string> collection = new List<string> { "one", "two", "three" };
-            var actual = new ObservableList<string>(collection);
+            var actual = new CiccioList<string>(collection);
             Assert.Equal(collection, actual);
         }
 
@@ -166,14 +166,14 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void ListConstructorTest_MakesCopy()
         {
             List<string> collection = new List<string> { "one", "two", "three" };
-            var oc = new ObservableListSubclass<string>(collection);
+            var oc = new ObservableCollectionSubclass<string>(collection);
             Assert.NotNull(oc.InnerList);
             Assert.NotSame(collection, oc.InnerList);
         }
 
-        private partial class ObservableListSubclass<T> : ObservableList<T>
+        private partial class ObservableCollectionSubclass<T> : CiccioList<T>
         {
-            public ObservableListSubclass(List<T> list) : base(list) { }
+            public ObservableCollectionSubclass(List<T> list) : base(list) { }
         }
     }
 }

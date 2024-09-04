@@ -10,7 +10,7 @@ using Xunit;
 
 namespace CiccioSoft.Collections.Tests.CiccioList
 {
-    public class CiccioListTest
+    public class CiccioList_Test
     {
         [Fact]
         public void FakeTest()

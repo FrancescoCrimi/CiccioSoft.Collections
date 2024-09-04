@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace CiccioSoft.Collections
@@ -347,7 +346,6 @@ namespace CiccioSoft.Collections
 
         #region Property Change Support
 
-        [RequiresUnreferencedCode("Raises ListChanged events with PropertyDescriptors. PropertyDescriptors require unreferenced code.")]
         private void HookPropertyChanged(T item)
         {
             // Note: inpc may be null if item is null, so always check.
@@ -367,7 +365,6 @@ namespace CiccioSoft.Collections
             }
         }
 
-        [RequiresUnreferencedCode("Raises ListChanged events with PropertyDescriptors. PropertyDescriptors require unreferenced code.")]
         private void Child_PropertyChanged(object? sender, PropertyChangedEventArgs? e)
         {
             if (sender == null || e == null || string.IsNullOrEmpty(e.PropertyName))
