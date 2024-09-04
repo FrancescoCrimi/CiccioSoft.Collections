@@ -1,19 +1,19 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CiccioSoft.Collections.Collections;
+namespace CiccioSoft.Collections;
 
+[DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
+[DebuggerDisplay("Count = {Count}")]
+[Serializable]
 public class HashSetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>
 {
-    private ISet<T> _set;
+    protected ISet<T> _set;
 
     #region Constructors
 
@@ -40,6 +40,9 @@ public class HashSetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, I
 
     #endregion
 
+
+    #region ISet
+
     public int Count
         => _set.Count;
 
@@ -47,40 +50,10 @@ public class HashSetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, I
         => _set.IsReadOnly;
 
     public bool Add(T item)
-    {
-        if (_set.Contains(item))
-        {
-            return false;
-        }
-
-        //OnCountPropertyChanging();
-
-        _set.Add(item);
-
-        //OnCollectionChanged(NotifyCollectionChangedAction.Add, item);
-
-        //OnCountPropertyChanged();
-
-        return true;
-    }
+        => AddItem(item);
 
     public void Clear()
-    {
-        if (_set.Count == 0)
-        {
-            return;
-        }
-
-        //OnCountPropertyChanging();
-
-        var removed = this.ToList();
-
-        _set.Clear();
-
-        //OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
-
-        //OnCountPropertyChanged();
-    }
+        => ClearItems();
 
     public bool Contains(T item)
         => _set.Contains(item);
@@ -89,53 +62,13 @@ public class HashSetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, I
         => _set.CopyTo(array, arrayIndex);
 
     public void ExceptWith(IEnumerable<T> other)
-    {
-        //var copy = new HashSet<T>(_set, _set.Comparer);
-        var copy = new HashSet<T>(_set);
-
-        copy.ExceptWith(other);
-
-        if (copy.Count == _set.Count)
-        {
-            return;
-        }
-
-        var removed = _set.Where(i => !copy.Contains(i)).ToList();
-
-        //OnCountPropertyChanging();
-
-        _set = copy;
-
-        //OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
-
-        //OnCountPropertyChanged();
-    }
+        => ExceptWithItems(other);
 
     public IEnumerator<T> GetEnumerator()
         => _set.GetEnumerator();
 
     public void IntersectWith(IEnumerable<T> other)
-    {
-        //var copy = new HashSet<T>(_set, _set.Comparer);
-        var copy = new HashSet<T>(_set);
-
-        copy.IntersectWith(other);
-
-        if (copy.Count == _set.Count)
-        {
-            return;
-        }
-
-        var removed = _set.Where(i => !copy.Contains(i)).ToList();
-
-        //OnCountPropertyChanging();
-
-        _set = copy;
-
-        //OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
-
-        //OnCountPropertyChanged();
-    }
+        => IntersectWithItems(other);
 
     public bool IsProperSubsetOf(IEnumerable<T> other)
         => _set.IsProperSubsetOf(other);
@@ -153,77 +86,48 @@ public class HashSetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, I
         => _set.Overlaps(other);
 
     public bool Remove(T item)
-    {
-        if (!_set.Contains(item))
-        {
-            return false;
-        }
-
-        //OnCountPropertyChanging();
-
-        _set.Remove(item);
-
-        //OnCollectionChanged(NotifyCollectionChangedAction.Remove, item);
-
-        //OnCountPropertyChanged();
-
-        return true;
-    }
+        => RemoveItem(item);
 
     public bool SetEquals(IEnumerable<T> other)
         => _set.SetEquals(other);
 
     public void SymmetricExceptWith(IEnumerable<T> other)
-    {
-        //var copy = new HashSet<T>(_set, _set.Comparer);
-        var copy = new HashSet<T>(_set);
-
-        copy.SymmetricExceptWith(other);
-
-        var removed = _set.Where(i => !copy.Contains(i)).ToList();
-        var added = copy.Where(i => !_set.Contains(i)).ToList();
-
-        if (removed.Count == 0
-            && added.Count == 0)
-        {
-            return;
-        }
-
-        //OnCountPropertyChanging();
-
-        _set = copy;
-
-        //OnCollectionChanged(added, removed);
-
-        //OnCountPropertyChanged();
-    }
+        => SymmetricExceptWithItems(other);
 
     public void UnionWith(IEnumerable<T> other)
-    {
-        //var copy = new HashSet<T>(_set, _set.Comparer);
-        var copy = new HashSet<T>(_set);
-
-        copy.UnionWith(other);
-
-        if (copy.Count == _set.Count)
-        {
-            return;
-        }
-
-        var added = copy.Where(i => !_set.Contains(i)).ToList();
-
-        //OnCountPropertyChanging();
-
-        _set = copy;
-
-        //OnCollectionChanged(added, ObservableHashSetSingletons.NoItems);
-
-        //OnCountPropertyChanged();
-    }
+        => UnionWithItems(other);
 
     void ICollection<T>.Add(T item)
         => Add(item);
 
     IEnumerator IEnumerable.GetEnumerator()
         => GetEnumerator();
+
+    #endregion
+
+
+    #region Virtual Methods
+
+    protected virtual bool AddItem(T item)
+        => _set.Add(item);
+
+    protected virtual void ClearItems()
+        => _set.Clear();
+
+    protected virtual void ExceptWithItems(IEnumerable<T> other)
+        => _set.ExceptWith(other);
+
+    protected virtual void IntersectWithItems(IEnumerable<T> other)
+        => _set.IntersectWith(other);
+
+    protected virtual bool RemoveItem(T item)
+        => _set.Remove(item);
+
+    protected virtual void SymmetricExceptWithItems(IEnumerable<T> other)
+        => _set.SymmetricExceptWith(other);
+
+    protected virtual void UnionWithItems(IEnumerable<T> other)
+        => _set.UnionWith(other);
+
+    #endregion
 }

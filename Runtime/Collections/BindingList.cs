@@ -62,7 +62,7 @@ namespace CiccioSoft.Collections
         #endregion
 
 
-        #region Collection<T> overrides
+        #region Overrides Method
 
         // Collection<T> funnels all list changes through the four virtual methods below.
         // We override these so that we can commit any pending new item and fire the proper ListChanged events.

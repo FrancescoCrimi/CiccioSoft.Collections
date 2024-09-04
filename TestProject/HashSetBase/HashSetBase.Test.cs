@@ -1,14 +1,13 @@
-﻿using CiccioSoft.Collections.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Tests;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CiccioSoft.Collections.Tests.HashSetBase
 {
-    public abstract class HashSetBase_Test<T> : ISet_Generic_Tests<T>
+    public abstract partial class HashSetBase_Test<T> : ISet_Generic_Tests<T>
     {
         #region ISet<T> Helper Methods
 

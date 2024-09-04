@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Tests;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.ObservableCollection
+namespace CiccioSoft.Collections.Tests.ObservableList
 {
     public partial class ObservableCollection_Serialization
     {

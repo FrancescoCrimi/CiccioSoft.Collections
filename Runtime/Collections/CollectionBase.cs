@@ -1,7 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-//using CiccioSoft.System;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,15 +53,9 @@ namespace CiccioSoft.Collections
 
         #region IEnumerable methods
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return items.GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)items).GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
 
         #endregion
 
@@ -158,15 +151,9 @@ namespace CiccioSoft.Collections
             InsertItem(index, item);
         }
 
-        public bool Contains(T item)
-        {
-            return items.Contains(item);
-        }
+        public bool Contains(T item) => items.Contains(item);
 
-        public void CopyTo(T[] array, int index)
-        {
-            items.CopyTo(array, index);
-        }
+        public void CopyTo(T[] array, int index) => items.CopyTo(array, index);
 
         public bool Remove(T item)
         {
@@ -345,10 +332,7 @@ namespace CiccioSoft.Collections
             }
         }
 
-        public int IndexOf(T item)
-        {
-            return items.IndexOf(item);
-        }
+        public int IndexOf(T item) => items.IndexOf(item);
 
         public void Insert(int index, T item)
         {
@@ -386,24 +370,24 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-        #region I/O Private Method 
+        #region Virtual Method 
 
-        private void ClearItems()
+        protected virtual void ClearItems()
         {
             items.Clear();
         }
 
-        private void InsertItem(int index, T item)
+        protected virtual void InsertItem(int index, T item)
         {
             items.Insert(index, item);
         }
 
-        private void RemoveItem(int index)
+        protected virtual void RemoveItem(int index)
         {
             items.RemoveAt(index);
         }
 
-        private void SetItem(int index, T item)
+        protected virtual void SetItem(int index, T item)
         {
             items[index] = item;
         }

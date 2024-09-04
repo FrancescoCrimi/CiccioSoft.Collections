@@ -4,7 +4,7 @@
 using System;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.ObservableCollection
+namespace CiccioSoft.Collections.Tests.ObservableList
 {
     public partial class ObservableCollectionTests
     {

@@ -2,8 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,15 +11,10 @@ using System.Runtime.Serialization;
 
 namespace CiccioSoft.Collections
 {
-    /// <summary>
-    /// Implementation of a dynamic data collection based on generic Collection&lt;T&gt;,
-    /// implementing INotifyCollectionChanged to notify listeners
-    /// when items get added, removed or the whole list is refreshed.
-    /// </summary>
-    [Serializable]
-    [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
+    [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ObservableCollection<T> : Collection<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    [Serializable]
+    public class ObservableList<T> : ListBase<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
 
@@ -28,41 +23,15 @@ namespace CiccioSoft.Collections
 
         #region Constructors
 
-        /// <summary>
-        /// Initializes a new instance of ObservableCollection that is empty and has default initial capacity.
-        /// </summary>
-        public ObservableCollection()
+        public ObservableList()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the ObservableCollection class that contains
-        /// elements copied from the specified collection and has sufficient capacity
-        /// to accommodate the number of elements copied.
-        /// </summary>
-        /// <param name="collection">The collection whose elements are copied to the new list.</param>
-        /// <remarks>
-        /// The elements are copied onto the ObservableCollection in the
-        /// same order they are read by the enumerator of the collection.
-        /// </remarks>
-        /// <exception cref="ArgumentNullException"> collection is a null reference </exception>
-        public ObservableCollection(IEnumerable<T> collection)
-            : base(new List<T>(collection ?? throw new ArgumentNullException(nameof(collection))))
+        public ObservableList(IEnumerable<T> collection) : base(collection)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the ObservableCollection class
-        /// that contains elements copied from the specified list
-        /// </summary>
-        /// <param name="list">The list whose elements are copied to the new list.</param>
-        /// <remarks>
-        /// The elements are copied onto the ObservableCollection in the
-        /// same order they are read by the enumerator of the list.
-        /// </remarks>
-        /// <exception cref="ArgumentNullException"> list is a null reference </exception>
-        public ObservableCollection(List<T> list)
-            : base(new List<T>(list ?? throw new ArgumentNullException(nameof(list))))
+        public ObservableList(int capacity) : base(capacity)
         {
         }
 
@@ -85,6 +54,20 @@ namespace CiccioSoft.Collections
         }
 
         /// <summary>
+        /// Called by base class Collection&lt;T&gt; when an item is added to list;
+        /// raises a CollectionChanged event to any listeners.
+        /// </summary>
+        protected override void InsertItem(int index, T item)
+        {
+            CheckReentrancy();
+            base.InsertItem(index, item);
+
+            OnCountPropertyChanged();
+            OnIndexerPropertyChanged();
+            OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
+        }
+
+        /// <summary>
         /// Called by base class Collection&lt;T&gt; when an item is removed from list;
         /// raises a CollectionChanged event to any listeners.
         /// </summary>
@@ -98,20 +81,6 @@ namespace CiccioSoft.Collections
             OnCountPropertyChanged();
             OnIndexerPropertyChanged();
             OnCollectionChanged(NotifyCollectionChangedAction.Remove, removedItem, index);
-        }
-
-        /// <summary>
-        /// Called by base class Collection&lt;T&gt; when an item is added to list;
-        /// raises a CollectionChanged event to any listeners.
-        /// </summary>
-        protected override void InsertItem(int index, T item)
-        {
-            CheckReentrancy();
-            base.InsertItem(index, item);
-
-            OnCountPropertyChanged();
-            OnIndexerPropertyChanged();
-            OnCollectionChanged(NotifyCollectionChangedAction.Add, item, index);
         }
 
         /// <summary>
@@ -279,9 +248,9 @@ namespace CiccioSoft.Collections
             internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
 
             [NonSerialized]
-            internal ObservableCollection<T> _collection;
+            internal ObservableList<T> _collection;
 
-            public SimpleMonitor(ObservableCollection<T> collection)
+            public SimpleMonitor(ObservableList<T> collection)
             {
                 Debug.Assert(collection != null);
                 _collection = collection;
