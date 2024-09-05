@@ -11,43 +11,38 @@ namespace CiccioSoft.Collections;
 [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
 [DebuggerDisplay("Count = {Count}")]
 [Serializable]
-public class HashSetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>
+public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>
 {
-    protected ISet<T> _set;
+    protected HashSet<T> _set;
 
     #region Constructors
 
-    public HashSetBase()
+    public SetBase()
         => _set = new HashSet<T>();
 
-    public HashSetBase(IEqualityComparer<T>? comparer)
+    public SetBase(IEqualityComparer<T>? comparer)
         => _set = new HashSet<T>(comparer);
 
-    public HashSetBase(int capacity)
+    public SetBase(int capacity)
         => _set = new HashSet<T>(capacity);
 
-    public HashSetBase(IEnumerable<T> collection)
+    public SetBase(IEnumerable<T> collection)
         => _set = new HashSet<T>(collection);
 
-    public HashSetBase(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+    public SetBase(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         => _set = new HashSet<T>(collection, comparer);
 
-    public HashSetBase(int capacity, IEqualityComparer<T>? comparer)
+    public SetBase(int capacity, IEqualityComparer<T>? comparer)
         => _set = new HashSet<T>(capacity, comparer);
-
-    public HashSetBase(ISet<T> set)
-        => _set = set;
 
     #endregion
 
 
-    #region ISet
+    #region Interface Implementation
 
-    public int Count
-        => _set.Count;
+    public int Count => _set.Count;
 
-    public bool IsReadOnly
-        => _set.IsReadOnly;
+    bool ICollection<T>.IsReadOnly => ((ICollection<T>)_set).IsReadOnly;
 
     public bool Add(T item)
         => AddItem(item);
@@ -130,4 +125,17 @@ public class HashSetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, I
         => _set.UnionWith(other);
 
     #endregion
+
+
+
+
+
+    /// <summary>Gets the <see cref="IEqualityComparer"/> object that is used to determine equality for the values in the set.</summary>
+    public IEqualityComparer<T> Comparer
+    {
+        get
+        {
+            return _set.Comparer;
+        }
+    }
 }

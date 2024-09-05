@@ -3,9 +3,9 @@
 
 using System;
 
-namespace CiccioSoft.Collections.Tests.HashSetBase
+namespace CiccioSoft.Collections.Tests.SetBase
 {
-    public class HashSetBase_Test_string : HashSetBase_Test<string>
+    public class SetBase_Test_string : SetBase_Test<string>
     {
         protected override string CreateT(int seed)
         {
@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Tests.HashSetBase
         }
     }
 
-    public class HashSetBase_Test_int : HashSetBase_Test<int>
+    public class SetBase_Test_int : SetBase_Test<int>
     {
         protected override int CreateT(int seed)
         {

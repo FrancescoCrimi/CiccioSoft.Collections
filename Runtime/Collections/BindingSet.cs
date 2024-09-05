@@ -10,7 +10,7 @@ namespace CiccioSoft.Collections
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
     [Serializable]
-    public class BindingSet<T> : HashSetBase<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T> /*, IBindingList, IRaiseItemChangedEvents*/
+    public class BindingSet<T> : SetBase<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T> /*, IBindingList, IRaiseItemChangedEvents*/
     {
         #region Constructors
 
@@ -27,10 +27,6 @@ namespace CiccioSoft.Collections
         }
 
         public BindingSet(IEnumerable<T> collection) : base(collection)
-        {
-        }
-
-        public BindingSet(ISet<T> set) : base(set)
         {
         }
 

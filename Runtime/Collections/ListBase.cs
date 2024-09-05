@@ -92,21 +92,12 @@ namespace CiccioSoft.Collections
 
         public void Add(T item)
         {
-            if (((ICollection<T>)items).IsReadOnly)
-            {
-                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            }
-
             int index = items.Count;
             InsertItem(index, item);
         }
 
         int IList.Add(object? value)
         {
-            if (((ICollection<T>)items).IsReadOnly)
-            {
-                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            }
             ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, ExceptionArgument.value);
 
             T? item = default;
@@ -127,11 +118,6 @@ namespace CiccioSoft.Collections
 
         public void Clear()
         {
-            if (((ICollection<T>)items).IsReadOnly)
-            {
-                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            }
-
             ClearItems();
         }
 
@@ -153,11 +139,6 @@ namespace CiccioSoft.Collections
 
         public void Insert(int index, T item)
         {
-            if (((ICollection<T>)items).IsReadOnly)
-            {
-                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            }
-
             if ((uint)index > (uint)items.Count)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException();
@@ -168,10 +149,6 @@ namespace CiccioSoft.Collections
 
         void IList.Insert(int index, object? value)
         {
-            if (((ICollection<T>)items).IsReadOnly)
-            {
-                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            }
             ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, ExceptionArgument.value);
 
             T? item = default;
@@ -190,11 +167,6 @@ namespace CiccioSoft.Collections
 
         public bool Remove(T item)
         {
-            if (((ICollection<T>)items).IsReadOnly)
-            {
-                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            }
-
             int index = items.IndexOf(item);
             if (index < 0) return false;
             RemoveItem(index);
@@ -203,11 +175,6 @@ namespace CiccioSoft.Collections
 
         void IList.Remove(object? value)
         {
-            if (((ICollection<T>)items).IsReadOnly)
-            {
-                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            }
-
             if (IsCompatibleObject(value))
             {
                 Remove((T)value!);
@@ -216,11 +183,6 @@ namespace CiccioSoft.Collections
 
         public void RemoveAt(int index)
         {
-            if (((ICollection<T>)items).IsReadOnly)
-            {
-                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            }
-
             if ((uint)index >= (uint)items.Count)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessException();

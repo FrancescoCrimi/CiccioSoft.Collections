@@ -10,7 +10,7 @@
 		<!-- Ignore all previous constants since SPCL is sensitive to what is defined and the Sdk adds some by default -->
 		<DefineConstants>CORECLR;NETCOREAPP</DefineConstants>
 		<AssemblyName>CiccioSoft.Collections</AssemblyName>
-		<RootNamespace>CiccioSoft</RootNamespace>
+		<RootNamespace>CiccioSoft.Collections</RootNamespace>
 	</PropertyGroup>
 
 
