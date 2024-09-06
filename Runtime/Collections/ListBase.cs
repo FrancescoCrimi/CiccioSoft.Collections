@@ -13,23 +13,23 @@ namespace CiccioSoft.Collections
     [Serializable]
     public class ListBase<T> : IList<T>, IList, IReadOnlyList<T>
     {
-        protected List<T> items;
+        protected List<T> _list;
 
         #region Constructors
 
         public ListBase()
         {
-            items = new List<T>();
+            _list = new List<T>();
         }
 
         public ListBase(IEnumerable<T> collection)
         {
-            items = new List<T>(collection);
+            _list = new List<T>(collection);
         }
 
         public ListBase(int capacity)
         {
-            items = new List<T>(capacity);
+            _list = new List<T>(capacity);
         }
 
         #endregion
@@ -39,15 +39,15 @@ namespace CiccioSoft.Collections
 
         public T this[int index]
         {
-            get => items[index];
+            get => _list[index];
             set
             {
-                if (((ICollection<T>)items).IsReadOnly)
+                if (((ICollection<T>)_list).IsReadOnly)
                 {
                     ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
                 }
 
-                if ((uint)index >= (uint)items.Count)
+                if ((uint)index >= (uint)_list.Count)
                 {
                     ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessException();
                 }
@@ -58,7 +58,7 @@ namespace CiccioSoft.Collections
 
         object? IList.this[int index]
         {
-            get => items[index];
+            get => _list[index];
             set
             {
                 ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, ExceptionArgument.value);
@@ -78,21 +78,21 @@ namespace CiccioSoft.Collections
             }
         }
 
-        T IReadOnlyList<T>.this[int index] => items[index];
+        T IReadOnlyList<T>.this[int index] => _list[index];
 
-        public int Count => items.Count;
+        public int Count => _list.Count;
 
-        public bool IsReadOnly => ((ICollection<T>)items).IsReadOnly;
+        public bool IsReadOnly => false;
 
-        bool IList.IsFixedSize => ((IList)items).IsFixedSize;
+        bool IList.IsFixedSize => ((IList)_list).IsFixedSize;
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => ((ICollection)items).SyncRoot;
+        object ICollection.SyncRoot => ((ICollection)_list).SyncRoot;
 
         public void Add(T item)
         {
-            int index = items.Count;
+            int index = _list.Count;
             InsertItem(index, item);
         }
 
@@ -121,25 +121,25 @@ namespace CiccioSoft.Collections
             ClearItems();
         }
 
-        public bool Contains(T item) => items.Contains(item);
+        public bool Contains(T item) => _list.Contains(item);
 
-        bool IList.Contains(object? value) => ((IList)items).Contains(value);
+        bool IList.Contains(object? value) => ((IList)_list).Contains(value);
 
-        public void CopyTo(T[] array, int arrayIndex)  => items.CopyTo(array, arrayIndex);
+        public void CopyTo(T[] array, int arrayIndex)  => _list.CopyTo(array, arrayIndex);
 
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)items).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_list).CopyTo(array, index);
 
-        public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
+        public IEnumerator<T> GetEnumerator() => _list.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_list).GetEnumerator();
 
-        public int IndexOf(T item) => items.IndexOf(item);
+        public int IndexOf(T item) => _list.IndexOf(item);
 
-        int IList.IndexOf(object? value) => ((IList)items).IndexOf(value);
+        int IList.IndexOf(object? value) => ((IList)_list).IndexOf(value);
 
         public void Insert(int index, T item)
         {
-            if ((uint)index > (uint)items.Count)
+            if ((uint)index > (uint)_list.Count)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException();
             }
@@ -167,7 +167,7 @@ namespace CiccioSoft.Collections
 
         public bool Remove(T item)
         {
-            int index = items.IndexOf(item);
+            int index = _list.IndexOf(item);
             if (index < 0) return false;
             RemoveItem(index);
             return true;
@@ -183,7 +183,7 @@ namespace CiccioSoft.Collections
 
         public void RemoveAt(int index)
         {
-            if ((uint)index >= (uint)items.Count)
+            if ((uint)index >= (uint)_list.Count)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessException();
             }
@@ -198,8 +198,8 @@ namespace CiccioSoft.Collections
 
         public int Capacity
         {
-            get => items.Capacity;
-            set => items.Capacity = value;
+            get => _list.Capacity;
+            set => _list.Capacity = value;
         }
 
         #endregion
@@ -209,22 +209,22 @@ namespace CiccioSoft.Collections
 
         protected virtual void ClearItems()
         {
-            items.Clear();
+            _list.Clear();
         }
 
         protected virtual void InsertItem(int index, T item)
         {
-            items.Insert(index, item);
+            _list.Insert(index, item);
         }
 
         protected virtual void RemoveItem(int index)
         {
-            items.RemoveAt(index);
+            _list.RemoveAt(index);
         }
 
         protected virtual void SetItem(int index, T item)
         {
-            items[index] = item;
+            _list[index] = item;
         }
 
         #endregion

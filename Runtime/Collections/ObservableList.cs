@@ -47,7 +47,9 @@ namespace CiccioSoft.Collections
         protected override void ClearItems()
         {
             CheckReentrancy();
+
             base.ClearItems();
+
             OnCountPropertyChanged();
             OnIndexerPropertyChanged();
             OnCollectionReset();
@@ -75,7 +77,6 @@ namespace CiccioSoft.Collections
         {
             CheckReentrancy();
             T removedItem = this[index];
-
             base.RemoveItem(index);
 
             OnCountPropertyChanged();

@@ -60,12 +60,11 @@ namespace CiccioSoft.Collections
                 return false;
             }
 
-            //OnCountPropertyChanging();
+            CheckReentrancy();
 
             _set.Add(item);
 
             OnCollectionChanged(NotifyCollectionChangedAction.Add, item);
-
             OnCountPropertyChanged();
 
             return true;
@@ -78,58 +77,48 @@ namespace CiccioSoft.Collections
                 return;
             }
 
-            //OnCountPropertyChanging();
-
+            CheckReentrancy();
             var removed = this.ToList();
 
             _set.Clear();
 
             OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
-
             OnCountPropertyChanged();
         }
 
         protected override void ExceptWithItems(IEnumerable<T> other)
         {
             var copy = new HashSet<T>(_set, _set.Comparer);
-
             copy.ExceptWith(other);
-
             if (copy.Count == _set.Count)
             {
                 return;
             }
-
             var removed = _set.Where(i => !copy.Contains(i)).ToList();
 
-            //OnCountPropertyChanging();
+            CheckReentrancy();
 
             _set = copy;
 
             OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
-
             OnCountPropertyChanged();
         }
 
         protected override void IntersectWithItems(IEnumerable<T> other)
         {
             var copy = new HashSet<T>(_set, _set.Comparer);
-
             copy.IntersectWith(other);
-
             if (copy.Count == _set.Count)
             {
                 return;
             }
-
             var removed = _set.Where(i => !copy.Contains(i)).ToList();
 
-            //OnCountPropertyChanging();
+            CheckReentrancy();
 
             _set = copy;
 
             OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
-
             OnCountPropertyChanged();
         }
 
@@ -140,12 +129,11 @@ namespace CiccioSoft.Collections
                 return false;
             }
 
-            //OnCountPropertyChanging();
+            CheckReentrancy();
 
             _set.Remove(item);
 
             OnCollectionChanged(NotifyCollectionChangedAction.Remove, item);
-
             OnCountPropertyChanged();
 
             return true;
@@ -154,9 +142,7 @@ namespace CiccioSoft.Collections
         protected override void SymmetricExceptWithItems(IEnumerable<T> other)
         {
             var copy = new HashSet<T>(_set, _set.Comparer);
-
             copy.SymmetricExceptWith(other);
-
             var removed = _set.Where(i => !copy.Contains(i)).ToList();
             var added = copy.Where(i => !_set.Contains(i)).ToList();
 
@@ -166,34 +152,29 @@ namespace CiccioSoft.Collections
                 return;
             }
 
-            //OnCountPropertyChanging();
+            CheckReentrancy();
 
             _set = copy;
 
             OnCollectionChanged(added, removed);
-
             OnCountPropertyChanged();
         }
 
         protected override void UnionWithItems(IEnumerable<T> other)
         {
             var copy = new HashSet<T>(_set, _set.Comparer);
-
             copy.UnionWith(other);
-
             if (copy.Count == _set.Count)
             {
                 return;
             }
-
             var added = copy.Where(i => !_set.Contains(i)).ToList();
 
-            //OnCountPropertyChanging();
+            CheckReentrancy();
 
             _set = copy;
 
             OnCollectionChanged(added, ObservableHashSetSingletons.NoItems);
-
             OnCountPropertyChanged();
         }
 
@@ -206,16 +187,16 @@ namespace CiccioSoft.Collections
         /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
         /// </summary>
         [field: NonSerialized]
-        private event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <summary>
-        /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
-        /// </summary>
-        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
-        {
-            add => PropertyChanged += value;
-            remove => PropertyChanged -= value;
-        }
+        ///// <summary>
+        ///// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
+        ///// </summary>
+        //event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
+        //{
+        //    add => PropertyChanged += value;
+        //    remove => PropertyChanged -= value;
+        //}
 
         /// <summary>
         /// Raises a PropertyChanged event (per <see cref="INotifyPropertyChanged" />).

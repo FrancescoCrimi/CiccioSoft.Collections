@@ -59,7 +59,7 @@ namespace CiccioSoft.Collections
                 raiseItemChangedEvents = true;
 
                 // Loop thru the items already in the collection and hook their change notification.
-                foreach (T item in items)
+                foreach (T item in _list)
                 {
                     HookPropertyChanged(item);
                 }
@@ -77,7 +77,7 @@ namespace CiccioSoft.Collections
 
             if (raiseItemChangedEvents)
             {
-                foreach (T item in items)
+                foreach (T item in _list)
                 {
                     UnhookPropertyChanged(item);
                 }

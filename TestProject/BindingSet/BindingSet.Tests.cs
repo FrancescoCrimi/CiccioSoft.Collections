@@ -6,14 +6,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.BindingCollection
+namespace CiccioSoft.Collections.Tests.BindingSet
 {
-    public class BindingCollection_Test
+    public class BindingSet_Test
     {
         [Fact]
         public void Ctor_Default()
         {
-            var list = new BindingCollection<string>();
+            var list = new BindingSet<string>();
             IBindingList iBindingList = list;
 
             Assert.True(list.AllowEdit);
@@ -35,7 +35,7 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
         public void Ctor_FixedSizeIList()
         {
             var array = new string[10];
-            var bindingList = new BindingCollection<string>(array);
+            var bindingList = new BindingSet<string>(array);
             IBindingList iBindingList = bindingList;
 
             Assert.True(bindingList.AllowEdit);
@@ -58,7 +58,7 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
         public void Ctor_NonFixedSizeIList()
         {
             var list = new List<string>();
-            var bindingList = new BindingCollection<string>(list);
+            var bindingList = new BindingSet<string>(list);
             IBindingList iBindingList = bindingList;
 
             Assert.True(bindingList.AllowEdit);
@@ -81,7 +81,7 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
         public void Ctor_IReadOnlyList()
         {
             var list = new List<string>();
-            var bindingList = new BindingCollection<string>(list);
+            var bindingList = new BindingSet<string>(list);
             IBindingList iBindingList = bindingList;
 
             Assert.True(bindingList.AllowEdit);
@@ -100,31 +100,31 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
             Assert.False(((IRaiseItemChangedEvents)bindingList).RaisesItemChangedEvents);
         }
 
-        [Fact]
-        public void RemoveAt_Invoke_CallsListChanged()
-        {
-            var list = new List<object> { new object() };
-            var bindingList = new BindingCollection<object>(list);
+        //[Fact]
+        //public void RemoveAt_Invoke_CallsListChanged()
+        //{
+        //    var list = new List<object> { new object() };
+        //    var bindingList = new BindingSet<object>(list);
 
-            bool calledListChanged = false;
-            bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
-            {
-                calledListChanged = true;
-                Assert.Equal(0, e.NewIndex);
-                Assert.Equal(ListChangedType.ItemDeleted, e.ListChangedType);
+        //    bool calledListChanged = false;
+        //    bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
+        //    {
+        //        calledListChanged = true;
+        //        Assert.Equal(0, e.NewIndex);
+        //        Assert.Equal(ListChangedType.ItemDeleted, e.ListChangedType);
 
-                // The event is raised after the removal.
-                Assert.Equal(0, bindingList.Count);
-            };
-            bindingList.RemoveAt(0);
+        //        // The event is raised after the removal.
+        //        Assert.Equal(0, bindingList.Count);
+        //    };
+        //    bindingList.RemoveAt(0);
 
-            Assert.True(calledListChanged);
-        }
+        //    Assert.True(calledListChanged);
+        //}
 
         [Fact]
         public void Clear_Invoke_Success()
         {
-            var bindingList = new BindingCollection<object> { new object(), new object() };
+            var bindingList = new BindingSet<object> { new object(), new object() };
 
             bool calledListChanged = false;
             bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
@@ -145,7 +145,7 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
             var item1 = new Item();
             var item2 = new Item();
             var list = new List<Item> { item1, item2, null };
-            var bindingList = new BindingCollection<Item>(list);
+            var bindingList = new BindingSet<Item>(list);
             Assert.Equal(1, item1.InvocationList.Length);
             Assert.Equal(1, item2.InvocationList.Length);
 
@@ -165,100 +165,100 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
             Assert.Null(item2.InvocationList);
         }
 
-        [Fact]
-        public void RemoveAt_INotifyPropertyChangedItems_RemovesPropertyChangedEventHandlers()
-        {
-            var item = new Item();
-            var bindingList = new BindingCollection<Item> { item };
-            Assert.Equal(1, item.InvocationList.Length);
+        //[Fact]
+        //public void RemoveAt_INotifyPropertyChangedItems_RemovesPropertyChangedEventHandlers()
+        //{
+        //    var item = new Item();
+        //    var bindingList = new BindingSet<Item> { item };
+        //    Assert.Equal(1, item.InvocationList.Length);
 
-            bool calledListChanged = false;
-            bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
-            {
-                calledListChanged = true;
-                Assert.Equal(ListChangedType.ItemDeleted, e.ListChangedType);
-                Assert.Equal(0, e.NewIndex);
-            };
+        //    bool calledListChanged = false;
+        //    bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
+        //    {
+        //        calledListChanged = true;
+        //        Assert.Equal(ListChangedType.ItemDeleted, e.ListChangedType);
+        //        Assert.Equal(0, e.NewIndex);
+        //    };
 
-            bindingList.RemoveAt(0);
-            Assert.True(calledListChanged);
-            Assert.Empty(bindingList);
-            Assert.Null(item.InvocationList);
-        }
+        //    bindingList.RemoveAt(0);
+        //    Assert.True(calledListChanged);
+        //    Assert.Empty(bindingList);
+        //    Assert.Null(item.InvocationList);
+        //}
 
-        [Fact]
-        public void ItemSet_Invoke_CallsListChanged()
-        {
-            var bindingList = new BindingCollection<int> { 1 };
+        //[Fact]
+        //public void ItemSet_Invoke_CallsListChanged()
+        //{
+        //    var bindingList = new BindingSet<int> { 1 };
 
-            bool calledListChanged = false;
-            bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
-            {
-                calledListChanged = true;
-                Assert.Equal(ListChangedType.ItemChanged, e.ListChangedType);
-                Assert.Equal(0, e.NewIndex);
-            };
+        //    bool calledListChanged = false;
+        //    bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
+        //    {
+        //        calledListChanged = true;
+        //        Assert.Equal(ListChangedType.ItemChanged, e.ListChangedType);
+        //        Assert.Equal(0, e.NewIndex);
+        //    };
 
-            bindingList[0] = 2;
-            Assert.True(calledListChanged);
-            Assert.Equal(2, bindingList[0]);
-        }
+        //    bindingList[0] = 2;
+        //    Assert.True(calledListChanged);
+        //    Assert.Equal(2, bindingList[0]);
+        //}
 
-        [Fact]
-        public void ItemSet_INotifyPropertyChangedItem_RemovesPropertyChangedEventHandlers()
-        {
-            var item1 = new Item();
-            var item2 = new Item();
-            var bindingList = new BindingCollection<Item> { item1 };
-            Assert.Equal(1, item1.InvocationList.Length);
+        //[Fact]
+        //public void ItemSet_INotifyPropertyChangedItem_RemovesPropertyChangedEventHandlers()
+        //{
+        //    var item1 = new Item();
+        //    var item2 = new Item();
+        //    var bindingList = new BindingSet<Item> { item1 };
+        //    Assert.Equal(1, item1.InvocationList.Length);
 
-            bool calledListChanged = false;
-            bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
-            {
-                calledListChanged = true;
-                Assert.Equal(ListChangedType.ItemChanged, e.ListChangedType);
-                Assert.Equal(0, e.NewIndex);
-            };
+        //    bool calledListChanged = false;
+        //    bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
+        //    {
+        //        calledListChanged = true;
+        //        Assert.Equal(ListChangedType.ItemChanged, e.ListChangedType);
+        //        Assert.Equal(0, e.NewIndex);
+        //    };
 
-            bindingList[0] = item2;
-            Assert.True(calledListChanged);
-            Assert.Equal(item2, bindingList[0]);
-            Assert.Null(item1.InvocationList);
-            Assert.Equal(1, item2.InvocationList.Length);
-        }
+        //    bindingList[0] = item2;
+        //    Assert.True(calledListChanged);
+        //    Assert.Equal(item2, bindingList[0]);
+        //    Assert.Null(item1.InvocationList);
+        //    Assert.Equal(1, item2.InvocationList.Length);
+        //}
 
         [Fact]
         public void SortProperty_Get_ReturnsNull()
         {
-            IBindingList bindingList = new BindingCollection<object>();
+            IBindingList bindingList = new BindingSet<object>();
             Assert.Null(bindingList.SortProperty);
         }
 
         [Fact]
         public void ApplySort_Invoke_ThrowsNotSupportedException()
         {
-            IBindingList bindingList = new BindingCollection<object>();
+            IBindingList bindingList = new BindingSet<object>();
             Assert.Throws<NotSupportedException>(() => bindingList.ApplySort(null, ListSortDirection.Descending));
         }
 
         [Fact]
         public void RemoveSort_Invoke_ThrowsNotSupportedException()
         {
-            IBindingList bindingList = new BindingCollection<object>();
+            IBindingList bindingList = new BindingSet<object>();
             Assert.Throws<NotSupportedException>(() => bindingList.RemoveSort());
         }
 
         [Fact]
         public void Find_Invoke_ThrowsNotSupportedException()
         {
-            IBindingList bindingList = new BindingCollection<object>();
+            IBindingList bindingList = new BindingSet<object>();
             Assert.Throws<NotSupportedException>(() => bindingList.Find(null, null));
         }
 
         [Fact]
         public void AddIndex_RemoveIndex_Nop()
         {
-            IBindingList bindingList = new BindingCollection<object>();
+            IBindingList bindingList = new BindingSet<object>();
             bindingList.AddIndex(null);
             bindingList.RemoveIndex(null);
         }
@@ -267,7 +267,7 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
         public void ItemPropertyChanged_RaiseListChangedEventsFalse_InvokesItemChanged()
         {
             var item = new Item();
-            var bindingList = new BindingCollection<Item> { item };
+            var bindingList = new BindingSet<Item> { item };
 
             bool calledListChanged = false;
             bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
@@ -295,7 +295,7 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
         public void ItemPropertyChanged_InvalidSender_InvokesReset(object invokeSender)
         {
             var item = new Item();
-            var bindingList = new BindingCollection<Item> { item };
+            var bindingList = new BindingSet<Item> { item };
 
             bool calledListChanged = false;
             bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
@@ -321,7 +321,7 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
         public void ItemPropertyChanged_InvalidEventArgs_InvokesReset(PropertyChangedEventArgs eventArgs)
         {
             var item = new Item();
-            var bindingList = new BindingCollection<Item> { item };
+            var bindingList = new BindingSet<Item> { item };
 
             bool calledListChanged = false;
             bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
@@ -340,7 +340,7 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
         {
             var item1 = new Item();
             var item2 = new Item();
-            var bindingList = new BindingCollection<Item> { item1 };
+            var bindingList = new BindingSet<Item> { item1 };
 
             bool calledListChanged = false;
             bindingList.ListChanged += (object sender, ListChangedEventArgs e) =>
@@ -385,20 +385,20 @@ namespace CiccioSoft.Collections.Tests.BindingCollection
             }
         }
 
-        [Fact]
-        public void Insert_Null_Success()
-        {
-            var list = new BindingCollection<Item>();
-            list.Insert(0, null);
+        //[Fact]
+        //public void Insert_Null_Success()
+        //{
+        //    var list = new BindingSet<Item>();
+        //    list.Insert(0, null);
 
-            Assert.Equal(1, list.Count);
-        }
+        //    Assert.Equal(1, list.Count);
+        //}
 
 
         [Fact]
         public void AddNew_Invoke_ThrowsNotSupportedException()
         {
-            var bindingList = new BindingCollection<object>();
+            var bindingList = new BindingSet<object>();
             Assert.Throws<NotSupportedException>(() =>
             {
                 bindingList.AddNew();

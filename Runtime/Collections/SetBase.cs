@@ -42,7 +42,7 @@ public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IRead
 
     public int Count => _set.Count;
 
-    bool ICollection<T>.IsReadOnly => ((ICollection<T>)_set).IsReadOnly;
+    bool ICollection<T>.IsReadOnly => false;
 
     public bool Add(T item)
         => AddItem(item);
