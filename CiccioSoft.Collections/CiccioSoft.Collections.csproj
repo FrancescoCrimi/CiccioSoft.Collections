@@ -1,12 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<DefineConstants>CORECLR;NETCOREAPP</DefineConstants>
+		<AssemblyName>CiccioSoft.Collections</AssemblyName>
+		<RootNamespace>CiccioSoft.Collections</RootNamespace>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>2.0.0</Version>
     <Authors>Francesco Crimi</Authors>
     <Company>CiccioSoft</Company>
-    <RootNamespace>CiccioSoft.Collections.Generic</RootNamespace>
     <NeutralLanguage />
     <Description>Generic IList and ISet implementations that implement INotifyCollectionChanged and IBindinList</Description>
     <PackageLicenseExpression />
@@ -23,6 +27,12 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

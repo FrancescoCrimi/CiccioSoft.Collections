@@ -1,19 +1,17 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace CiccioSoft.Collections.Generic.Test.ObservableList
+namespace CiccioSoft.Collections.Tests.ObservableList
 {
     /// <summary>
-    /// Tests the public properties and constructor in ObservableCollection<T>.
+    /// Tests the public properties and constructor in ObservableList<T>.
     /// </summary>
     public partial class ConstructorAndPropertyTests
     {
@@ -43,7 +41,7 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
         [MemberData(nameof(Collections))]
         public static void IEnumerableConstructorTest_MakesCopy(IEnumerable<string> collection)
         {
-            var oc = new ObservableCollectionSubclass<string>(collection);
+            var oc = new ObservableListSubclass<string>(collection);
             Assert.NotNull(oc.InnerList);
             Assert.NotSame(collection, oc.InnerList);
         }
@@ -52,7 +50,7 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
         {
             new object[] { new string[] { "one", "two", "three" } },
             new object[] { new List<string> { "one", "two", "three" } },
-            new object[] { new Collection<string> { "one", "two", "three" } },
+            new object[] { new System.Collections.ObjectModel.Collection<string> { "one", "two", "three" } },
             new object[] { Enumerable.Range(1, 3).Select(i => i.ToString()) },
             new object[] { CreateIteratorCollection() }
         };
@@ -121,6 +119,7 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
         }
 
         [Fact]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/57588", typeof(PlatformDetection), nameof(PlatformDetection.IsBuiltWithAggressiveTrimming), nameof(PlatformDetection.IsBrowser))]
         public static void DebuggerAttributeTests()
         {
             ObservableList<int> col = new ObservableList<int>(new[] {1, 2, 3, 4});
@@ -132,17 +131,18 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
         }
 
         [Fact]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/57588", typeof(PlatformDetection), nameof(PlatformDetection.IsBuiltWithAggressiveTrimming), nameof(PlatformDetection.IsBrowser))]
         public static void DebuggerAttribute_NullCollection_ThrowsArgumentNullException()
         {
             TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => DebuggerAttributes.ValidateDebuggerTypeProxyProperties(typeof(ObservableList<int>), null));
             ArgumentNullException argumentNullException = Assert.IsType<ArgumentNullException>(ex.InnerException);
         }
 
-        private partial class ObservableCollectionSubclass<T> : ObservableList<T>
+        private partial class ObservableListSubclass<T> : ObservableList<T>
         {
-            public ObservableCollectionSubclass(IEnumerable<T> collection) : base(collection) { }
+            public ObservableListSubclass(IEnumerable<T> collection) : base(collection) { }
 
-            public List<T> InnerList => (List<T>)base.Items;
+            public List<T> InnerList => (List<T>)base._list;
         }
 
         /// <summary>
@@ -166,14 +166,14 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
         public static void ListConstructorTest_MakesCopy()
         {
             List<string> collection = new List<string> { "one", "two", "three" };
-            var oc = new ObservableCollectionSubclass<string>(collection);
+            var oc = new ObservableListSubclass<string>(collection);
             Assert.NotNull(oc.InnerList);
             Assert.NotSame(collection, oc.InnerList);
         }
 
-        private partial class ObservableCollectionSubclass<T> : ObservableList<T>
+        private partial class ObservableListSubclass<T> : ObservableList<T>
         {
-            public ObservableCollectionSubclass(List<T> list) : base(list) { }
+            public ObservableListSubclass(List<T> list) : base(list) { }
         }
     }
 }

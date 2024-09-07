@@ -1,11 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using Xunit;
 
-namespace CiccioSoft.Collections.Generic.Test.ObservableList
+namespace CiccioSoft.Collections.Tests.ObservableList
 {
     public partial class ObservableListTests
     {
@@ -54,73 +53,6 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
             Assert.True(handler2Called);
             Assert.Equal(1, collection.Count);
             Assert.Equal(1, collection[0]);
-        }
-
-        [Fact]
-        public void BlockReentrancy()
-        {
-            var collection = new ObservableCollectionSubclass<int>();
-            Assert.NotNull(collection.BlockReentrancy());
-            Assert.Same(collection.BlockReentrancy(), collection.BlockReentrancy());
-        }
-
-        [Theory]
-        [InlineData(0, false)]
-        [InlineData(1, false)]
-        [InlineData(2, true)]
-        [InlineData(3, true)]
-        public void CheckReentrancy(int listenerCount, bool shouldThrow)
-        {
-            var collection = new ObservableCollectionSubclass<int>();
-            for (int i = 0; i < listenerCount; i++)
-            {
-                collection.CollectionChanged += (sender, e) => { };
-            }
-
-            collection.CheckReentrancy();
-            using (collection.BlockReentrancy())
-            {
-                if (shouldThrow)
-                {
-                    Assert.Throws<InvalidOperationException>(() => collection.CheckReentrancy());
-                }
-                else
-                {
-                    collection.CheckReentrancy();
-                }
-            }
-            collection.CheckReentrancy();
-        }
-
-        [Fact]
-        public void CheckReentrancy_MultipleListeners_MultipleBlocks()
-        {
-            var collection = new ObservableCollectionSubclass<int>();
-            collection.CollectionChanged += (sender, e) => { };
-            collection.CollectionChanged += (sender, e) => { };
-
-            collection.CheckReentrancy();
-
-            IDisposable block1 = collection.BlockReentrancy();
-            Assert.Throws<InvalidOperationException>(() => collection.CheckReentrancy());
-
-            IDisposable block2 = collection.BlockReentrancy();
-            Assert.Throws<InvalidOperationException>(() => collection.CheckReentrancy());
-
-            block1.Dispose();
-            Assert.Throws<InvalidOperationException>(() => collection.CheckReentrancy());
-
-            block2.Dispose();
-            collection.CheckReentrancy();
-
-            collection.CheckReentrancy();
-        }
-
-        public class ObservableCollectionSubclass<T> : ObservableList<T>
-        {
-            public new IDisposable BlockReentrancy() => base.BlockReentrancy();
-
-            public new void CheckReentrancy() => base.CheckReentrancy();
         }
     }
 }

@@ -1,13 +1,13 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Tests;
 using Xunit;
 
-namespace CiccioSoft.Collections.Generic.Test.ObservableList
+namespace CiccioSoft.Collections.Tests.ObservableList
 {
     public partial class ObservableList_Serialization
     {
@@ -18,7 +18,7 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
             yield return new object[] { new ObservableList<int>() { 1, 5, 3, 4, 2 } };
         }
 
-        [Theory]
+        [ConditionalTheory(typeof(PlatformDetection), nameof(PlatformDetection.IsBinaryFormatterSupported))]
         [MemberData(nameof(SerializeDeserialize_Roundtrips_MemberData))]
         public void SerializeDeserialize_Roundtrips(ObservableList<int> c)
         {
@@ -28,6 +28,7 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
         }
 
         [Fact]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/57588", typeof(PlatformDetection), nameof(PlatformDetection.IsBuiltWithAggressiveTrimming), nameof(PlatformDetection.IsBrowser))]
         public void OnDeserialized_MonitorNotInitialized_ExpectSuccess()
         {
             var observableCollection = new ObservableList<int>();

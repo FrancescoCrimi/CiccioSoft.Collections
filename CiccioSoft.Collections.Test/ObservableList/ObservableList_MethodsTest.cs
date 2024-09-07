@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
 
 using System;
 using System.Collections;
@@ -9,10 +8,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using Xunit;
 
-namespace CiccioSoft.Collections.Generic.Test.ObservableList
+namespace CiccioSoft.Collections.Tests.ObservableList
 {
     /// <summary>
-    /// Tests the public methods in ObservableCollection<T> as well as verifies
+    /// Tests the public methods in ObservableList<T> as well as verifies
     /// that the CollectionChanged events and eventargs are fired and populated
     /// properly.
     /// </summary>
@@ -154,92 +153,6 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
             }
         }
 
-        ///// <summary>
-        ///// Tests that items can be moved throughout a collection whether from 
-        ///// beginning to end, etc.
-        ///// </summary>
-        //[Fact]
-        //public static void MoveTest()
-        //{
-        //    Guid[] anArray = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-        //    ObservableList<Guid> col01 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-        //    ObservableList<Guid> col10 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-        //    ObservableList<Guid> col12 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-        //    ObservableList<Guid> col21 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-        //    ObservableList<Guid> col20 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-
-        //    col01.Move(0, 1);
-        //    Assert.Equal(anArray[0], col01[1]);
-
-        //    col10.Move(1, 0);
-        //    Assert.Equal(anArray[1], col10[0]);
-
-        //    col12.Move(1, 2);
-        //    Assert.Equal(anArray[1], col12[2]);
-
-        //    col21.Move(2, 1);
-        //    Assert.Equal(anArray[2], col21[1]);
-
-        //    col20.Move(2, 0);
-        //    Assert.Equal(anArray[2], col20[0]);
-
-        //    CollectionAndPropertyChangedTester helper = new CollectionAndPropertyChangedTester();
-        //    string[] anArrayString = new string[] { "one", "two", "three", "four" };
-        //    ObservableList<string> collection = new ObservableList<string>(anArrayString);
-        //    helper.MoveItemTest(collection, 0, 2);
-        //    helper.MoveItemTest(collection, 3, 0);
-        //    helper.MoveItemTest(collection, 1, 2);
-        //}
-
-        ///// <summary>
-        ///// Tests that:
-        ///// ArgumentOutOfRangeException is thrown when the source or destination 
-        ///// Index is >= collection.Count or Index < 0.
-        ///// </summary>
-        ///// <remarks>
-        ///// When the sourceIndex is valid, the item actually is removed from the list.
-        ///// </remarks>
-        //[Fact]
-        //public static void MoveTest_Negative()
-        //{
-        //    string[] anArray = new string[] { "one", "two", "three", "four" };
-        //    ObservableList<string> collection = null;
-
-        //    int validIndex = 2;
-        //    int[] iArrInvalidValues = new int[] { -1, -2, -100, -1000, -10000, -100000, -1000000, -10000000, -100000000, -1000000000, int.MinValue };
-        //    int[] iArrLargeValues = new int[] { anArray.Length, int.MaxValue, int.MaxValue / 2, int.MaxValue / 10 };
-
-        //    foreach (var index in iArrInvalidValues)
-        //    {
-        //        collection = new ObservableList<string>(anArray);
-        //        collection.CollectionChanged += (o, e) => { throw new ShouldNotBeInvokedException(); };
-
-        //        // invalid startIndex, valid destination index.
-        //        AssertExtensions.Throws<ArgumentOutOfRangeException>("index", () => collection.Move(index, validIndex));
-        //        Assert.Equal(anArray.Length, collection.Count);
-
-        //        // valid startIndex, invalid destIndex.
-        //        AssertExtensions.Throws<ArgumentOutOfRangeException>("index", () => collection.Move(validIndex, index));
-        //        //NOTE: It actually moves the item right out of the collection.So the count is one less.
-        //        //Assert.Equal(anArray.Length, collection.Count, "Collection should not have changed. index: " + index);
-        //    }
-
-        //    foreach (var index in iArrLargeValues)
-        //    {
-        //        collection = new ObservableList<string>(anArray);
-        //        collection.CollectionChanged += (o, e) => { throw new ShouldNotBeInvokedException(); };
-
-        //        // invalid startIndex, valid destination index.
-        //        AssertExtensions.Throws<ArgumentOutOfRangeException>("index", () => collection.Move(index, validIndex));
-        //        Assert.Equal(anArray.Length, collection.Count);
-
-        //        // valid startIndex, invalid destIndex.
-        //        AssertExtensions.Throws<ArgumentOutOfRangeException>("index", () => collection.Move(validIndex, index));
-        //        //NOTE: It actually moves the item right out of the collection. So the count is one less.
-        //        //Assert.Equal(anArray.Length, collection.Count, "Collection should not have changed.");
-        //    }
-        //}
-
         /// <summary>
         /// Tests that an item can be inserted throughout the collection.
         /// </summary>
@@ -331,7 +244,7 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
                 collectionString += item + ", ";
 
             for (int i = 0; i < collection.Count; ++i)
-                Assert.True(collection.Contains(anArray[i]), "ObservableCollection did not contain the item: " + anArray[i] + " Collection: " + collectionString);
+                Assert.True(collection.Contains(anArray[i]), "ObservableList did not contain the item: " + anArray[i] + " Collection: " + collectionString);
 
             string g = "six";
             Assert.False(collection.Contains(g), "Collection contained an item that should not have been there. guid: " + g + " Collection: " + collectionString);
@@ -486,7 +399,7 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
         #region Helper Methods
 
         /// <summary>
-        /// Will perform an Add or Insert on the given Collection depending on whether the 
+        /// Will perform an Add or Insert on the given Collection depending on whether the
         /// insertIndex is null or not. If it is null, will Add, otherwise, will Insert.
         /// </summary>
         public void AddOrInsertItemTest(ObservableList<string> collection, string itemToAdd, int? insertIndex = null)
@@ -566,40 +479,6 @@ namespace CiccioSoft.Collections.Generic.Test.ObservableList
             collection.CollectionChanged -= Collection_CollectionChanged;
             collectionPropertyChanged.PropertyChanged -= Collection_PropertyChanged;
         }
-
-        ///// <summary>
-        ///// Given a collection, will move an item from the oldIndex to the newIndex.
-        ///// </summary>
-        //public void MoveItemTest(ObservableList<string> collection, int oldIndex, int newIndex)
-        //{
-        //    INotifyPropertyChanged collectionPropertyChanged = collection;
-        //    collectionPropertyChanged.PropertyChanged += Collection_PropertyChanged;
-        //    _expectedPropertyChanged = new[] { new PropertyNameExpected(ITEMARRAY) };
-
-        //    collection.CollectionChanged += Collection_CollectionChanged;
-
-        //    string itemAtOldIndex = collection[oldIndex];
-
-        //    ExpectedCollectionChangedFired++;
-        //    ExpectedAction = NotifyCollectionChangedAction.Move;
-        //    ExpectedNewItems = new string[] { itemAtOldIndex };
-        //    ExpectedNewStartingIndex = newIndex;
-        //    ExpectedOldItems = new string[] { itemAtOldIndex };
-        //    ExpectedOldStartingIndex = oldIndex;
-
-        //    int expectedCount = collection.Count;
-
-        //    collection.Move(oldIndex, newIndex);
-        //    Assert.Equal(expectedCount, collection.Count);
-        //    Assert.Equal(itemAtOldIndex, collection[newIndex]);
-        //    Assert.Equal(ExpectedCollectionChangedFired, NumCollectionChangedFired);
-
-        //    foreach (var item in _expectedPropertyChanged)
-        //        Assert.True(item.IsFound, "The propertychanged event should have fired for" + item.Name + ", since we just moved an item");
-
-        //    collection.CollectionChanged -= Collection_CollectionChanged;
-        //    collectionPropertyChanged.PropertyChanged -= Collection_PropertyChanged;
-        //}
 
         /// <summary>
         /// Will set that new item at the specified index in the given collection.
