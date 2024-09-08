@@ -32,9 +32,13 @@ namespace CiccioSoft.Collections
         {
         }
 
+#if NET6_0_OR_GREATER
+
         public ObservableSet(int capacity) : base(capacity)
         {
         }
+
+#endif
 
         public ObservableSet(IEnumerable<T> collection) : base(collection)
         {
@@ -44,9 +48,13 @@ namespace CiccioSoft.Collections
         {
         }
 
+#if NET6_0_OR_GREATER
+
         public ObservableSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
         {
         }
+
+#endif
 
         #endregion
 

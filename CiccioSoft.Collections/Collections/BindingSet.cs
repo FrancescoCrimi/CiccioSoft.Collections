@@ -42,10 +42,14 @@ namespace CiccioSoft.Collections
             Initialize();
         }
 
+#if NET6_0_OR_GREATER
+
         public BindingSet(int capacity) : base(capacity)
         {
             Initialize();
         }
+
+#endif
 
         public BindingSet(IEnumerable<T> collection) : base(collection)
         {
@@ -57,10 +61,14 @@ namespace CiccioSoft.Collections
             Initialize();
         }
 
+#if NET6_0_OR_GREATER
+
         public BindingSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
         {
             Initialize();
         }
+
+#endif
 
         private void Initialize()
         {
@@ -78,7 +86,7 @@ namespace CiccioSoft.Collections
             }
         }
 
-        #endregion
+#endregion
 
 
         #region Overrides Method

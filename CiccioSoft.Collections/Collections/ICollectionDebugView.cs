@@ -13,9 +13,9 @@ namespace CiccioSoft.Collections
 
         public ICollectionDebugView(ICollection<T> collection)
         {
-            ArgumentNullException.ThrowIfNull(collection);
+            //ArgumentNullException.ThrowIfNull(collection);
 
-            _collection = collection;
+            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]

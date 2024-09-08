@@ -23,8 +23,12 @@ public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IRead
     public SetBase(IEqualityComparer<T>? comparer)
         => _set = new HashSet<T>(comparer);
 
+#if NET6_0_OR_GREATER
+
     public SetBase(int capacity)
         => _set = new HashSet<T>(capacity);
+
+#endif
 
     public SetBase(IEnumerable<T> collection)
         => _set = new HashSet<T>(collection);
@@ -32,8 +36,12 @@ public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IRead
     public SetBase(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         => _set = new HashSet<T>(collection, comparer);
 
+#if NET6_0_OR_GREATER
+
     public SetBase(int capacity, IEqualityComparer<T>? comparer)
         => _set = new HashSet<T>(capacity, comparer);
+
+#endif
 
     #endregion
 

@@ -35,215 +35,208 @@
 //
 
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Numerics;
 using System.Reflection;
-using System.Runtime;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics;
 using System.Runtime.Serialization;
 
 namespace CiccioSoft
 {
-    [StackTraceHidden]
     internal static class ThrowHelper
     {
-        [DoesNotReturn]
+
         internal static void ThrowAccessViolationException()
         {
             throw new AccessViolationException();
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArrayTypeMismatchException()
         {
             throw new ArrayTypeMismatchException();
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidTypeWithPointersNotSupported(Type targetType)
         {
             throw new ArgumentException(SR.Format(SR.Argument_InvalidTypeWithPointersNotSupported, targetType));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowIndexOutOfRangeException()
         {
             throw new IndexOutOfRangeException();
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRangeException()
         {
             throw new ArgumentOutOfRangeException();
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_DestinationTooShort()
         {
             throw new ArgumentException(SR.Argument_DestinationTooShort, "destination");
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_OverlapAlignmentMismatch()
         {
             throw new ArgumentException(SR.Argument_OverlapAlignmentMismatch);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_ArgumentNull_TypedRefType()
         {
             throw new ArgumentNullException("value", SR.ArgumentNull_TypedRefType);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_CannotExtractScalar(ExceptionArgument argument)
         {
             throw GetArgumentException(ExceptionResource.Argument_CannotExtractScalar, argument);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_TupleIncorrectType(object obj)
         {
             throw new ArgumentException(SR.Format(SR.ArgumentException_ValueTupleIncorrectType, obj.GetType()), "other");
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_IndexMustBeLessException()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.index,
                                                     ExceptionResource.ArgumentOutOfRange_IndexMustBeLess);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.index,
                                                     ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_BadComparer(object? comparer)
         {
             throw new ArgumentException(SR.Format(SR.Arg_BogusIComparer, comparer));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowIndexArgumentOutOfRange_NeedNonNegNumException()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.index,
                                                     ExceptionResource.ArgumentOutOfRange_NeedNonNegNum);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowValueArgumentOutOfRange_NeedNonNegNumException()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.value,
                                                     ExceptionResource.ArgumentOutOfRange_NeedNonNegNum);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowLengthArgumentOutOfRange_ArgumentOutOfRange_NeedNonNegNum()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.length,
                                                     ExceptionResource.ArgumentOutOfRange_NeedNonNegNum);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowStartIndexArgumentOutOfRange_ArgumentOutOfRange_IndexMustBeLessOrEqual()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.startIndex,
                                                     ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowStartIndexArgumentOutOfRange_ArgumentOutOfRange_IndexMustBeLess()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.startIndex,
                                                     ExceptionResource.ArgumentOutOfRange_IndexMustBeLess);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowCountArgumentOutOfRange_ArgumentOutOfRange_Count()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.count,
                                                     ExceptionResource.ArgumentOutOfRange_Count);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_Year()
         {
             throw GetArgumentOutOfRangeException(ExceptionArgument.year,
                                                     ExceptionResource.ArgumentOutOfRange_Year);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_Month(int month)
         {
             throw new ArgumentOutOfRangeException(nameof(month), month, SR.ArgumentOutOfRange_Month);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_DayNumber(int dayNumber)
         {
             throw new ArgumentOutOfRangeException(nameof(dayNumber), dayNumber, SR.ArgumentOutOfRange_DayNumber);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_BadYearMonthDay()
         {
             throw new ArgumentOutOfRangeException(null, SR.ArgumentOutOfRange_BadYearMonthDay);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_BadHourMinuteSecond()
         {
             throw new ArgumentOutOfRangeException(null, SR.ArgumentOutOfRange_BadHourMinuteSecond);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_TimeSpanTooLong()
         {
             throw new ArgumentOutOfRangeException(null, SR.Overflow_TimeSpanTooLong);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRange_Range<T>(string parameterName, T value, T minInclusive, T maxInclusive)
         {
             throw new ArgumentOutOfRangeException(parameterName, value, SR.Format(SR.ArgumentOutOfRange_Range, minInclusive, maxInclusive));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowOverflowException()
         {
             throw new OverflowException();
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowOverflowException_TimeSpanTooLong()
         {
             throw new OverflowException(SR.Overflow_TimeSpanTooLong);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_Arg_CannotBeNaN()
         {
             throw new ArgumentException(SR.Arg_CannotBeNaN);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowWrongKeyTypeArgumentException<T>(T key, Type targetType)
         {
             // Generic key to move the boxing to the right hand side of throw
             throw GetWrongKeyTypeArgumentException((object?)key, targetType);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowWrongValueTypeArgumentException<T>(T value, Type targetType)
         {
             // Generic key to move the boxing to the right hand side of throw
@@ -255,81 +248,81 @@ namespace CiccioSoft
             return new ArgumentException(SR.Format(SR.Argument_AddingDuplicateWithKey, key));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowAddingDuplicateWithKeyArgumentException<T>(T key)
         {
             // Generic key to move the boxing to the right hand side of throw
             throw GetAddingDuplicateWithKeyArgumentException((object?)key);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowKeyNotFoundException<T>(T key)
         {
             // Generic key to move the boxing to the right hand side of throw
             throw GetKeyNotFoundException((object?)key);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException(ExceptionResource resource)
         {
             throw GetArgumentException(resource);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException(ExceptionResource resource, ExceptionArgument argument)
         {
             throw GetArgumentException(resource, argument);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_HandleNotSync(string paramName)
         {
             throw new ArgumentException(SR.Arg_HandleNotSync, paramName);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_HandleNotAsync(string paramName)
         {
             throw new ArgumentException(SR.Arg_HandleNotAsync, paramName);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentNullException(ExceptionArgument argument)
         {
             throw new ArgumentNullException(GetArgumentName(argument));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentNullException(ExceptionResource resource)
         {
             throw new ArgumentNullException(GetResourceString(resource));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentNullException(ExceptionArgument argument, ExceptionResource resource)
         {
             throw new ArgumentNullException(GetArgumentName(argument), GetResourceString(resource));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument)
         {
             throw new ArgumentOutOfRangeException(GetArgumentName(argument));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
         {
             throw GetArgumentOutOfRangeException(argument, resource);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRangeException(ExceptionArgument argument, int paramNumber, ExceptionResource resource)
         {
             throw GetArgumentOutOfRangeException(argument, paramNumber, resource);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowEndOfFileException()
         {
             throw CreateEndOfFileException();
@@ -338,277 +331,277 @@ namespace CiccioSoft
         internal static Exception CreateEndOfFileException() =>
             new EndOfStreamException(SR.IO_EOF_ReadBeyondEOF);
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException()
         {
             throw new InvalidOperationException();
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException(ExceptionResource resource)
         {
             throw GetInvalidOperationException(resource);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException(ExceptionResource resource, Exception e)
         {
             throw new InvalidOperationException(GetResourceString(resource), e);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowNullReferenceException()
         {
             throw new NullReferenceException(SR.Arg_NullArgumentNullRef);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowSerializationException(ExceptionResource resource)
         {
             throw new SerializationException(GetResourceString(resource));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowRankException(ExceptionResource resource)
         {
             throw new RankException(GetResourceString(resource));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowNotSupportedException(ExceptionResource resource)
         {
             throw new NotSupportedException(GetResourceString(resource));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowNotSupportedException_UnseekableStream()
         {
             throw new NotSupportedException(SR.NotSupported_UnseekableStream);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowNotSupportedException_UnreadableStream()
         {
             throw new NotSupportedException(SR.NotSupported_UnreadableStream);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowNotSupportedException_UnwritableStream()
         {
             throw new NotSupportedException(SR.NotSupported_UnwritableStream);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowObjectDisposedException(object? instance)
         {
             throw new ObjectDisposedException(instance?.GetType().FullName);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowObjectDisposedException(Type? type)
         {
             throw new ObjectDisposedException(type?.FullName);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowObjectDisposedException_StreamClosed(string? objectName)
         {
             throw new ObjectDisposedException(objectName, SR.ObjectDisposed_StreamClosed);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowObjectDisposedException_FileClosed()
         {
             throw new ObjectDisposedException(null, SR.ObjectDisposed_FileClosed);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowObjectDisposedException(ExceptionResource resource)
         {
             throw new ObjectDisposedException(null, GetResourceString(resource));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowNotSupportedException()
         {
             throw new NotSupportedException();
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowAggregateException(List<Exception> exceptions)
         {
             throw new AggregateException(exceptions);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowOutOfMemoryException()
         {
             throw new OutOfMemoryException();
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowOutOfMemoryException_StringTooLong()
         {
             throw new OutOfMemoryException(SR.OutOfMemory_StringTooLong);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_Argument_IncompatibleArrayType()
         {
             throw new ArgumentException(SR.Argument_IncompatibleArrayType);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentException_InvalidHandle(string? paramName)
         {
             throw new ArgumentException(SR.Arg_InvalidHandle, paramName);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowUnexpectedStateForKnownCallback(object? state)
         {
             throw new ArgumentOutOfRangeException(nameof(state), state, SR.Argument_UnexpectedStateForKnownCallback);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_InvalidOperation_EnumNotStarted()
         {
             throw new InvalidOperationException(SR.InvalidOperation_EnumNotStarted);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_InvalidOperation_EnumEnded()
         {
             throw new InvalidOperationException(SR.InvalidOperation_EnumEnded);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_EnumCurrent(int index)
         {
             throw GetInvalidOperationException_EnumCurrent(index);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_InvalidOperation_EnumFailedVersion()
         {
             throw new InvalidOperationException(SR.InvalidOperation_EnumFailedVersion);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_InvalidOperation_EnumOpCantHappen()
         {
             throw new InvalidOperationException(SR.InvalidOperation_EnumOpCantHappen);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_InvalidOperation_NoValue()
         {
             throw new InvalidOperationException(SR.InvalidOperation_NoValue);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_ConcurrentOperationsNotSupported()
         {
             throw new InvalidOperationException(SR.InvalidOperation_ConcurrentOperationsNotSupported);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_HandleIsNotInitialized()
         {
             throw new InvalidOperationException(SR.InvalidOperation_HandleIsNotInitialized);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_HandleIsNotPinned()
         {
             throw new InvalidOperationException(SR.InvalidOperation_HandleIsNotPinned);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArraySegmentCtorValidationFailedExceptions(Array? array, int offset, int count)
         {
             throw GetArraySegmentCtorValidationFailedException(array, offset, count);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowInvalidOperationException_InvalidUtf8()
         {
             throw new InvalidOperationException(SR.InvalidOperation_InvalidUtf8);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowFormatException_BadFormatSpecifier()
         {
             throw new FormatException(SR.Argument_BadFormatSpecifier);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowFormatException_NeedSingleChar()
         {
             throw new FormatException(SR.Format_NeedSingleChar);
         }
 
-        [DoesNotReturn]
-        internal static void ThrowFormatException_BadBoolean(ReadOnlySpan<char> value)
-        {
-            throw new FormatException(SR.Format(SR.Format_BadBoolean, new string(value)));
-        }
 
-        [DoesNotReturn]
-        internal static void ThrowArgumentOutOfRangeException_PrecisionTooLarge()
-        {
-            throw new ArgumentOutOfRangeException("precision", SR.Format(SR.Argument_PrecisionTooLarge, StandardFormat.MaxPrecision));
-        }
+        //internal static void ThrowFormatException_BadBoolean(ReadOnlySpan<char> value)
+        //{
+        //    throw new FormatException(SR.Format(SR.Format_BadBoolean, new string(value)));
+        //}
 
-        [DoesNotReturn]
+
+        //internal static void ThrowArgumentOutOfRangeException_PrecisionTooLarge()
+        //{
+        //    throw new ArgumentOutOfRangeException("precision", SR.Format(SR.Argument_PrecisionTooLarge, StandardFormat.MaxPrecision));
+        //}
+
+
         internal static void ThrowArgumentOutOfRangeException_SymbolDoesNotFit()
         {
             throw new ArgumentOutOfRangeException("symbol", SR.Argument_BadFormatSpecifier);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowArgumentOutOfRangeException_NeedNonNegNum(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, SR.ArgumentOutOfRange_NeedNonNegNum);
         }
 
-        [DoesNotReturn]
+
         internal static void ArgumentOutOfRangeException_Enum_Value()
         {
             throw new ArgumentOutOfRangeException("value", SR.ArgumentOutOfRange_Enum);
         }
 
-        [DoesNotReturn]
-        internal static void ThrowApplicationException(int hr)
-        {
-            // Get a message for this HR
-            Exception? ex = Marshal.GetExceptionForHR(hr);
-            if (ex != null && !string.IsNullOrEmpty(ex.Message))
-            {
-                ex = new ApplicationException(ex.Message);
-            }
-            else
-            {
-                ex = new ApplicationException();
-            }
 
-            ex.HResult = hr;
-            throw ex;
-        }
+        //internal static void ThrowApplicationException(int hr)
+        //{
+        //    // Get a message for this HR
+        //    Exception? ex = Marshal.GetExceptionForHR(hr);
+        //    if (ex != null && !string.IsNullOrEmpty(ex.Message))
+        //    {
+        //        ex = new ApplicationException(ex.Message);
+        //    }
+        //    else
+        //    {
+        //        ex = new ApplicationException();
+        //    }
 
-        [DoesNotReturn]
+        //    ex.HResult = hr;
+        //    throw ex;
+        //}
+
+
         internal static void ThrowFormatInvalidString()
         {
             throw new FormatException(SR.Format_InvalidString);
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowFormatInvalidString(int offset, ExceptionResource resource)
         {
             throw new FormatException(SR.Format(SR.Format_InvalidStringWithOffsetAndReason, offset, GetResourceString(resource)));
         }
 
-        [DoesNotReturn]
+
         internal static void ThrowFormatIndexOutOfRange()
         {
             throw new FormatException(SR.Format_IndexOutOfRange);
@@ -702,65 +695,65 @@ namespace CiccioSoft
                 ThrowArgumentNullException(argName);
         }
 
-        // Throws if 'T' is disallowed in Vector<T> in the Numerics namespace.
-        // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-        // is supported and we're on an optimized release build.
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void ThrowForUnsupportedNumericsVectorBaseType<T>()
-        {
-            if (!Vector<T>.IsSupported)
-            {
-                ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-            }
-        }
+        //// Throws if 'T' is disallowed in Vector<T> in the Numerics namespace.
+        //// If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
+        //// is supported and we're on an optimized release build.
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //internal static void ThrowForUnsupportedNumericsVectorBaseType<T>()
+        //{
+        //    if (!Vector<T>.IsSupported)
+        //    {
+        //        ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
+        //    }
+        //}
 
-        // Throws if 'T' is disallowed in Vector64<T> in the Intrinsics namespace.
-        // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-        // is supported and we're on an optimized release build.
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void ThrowForUnsupportedIntrinsicsVector64BaseType<T>()
-        {
-            if (!Vector64<T>.IsSupported)
-            {
-                ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-            }
-        }
+        //// Throws if 'T' is disallowed in Vector64<T> in the Intrinsics namespace.
+        //// If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
+        //// is supported and we're on an optimized release build.
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //internal static void ThrowForUnsupportedIntrinsicsVector64BaseType<T>()
+        //{
+        //    if (!Vector64<T>.IsSupported)
+        //    {
+        //        ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
+        //    }
+        //}
 
-        // Throws if 'T' is disallowed in Vector128<T> in the Intrinsics namespace.
-        // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-        // is supported and we're on an optimized release build.
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void ThrowForUnsupportedIntrinsicsVector128BaseType<T>()
-        {
-            if (!Vector128<T>.IsSupported)
-            {
-                ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-            }
-        }
+        //// Throws if 'T' is disallowed in Vector128<T> in the Intrinsics namespace.
+        //// If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
+        //// is supported and we're on an optimized release build.
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //internal static void ThrowForUnsupportedIntrinsicsVector128BaseType<T>()
+        //{
+        //    if (!Vector128<T>.IsSupported)
+        //    {
+        //        ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
+        //    }
+        //}
 
-        // Throws if 'T' is disallowed in Vector256<T> in the Intrinsics namespace.
-        // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-        // is supported and we're on an optimized release build.
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void ThrowForUnsupportedIntrinsicsVector256BaseType<T>()
-        {
-            if (!Vector256<T>.IsSupported)
-            {
-                ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-            }
-        }
+        //// Throws if 'T' is disallowed in Vector256<T> in the Intrinsics namespace.
+        //// If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
+        //// is supported and we're on an optimized release build.
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //internal static void ThrowForUnsupportedIntrinsicsVector256BaseType<T>()
+        //{
+        //    if (!Vector256<T>.IsSupported)
+        //    {
+        //        ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
+        //    }
+        //}
 
-        // Throws if 'T' is disallowed in Vector512<T> in the Intrinsics namespace.
-        // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-        // is supported and we're on an optimized release build.
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void ThrowForUnsupportedIntrinsicsVector512BaseType<T>()
-        {
-            if (!Vector512<T>.IsSupported)
-            {
-                ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-            }
-        }
+        //// Throws if 'T' is disallowed in Vector512<T> in the Intrinsics namespace.
+        //// If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
+        //// is supported and we're on an optimized release build.
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //internal static void ThrowForUnsupportedIntrinsicsVector512BaseType<T>()
+        //{
+        //    if (!Vector512<T>.IsSupported)
+        //    {
+        //        ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
+        //    }
+        //}
 
 #if false // Reflection-based implementation does not work for NativeAOT
         // This function will convert an ExceptionArgument enum value to the argument name string.
