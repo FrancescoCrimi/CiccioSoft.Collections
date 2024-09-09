@@ -21,6 +21,7 @@
     <PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;; WinForms; WPF; UWP;</PackageTags>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
@@ -50,8 +51,12 @@
   <ItemGroup>
     <None Include="..\LICENSE.TXT">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>\</PackagePath>
     </None>
+		<None Include="..\README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>		
   </ItemGroup>
 
   <ItemGroup>

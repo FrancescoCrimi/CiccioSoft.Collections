@@ -145,7 +145,7 @@ namespace CiccioSoft.Collections
 
             FireListChanged(ListChangedType.Reset, -1);
 
-            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
+            OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
         }
 
@@ -173,7 +173,7 @@ namespace CiccioSoft.Collections
 
             FireListChanged(ListChangedType.Reset, -1);
 
-            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
+            OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
         }
 
@@ -201,7 +201,7 @@ namespace CiccioSoft.Collections
 
             FireListChanged(ListChangedType.Reset, -1);
 
-            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
+            OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
         }
 
@@ -288,7 +288,7 @@ namespace CiccioSoft.Collections
 
             FireListChanged(ListChangedType.Reset, -1);
 
-            OnCollectionChanged(added, ObservableHashSetSingletons.NoItems);
+            OnCollectionChanged(added, EventArgsCache.NoItems);
             OnCountPropertyChanged();
         }
 

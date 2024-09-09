@@ -90,7 +90,7 @@ namespace CiccioSoft.Collections
 
             _set.Clear();
 
-            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
+            OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
         }
 
@@ -108,7 +108,7 @@ namespace CiccioSoft.Collections
 
             _set = copy;
 
-            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
+            OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
         }
 
@@ -126,7 +126,7 @@ namespace CiccioSoft.Collections
 
             _set = copy;
 
-            OnCollectionChanged(ObservableHashSetSingletons.NoItems, removed);
+            OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
         }
 
@@ -182,7 +182,7 @@ namespace CiccioSoft.Collections
 
             _set = copy;
 
-            OnCollectionChanged(added, ObservableHashSetSingletons.NoItems);
+            OnCollectionChanged(added, EventArgsCache.NoItems);
             OnCountPropertyChanged();
         }
 

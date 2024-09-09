@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+		<RootNamespace>CiccioSoft.Collections</RootNamespace>
+		<AssemblyName>CiccioSoft.Collections</AssemblyName>
+		<!-- Ignore all previous constants since SPCL is sensitive to what is defined and the Sdk adds some by default -->
+		<DefineConstants>CORECLR;NETCOREAPP</DefineConstants>
+	</PropertyGroup>
+	
+	<ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.DotNet.XUnitAssert" Version="8.0.0-beta.24413.2" />
+    <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="8.0.0-beta.24360.5" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
