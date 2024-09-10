@@ -8,7 +8,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.ObservableList
+namespace CiccioSoft.Collections.Tests.ObservableCollection
 {
     /// <summary>
     /// Tests the public methods in ObservableList<T> as well as verifies
@@ -24,7 +24,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void AddTest()
         {
             string[] anArray = { "one", "two", "three" };
-            ObservableList<string> col = new ObservableList<string>(anArray);
+            ObservableCollection<string> col = new ObservableCollection<string>(anArray);
             CollectionAndPropertyChangedTester helper = new CollectionAndPropertyChangedTester();
             helper.AddOrInsertItemTest(col, "four");
         }
@@ -40,25 +40,25 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         {
             // trying to remove item in collection.
             string[] anArray = { "one", "two", "three", "four" };
-            ObservableList<string> col = new ObservableList<string>(anArray);
+            ObservableCollection<string> col = new ObservableCollection<string>(anArray);
             CollectionAndPropertyChangedTester helper = new CollectionAndPropertyChangedTester();
             helper.RemoveItemTest(col, 2, "three", true, hasDuplicates: false);
 
             // trying to remove item not in collection.
             anArray = new string[] { "one", "two", "three", "four" };
-            col = new ObservableList<string>(anArray);
+            col = new ObservableCollection<string>(anArray);
             helper = new CollectionAndPropertyChangedTester();
             helper.RemoveItemTest(col, -1, "three2", false, hasDuplicates: false);
 
             // removing null
             anArray = new string[] { "one", "two", "three", "four" };
-            col = new ObservableList<string>(anArray);
+            col = new ObservableCollection<string>(anArray);
             helper = new CollectionAndPropertyChangedTester();
             helper.RemoveItemTest(col, -1, null, false, hasDuplicates: false);
 
             // trying to remove item in collection that has duplicates.
             anArray = new string[] { "one", "three", "two", "three", "four" };
-            col = new ObservableList<string>(anArray);
+            col = new ObservableCollection<string>(anArray);
             helper = new CollectionAndPropertyChangedTester();
             helper.RemoveItemTest(col, 1, "three", true, hasDuplicates: true);
             // want to ensure that there is one "three" left in collection and not both were removed.
@@ -78,7 +78,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void ClearTest()
         {
             string[] anArray = { "one", "two", "three", "four" };
-            ObservableList<string> col = new ObservableList<string>(anArray);
+            ObservableCollection<string> col = new ObservableCollection<string>(anArray);
 
             col.Clear();
             Assert.Equal(0, col.Count);
@@ -88,7 +88,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
 
             //tests that the collectionChanged events are fired.
             CollectionAndPropertyChangedTester helper = new CollectionAndPropertyChangedTester();
-            col = new ObservableList<string>(anArray);
+            col = new ObservableCollection<string>(anArray);
             helper.ClearTest(col);
         }
 
@@ -99,9 +99,9 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void RemoveAtTest()
         {
             Guid[] anArray = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-            ObservableList<Guid> col0 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-            ObservableList<Guid> col1 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-            ObservableList<Guid> col2 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
+            ObservableCollection<Guid> col0 = new ObservableCollection<Guid>((IEnumerable<Guid>)anArray);
+            ObservableCollection<Guid> col1 = new ObservableCollection<Guid>((IEnumerable<Guid>)anArray);
+            ObservableCollection<Guid> col2 = new ObservableCollection<Guid>((IEnumerable<Guid>)anArray);
 
             col0.RemoveAt(0);
             string collectionString = "";
@@ -122,7 +122,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
             Assert.False(col2.Contains(anArray[2]), "Collection2 should no longer contain the item: " + anArray[2] + " Collection: " + collectionString);
 
             string[] anArrayString = { "one", "two", "three", "four" };
-            ObservableList<string> col = new ObservableList<string>(anArrayString);
+            ObservableCollection<string> col = new ObservableCollection<string>(anArrayString);
             CollectionAndPropertyChangedTester helper = new CollectionAndPropertyChangedTester();
             helper.RemoveItemAtTest(col, 1);
         }
@@ -136,7 +136,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void RemoveAtTest_Negative()
         {
             Guid[] anArray = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-            ObservableList<Guid> collection = new ObservableList<Guid>(anArray);
+            ObservableCollection<Guid> collection = new ObservableCollection<Guid>(anArray);
             collection.CollectionChanged += (o, e) => { throw new ShouldNotBeInvokedException(); };
             int[] iArrInvalidValues = new int[] { -1, -2, -100, -1000, -10000, -100000, -1000000, -10000000, -100000000, -1000000000, int.MinValue };
             foreach (var index in iArrInvalidValues)
@@ -160,9 +160,9 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void InsertTest()
         {
             Guid[] anArray = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-            ObservableList<Guid> col0 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-            ObservableList<Guid> col1 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
-            ObservableList<Guid> col3 = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
+            ObservableCollection<Guid> col0 = new ObservableCollection<Guid>((IEnumerable<Guid>)anArray);
+            ObservableCollection<Guid> col1 = new ObservableCollection<Guid>((IEnumerable<Guid>)anArray);
+            ObservableCollection<Guid> col3 = new ObservableCollection<Guid>((IEnumerable<Guid>)anArray);
 
             //inserting item at the beginning.
             Guid g0 = Guid.NewGuid();
@@ -180,7 +180,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
             Assert.Equal(g3, col3[col3.Count - 1]);
 
             string[] anArrayString = new string[] { "one", "two", "three", "four" };
-            ObservableList<string> collection = new ObservableList<string>((IEnumerable<string>)anArrayString);
+            ObservableCollection<string> collection = new ObservableCollection<string>((IEnumerable<string>)anArrayString);
             CollectionAndPropertyChangedTester helper = new CollectionAndPropertyChangedTester();
             helper.AddOrInsertItemTest(collection, "seven", 2);
             helper.AddOrInsertItemTest(collection, "zero", 0);
@@ -196,7 +196,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void InsertTest_Negative()
         {
             Guid[] anArray = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-            ObservableList<Guid> collection = new ObservableList<Guid>(anArray);
+            ObservableCollection<Guid> collection = new ObservableCollection<Guid>(anArray);
             collection.CollectionChanged += (o, e) => { throw new ShouldNotBeInvokedException(); };
 
             Guid itemToInsert = Guid.NewGuid();
@@ -223,7 +223,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void ReplaceItemTest()
         {
             string[] anArray = new string[] { "one", "two", "three", "four" };
-            ObservableList<string> collection = new ObservableList<string>((IEnumerable<string>)anArray);
+            ObservableCollection<string> collection = new ObservableCollection<string>((IEnumerable<string>)anArray);
             CollectionAndPropertyChangedTester helper = new CollectionAndPropertyChangedTester();
             helper.ReplaceItemTest(collection, 1, "seven");
             helper.ReplaceItemTest(collection, 3, "zero");
@@ -237,7 +237,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void ContainsTest()
         {
             string[] anArray = new string[] { "one", "two", "three", "four" };
-            ObservableList<string> collection = new ObservableList<string>((IEnumerable<string>)anArray);
+            ObservableCollection<string> collection = new ObservableCollection<string>((IEnumerable<string>)anArray);
             string collectionString = "";
 
             foreach (var item in collection)
@@ -259,7 +259,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void IndexOfTest()
         {
             string[] anArray = new string[] { "one", "two", "three", "four" };
-            ObservableList<string> collection = new ObservableList<string>((IEnumerable<string>)anArray);
+            ObservableCollection<string> collection = new ObservableCollection<string>((IEnumerable<string>)anArray);
 
             for (int i = 0; i < anArray.Length; ++i)
                 Assert.Equal(i, collection.IndexOf(anArray[i]));
@@ -268,7 +268,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
             Assert.Equal(-1, collection.IndexOf(null));
 
             // testing that the first occurrence is the index returned.
-            ObservableList<int> intCol = new ObservableList<int>();
+            ObservableCollection<int> intCol = new ObservableCollection<int>();
             for (int i = 0; i < 4; ++i)
                 intCol.Add(i % 2);
 
@@ -287,7 +287,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void CopyToTest()
         {
             string[] anArray = new string[] { "one", "two", "three", "four" };
-            ObservableList<string> collection = new ObservableList<string>((IEnumerable<string>)anArray);
+            ObservableCollection<string> collection = new ObservableCollection<string>((IEnumerable<string>)anArray);
 
             string[] aCopy = new string[collection.Count];
             collection.CopyTo(aCopy, 0);
@@ -325,7 +325,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void CopyToTest_Negative()
         {
             string[] anArray = new string[] { "one", "two", "three", "four" };
-            ObservableList<string> collection = new ObservableList<string>(anArray);
+            ObservableCollection<string> collection = new ObservableCollection<string>(anArray);
 
             int[] iArrInvalidValues = new int[] { -1, -2, -100, -1000, -10000, -100000, -1000000, -10000000, -100000000, -1000000000, int.MinValue };
             foreach (var index in iArrInvalidValues)
@@ -358,7 +358,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         public static void GetEnumeratorTest()
         {
             Guid[] anArray = { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-            ObservableList<Guid> col = new ObservableList<Guid>((IEnumerable<Guid>)anArray);
+            ObservableCollection<Guid> col = new ObservableCollection<Guid>((IEnumerable<Guid>)anArray);
 
             int i = 0;
             IEnumerator<Guid> e;
@@ -402,7 +402,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         /// Will perform an Add or Insert on the given Collection depending on whether the
         /// insertIndex is null or not. If it is null, will Add, otherwise, will Insert.
         /// </summary>
-        public void AddOrInsertItemTest(ObservableList<string> collection, string itemToAdd, int? insertIndex = null)
+        public void AddOrInsertItemTest(ObservableCollection<string> collection, string itemToAdd, int? insertIndex = null)
         {
             INotifyPropertyChanged collectionPropertyChanged = collection;
             collectionPropertyChanged.PropertyChanged += Collection_PropertyChanged;
@@ -451,7 +451,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         /// <summary>
         /// Clears the given Collection.
         /// </summary>
-        public void ClearTest(ObservableList<string> collection)
+        public void ClearTest(ObservableCollection<string> collection)
         {
             INotifyPropertyChanged collectionPropertyChanged = collection;
             collectionPropertyChanged.PropertyChanged += Collection_PropertyChanged;
@@ -483,7 +483,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         /// <summary>
         /// Will set that new item at the specified index in the given collection.
         /// </summary>
-        public void ReplaceItemTest(ObservableList<string> collection, int index, string newItem)
+        public void ReplaceItemTest(ObservableCollection<string> collection, int index, string newItem)
         {
             INotifyPropertyChanged collectionPropertyChanged = collection;
             collectionPropertyChanged.PropertyChanged += Collection_PropertyChanged;
@@ -519,7 +519,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         /// from the index. If the item has duplicates, will verify that only the first
         /// instance was removed.
         /// </summary>
-        public void RemoveItemTest(ObservableList<string> collection, int itemIndex, string itemToRemove, bool isSuccessfulRemove, bool hasDuplicates)
+        public void RemoveItemTest(ObservableCollection<string> collection, int itemIndex, string itemToRemove, bool isSuccessfulRemove, bool hasDuplicates)
         {
             INotifyPropertyChanged collectionPropertyChanged = collection;
             collectionPropertyChanged.PropertyChanged += Collection_PropertyChanged;
@@ -572,7 +572,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
         /// <summary>
         /// Verifies that the item is removed from a given index in the collection.
         /// </summary>
-        public void RemoveItemAtTest(ObservableList<string> collection, int itemIndex)
+        public void RemoveItemAtTest(ObservableCollection<string> collection, int itemIndex)
         {
             INotifyPropertyChanged collectionPropertyChanged = collection;
             collectionPropertyChanged.PropertyChanged += Collection_PropertyChanged;

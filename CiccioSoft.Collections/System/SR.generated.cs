@@ -13,7 +13,7 @@ namespace CiccioSoft.Collections.Resources
     internal static class Strings { }
 }
 
-namespace CiccioSoft
+namespace System
 {
     internal static partial class SR
     {

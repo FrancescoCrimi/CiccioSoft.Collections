@@ -46,29 +46,21 @@ public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IRead
     #endregion
 
 
-    #region Interface Implementation
+    #region Public Property
 
-    public int Count => _set.Count;
+    /// <summary>Gets the <see cref="IEqualityComparer"/> object that is used to determine equality for the values in the set.</summary>
+    public IEqualityComparer<T> Comparer => _set.Comparer;
 
-    bool ICollection<T>.IsReadOnly => false;
+    #endregion
+
+
+    #region ISet<T>
 
     public bool Add(T item)
         => AddItem(item);
 
-    public void Clear()
-        => ClearItems();
-
-    public bool Contains(T item)
-        => _set.Contains(item);
-
-    public void CopyTo(T[] array, int arrayIndex)
-        => _set.CopyTo(array, arrayIndex);
-
     public void ExceptWith(IEnumerable<T> other)
         => ExceptWithItems(other);
-
-    public IEnumerator<T> GetEnumerator()
-        => _set.GetEnumerator();
 
     public void IntersectWith(IEnumerable<T> other)
         => IntersectWithItems(other);
@@ -88,9 +80,6 @@ public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IRead
     public bool Overlaps(IEnumerable<T> other)
         => _set.Overlaps(other);
 
-    public bool Remove(T item)
-        => RemoveItem(item);
-
     public bool SetEquals(IEnumerable<T> other)
         => _set.SetEquals(other);
 
@@ -100,8 +89,37 @@ public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IRead
     public void UnionWith(IEnumerable<T> other)
         => UnionWithItems(other);
 
+    #endregion
+
+
+    #region ICollection<T>
+
+    public int Count => _set.Count;
+
+    bool ICollection<T>.IsReadOnly => false;
+
     void ICollection<T>.Add(T item)
         => Add(item);
+
+    public void Clear()
+        => ClearItems();
+
+    public bool Contains(T item)
+        => _set.Contains(item);
+
+    public void CopyTo(T[] array, int arrayIndex)
+        => _set.CopyTo(array, arrayIndex);
+
+    public bool Remove(T item)
+        => RemoveItem(item);
+
+    #endregion
+
+
+    #region IEnumerable
+
+    public IEnumerator<T> GetEnumerator()
+        => _set.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator()
         => GetEnumerator();
@@ -133,17 +151,4 @@ public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IRead
         => _set.UnionWith(other);
 
     #endregion
-
-
-
-
-
-    /// <summary>Gets the <see cref="IEqualityComparer"/> object that is used to determine equality for the values in the set.</summary>
-    public IEqualityComparer<T> Comparer
-    {
-        get
-        {
-            return _set.Comparer;
-        }
-    }
 }

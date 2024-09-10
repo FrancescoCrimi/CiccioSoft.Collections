@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -19,12 +20,6 @@ namespace CiccioSoft.Collections
 
         [NonSerialized]
         private PropertyDescriptorCollection? _itemTypeProperties;
-
-        [NonSerialized]
-        private PropertyChangedEventHandler? _propertyChangedEventHandler;
-
-        [NonSerialized]
-        private ListChangedEventHandler? _onListChanged;
 
         [NonSerialized]
         private int _lastChangeIndex = -1;
@@ -252,16 +247,13 @@ namespace CiccioSoft.Collections
         #endregion
 
 
-        #region ListChanged event
+        #region ListChanged
 
         /// <summary>
         /// Event that reports changes to the list or to items in the list.
         /// </summary>
-        public event ListChangedEventHandler ListChanged
-        {
-            add => _onListChanged += value;
-            remove => _onListChanged -= value;
-        }
+        [field: NonSerialized]
+        public event ListChangedEventHandler? ListChanged;
 
         // Private helper method
         private void FireListChanged(ListChangedType type, int index)
@@ -272,7 +264,10 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Raises the ListChanged event.
         /// </summary>
-        private void OnListChanged(ListChangedEventArgs e) => _onListChanged?.Invoke(this, e);
+        protected virtual void OnListChanged(ListChangedEventArgs e)
+        {
+            ListChanged?.Invoke(this, e);
+        }
 
         #endregion
 
@@ -284,17 +279,16 @@ namespace CiccioSoft.Collections
             // Note: inpc may be null if item is null, so always check.
             if (item is INotifyPropertyChanged inpc)
             {
-                _propertyChangedEventHandler ??= new PropertyChangedEventHandler(Child_PropertyChanged);
-                inpc.PropertyChanged += _propertyChangedEventHandler;
+                inpc.PropertyChanged += Child_PropertyChanged;
             }
         }
 
         private void UnhookPropertyChanged(T item)
         {
             // Note: inpc may be null if item is null, so always check.
-            if (item is INotifyPropertyChanged inpc && _propertyChangedEventHandler != null)
+            if (item is INotifyPropertyChanged inpc)
             {
-                inpc.PropertyChanged -= _propertyChangedEventHandler;
+                inpc.PropertyChanged -= Child_PropertyChanged;
             }
         }
 
@@ -423,91 +417,23 @@ namespace CiccioSoft.Collections
         /// of type ItemChanged as a result of property changes on individual list items
         /// unless those items support INotifyPropertyChanged.
         /// </summary>
-        bool IRaiseItemChangedEvents.RaisesItemChangedEvents => raiseItemChangedEvents;
+        public bool RaisesItemChangedEvents => raiseItemChangedEvents;
 
         #endregion
 
 
-        #region IList ICollection
+        #region ICollection
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => this;
+        object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
 
-        void ICollection.CopyTo(Array array, int index)
-        {
-            if (array == null)
-            {
-                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.array);
-            }
+        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
 
-            if (array.Rank != 1)
-            {
-                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_RankMultiDimNotSupported);
-            }
+        #endregion
 
-            if (array.GetLowerBound(0) != 0)
-            {
-                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_NonZeroLowerBound);
-            }
 
-            if (index < 0)
-            {
-                ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException();
-            }
-
-            if (array.Length - index < Count)
-            {
-                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_ArrayPlusOffTooSmall);
-            }
-
-            if (array is T[] tArray)
-            {
-                _set.CopyTo(tArray, index);
-            }
-            else
-            {
-                //
-                // Catch the obvious case assignment will fail.
-                // We can't find all possible problems by doing the check though.
-                // For example, if the element type of the Array is derived from T,
-                // we can't figure out if we can successfully copy the element beforehand.
-                //
-                Type targetType = array.GetType().GetElementType()!;
-                Type sourceType = typeof(T);
-                if (!(targetType.IsAssignableFrom(sourceType) || sourceType.IsAssignableFrom(targetType)))
-                {
-                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
-                }
-
-                //
-                // We can't cast array of value type to object[], so we don't support
-                // widening of primitive types here.
-                //
-                object?[]? objects = array as object[];
-                if (objects == null)
-                {
-                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
-                }
-
-                //int count = items.Count;
-                try
-                {
-                    //for (int i = 0; i < count; i++)
-                    //{
-                    //    objects[index++] = items[i];
-                    //}
-                    foreach (var item in (IEnumerable)_set)
-                    {
-                        objects[index++] = item;
-                    }
-                }
-                catch (ArrayTypeMismatchException)
-                {
-                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
-                }
-            }
-        }
+        #region IList
 
         object? IList.this[int index]
         {
@@ -574,6 +500,11 @@ namespace CiccioSoft.Collections
         {
             throw new NotSupportedException("Mutating a value collection derived from a hashset is not allowed.");
         }
+
+        #endregion
+
+
+        #region Private method
 
         private static bool IsCompatibleObject(object? value)
         {

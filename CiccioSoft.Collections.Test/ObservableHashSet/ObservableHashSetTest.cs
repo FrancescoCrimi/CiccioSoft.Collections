@@ -8,9 +8,9 @@ using System.ComponentModel;
 using System.Linq;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.ObservableSet;
+namespace CiccioSoft.Collections.Tests.ObservableHashSet;
 
-public class ObservableSetTest
+public class ObservableHashSetTest
 {
     private static readonly Random _random = new();
 

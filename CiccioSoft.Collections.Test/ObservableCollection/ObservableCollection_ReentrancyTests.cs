@@ -4,16 +4,16 @@
 using System;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.ObservableList
+namespace CiccioSoft.Collections.Tests.ObservableCollection
 {
-    public partial class ObservableListTests
+    public partial class ObservableCollectionTests
     {
         [Fact]
         public void Reentrancy_SingleListener_DoesNotThrow()
         {
             bool handlerCalled = false;
 
-            var collection = new ObservableList<int>();
+            var collection = new ObservableCollection<int>();
             collection.CollectionChanged += (sender, e) =>
             {
                 if (!handlerCalled)
@@ -38,7 +38,7 @@ namespace CiccioSoft.Collections.Tests.ObservableList
             bool handler1Called = false;
             bool handler2Called = false;
 
-            var collection = new ObservableList<int>();
+            var collection = new ObservableCollection<int>();
             collection.CollectionChanged += (sender, e) => { handler1Called = true; };
             collection.CollectionChanged += (sender, e) =>
             {

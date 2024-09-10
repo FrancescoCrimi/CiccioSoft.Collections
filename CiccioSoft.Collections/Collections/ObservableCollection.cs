@@ -14,7 +14,7 @@ namespace CiccioSoft.Collections
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
     [Serializable]
-    public class ObservableList<T> : ListBase<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableCollection<T> : ListBase<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
 
@@ -23,15 +23,15 @@ namespace CiccioSoft.Collections
 
         #region Constructors
 
-        public ObservableList()
+        public ObservableCollection()
         {
         }
 
-        public ObservableList(IEnumerable<T> collection) : base(collection)
+        public ObservableCollection(IEnumerable<T> collection) : base(collection)
         {
         }
 
-        public ObservableList(int capacity) : base(capacity)
+        public ObservableCollection(int capacity) : base(capacity)
         {
         }
 
@@ -107,16 +107,7 @@ namespace CiccioSoft.Collections
         /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
         /// </summary>
         [field: NonSerialized]
-        private event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
-        /// </summary>
-        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
-        {
-            add => PropertyChanged += value;
-            remove => PropertyChanged -= value;
-        }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Raises a PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
@@ -249,9 +240,9 @@ namespace CiccioSoft.Collections
             internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
 
             [NonSerialized]
-            internal ObservableList<T> _collection;
+            internal ObservableCollection<T> _collection;
 
-            public SimpleMonitor(ObservableList<T> collection)
+            public SimpleMonitor(ObservableCollection<T> collection)
             {
                 Debug.Assert(collection != null);
                 _collection = collection;

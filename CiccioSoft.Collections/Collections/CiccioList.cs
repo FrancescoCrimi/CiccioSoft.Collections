@@ -27,11 +27,11 @@ namespace CiccioSoft.Collections
         [NonSerialized]
         private PropertyDescriptorCollection? _itemTypeProperties;
 
-        [NonSerialized]
-        private PropertyChangedEventHandler? _propertyChangedEventHandler;
+        //[NonSerialized]
+        //private PropertyChangedEventHandler? _propertyChangedEventHandler;
 
-        [NonSerialized]
-        private ListChangedEventHandler? _onListChanged;
+        //[NonSerialized]
+        //private ListChangedEventHandler? _onListChanged;
 
         [NonSerialized]
         private int _lastChangeIndex = -1;
@@ -161,21 +161,12 @@ namespace CiccioSoft.Collections
         /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
         /// </summary>
         [field: NonSerialized]
-        private event PropertyChangedEventHandler? PropertyChanged;
-
-        /// <summary>
-        /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
-        /// </summary>
-        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
-        {
-            add => PropertyChanged += value;
-            remove => PropertyChanged -= value;
-        }
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Raises a PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
         /// </summary>
-        private void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
@@ -220,7 +211,7 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Raise CollectionChanged event to any listeners.
         /// </summary>
-        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             NotifyCollectionChangedEventHandler? handler = CollectionChanged;
             if (handler != null)
@@ -324,11 +315,8 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Event that reports changes to the list or to items in the list.
         /// </summary>
-        public event ListChangedEventHandler ListChanged
-        {
-            add => _onListChanged += value;
-            remove => _onListChanged -= value;
-        }
+        [field: NonSerialized]
+        public event ListChangedEventHandler? ListChanged;
 
         // Private helper method
         private void FireListChanged(ListChangedType type, int index)
@@ -339,7 +327,10 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Raises the ListChanged event.
         /// </summary>
-        private void OnListChanged(ListChangedEventArgs e) => _onListChanged?.Invoke(this, e);
+        protected virtual void OnListChanged(ListChangedEventArgs e)
+        {
+            ListChanged?.Invoke(this, e);
+        }
 
         #endregion
 
@@ -351,17 +342,16 @@ namespace CiccioSoft.Collections
             // Note: inpc may be null if item is null, so always check.
             if (item is INotifyPropertyChanged inpc)
             {
-                _propertyChangedEventHandler ??= new PropertyChangedEventHandler(Child_PropertyChanged);
-                inpc.PropertyChanged += _propertyChangedEventHandler;
+                inpc.PropertyChanged += Child_PropertyChanged;
             }
         }
 
         private void UnhookPropertyChanged(T item)
         {
             // Note: inpc may be null if item is null, so always check.
-            if (item is INotifyPropertyChanged inpc && _propertyChangedEventHandler != null)
+            if (item is INotifyPropertyChanged inpc)
             {
-                inpc.PropertyChanged -= _propertyChangedEventHandler;
+                inpc.PropertyChanged -= Child_PropertyChanged;
             }
         }
 

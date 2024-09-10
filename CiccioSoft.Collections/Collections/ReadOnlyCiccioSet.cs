@@ -1,0 +1,237 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+
+namespace CiccioSoft.Collections
+{
+    /// <summary>
+    /// Read-only wrapper around an CiccioHashSet.
+    /// </summary>
+    [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
+    [DebuggerDisplay("Count = {Count}")]
+    [Serializable]
+    public class ReadOnlyCiccioSet<T> : ReadOnlySet<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
+    {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of ReadOnlyObservableCollection that
+        /// wraps the given ObservableCollection.
+        /// </summary>
+        public ReadOnlyCiccioSet(CiccioSet<T> set) : base(set)
+        {
+            set.CollectionChanged += new NotifyCollectionChangedEventHandler(HandleCollectionChanged);
+            set.PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
+            set.ListChanged += new ListChangedEventHandler(HandleListChanged);
+        }
+
+        #endregion
+
+        #region CollectionChanged
+
+        /// <summary>
+        /// Occurs when the collection changes, either by adding or removing an item.
+        /// </summary>
+        /// <remarks>
+        /// see <seealso cref="INotifyCollectionChanged"/>
+        /// </remarks>
+        [field: NonSerialized]
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
+
+        /// <summary>
+        /// raise CollectionChanged event to any listeners
+        /// </summary>
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
+        {
+            CollectionChanged?.Invoke(this, args);
+        }
+
+        private void HandleCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnCollectionChanged(e);
+        }
+
+        #endregion
+
+        #region PropertyChanged
+
+        /// <summary>
+        /// Occurs when a property changes.
+        /// </summary>
+        /// <remarks>
+        /// see <seealso cref="INotifyPropertyChanged"/>
+        /// </remarks>
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
+        /// raise PropertyChanged event to any listeners
+        /// </summary>
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
+        {
+            PropertyChanged?.Invoke(this, args);
+        }
+
+        private void HandlePropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e);
+        }
+
+        #endregion
+
+        #region ListChanged
+
+        /// <summary>
+        /// Event that reports changes to the list or to items in the list.
+        /// </summary>
+        [field: NonSerialized]
+        public event ListChangedEventHandler? ListChanged;
+
+        /// <summary>
+        /// Raises the ListChanged event.
+        /// </summary>
+        protected virtual void OnListChanged(ListChangedEventArgs e)
+        {
+            ListChanged?.Invoke(this, e);
+        }
+
+        private void HandleListChanged(object? sender, ListChangedEventArgs e)
+        {
+            OnListChanged(e);
+        }
+
+        #endregion
+
+        #region IBindingList interface
+
+        public T AddNew() => throw new NotSupportedException();
+
+        object? IBindingList.AddNew() => throw new NotSupportedException();
+
+        public bool AllowNew => false;
+
+        bool IBindingList.AllowNew => false;
+
+        public bool AllowEdit => true;
+
+        bool IBindingList.AllowEdit => AllowEdit;
+
+        public bool AllowRemove => true;
+
+        bool IBindingList.AllowRemove => AllowRemove;
+
+        bool IBindingList.SupportsChangeNotification => true;
+
+        bool IBindingList.SupportsSearching => false;
+
+        bool IBindingList.SupportsSorting => false;
+
+        bool IBindingList.IsSorted => false;
+
+        PropertyDescriptor? IBindingList.SortProperty => null;
+
+        ListSortDirection IBindingList.SortDirection => ListSortDirection.Ascending;
+
+        void IBindingList.ApplySort(PropertyDescriptor prop, ListSortDirection direction) => throw new NotSupportedException();
+
+        void IBindingList.RemoveSort() => throw new NotSupportedException();
+
+        int IBindingList.Find(PropertyDescriptor prop, object key) => throw new NotSupportedException();
+
+        void IBindingList.AddIndex(PropertyDescriptor prop)
+        {
+            // Not supported
+        }
+
+        void IBindingList.RemoveIndex(PropertyDescriptor prop)
+        {
+            // Not supported
+        }
+
+        #endregion
+
+        #region IRaiseItemChangedEvents interface
+
+        /// <summary>
+        /// Returns false to indicate that BindingList&lt;T&gt; does NOT raise ListChanged events
+        /// of type ItemChanged as a result of property changes on individual list items
+        /// unless those items support INotifyPropertyChanged.
+        /// </summary>
+        public bool RaisesItemChangedEvents => ((IRaiseItemChangedEvents)_set).RaisesItemChangedEvents;
+
+        #endregion
+
+        #region IList
+
+        object? IList.this[int index]
+        {
+            get => _set.ToList()[index];
+            set => ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+        }
+
+        bool IList.IsReadOnly => true;
+
+        bool IList.IsFixedSize => true;
+
+        int IList.Add(object? value)
+        {
+            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            return -1;
+        }
+
+        void IList.Clear()
+        {
+            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+        }
+
+        bool IList.Contains(object? value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                return Contains((T)value!);
+            }
+            return false;
+        }
+
+        int IList.IndexOf(object? value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                return _set.ToList().IndexOf((T)value!);
+            }
+            return -1;
+        }
+
+        void IList.Insert(int index, object? value)
+        {
+            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+        }
+
+        void IList.Remove(object? value)
+        {
+            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+        }
+
+        void IList.RemoveAt(int index)
+        {
+            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+        }
+
+        #endregion
+
+        #region Private Method
+
+        private static bool IsCompatibleObject(object? value)
+        {
+            // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
+            // Note that default(T) is not equal to null for value types except when T is Nullable<U>.
+            return (value is T) || (value == null && default(T) == null);
+        }
+
+        #endregion
+    }
+}

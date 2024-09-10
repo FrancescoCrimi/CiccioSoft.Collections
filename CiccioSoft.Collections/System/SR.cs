@@ -4,7 +4,7 @@
 using System;
 using System.Resources;
 
-namespace CiccioSoft
+namespace System
 {
     internal static partial class SR
     {
