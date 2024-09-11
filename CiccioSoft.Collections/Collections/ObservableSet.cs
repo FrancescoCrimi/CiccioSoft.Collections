@@ -12,9 +12,9 @@ using System.Runtime.Serialization;
 
 namespace CiccioSoft.Collections
 {
+    [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    [Serializable]
     public class ObservableSet<T> : SetBase<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
@@ -57,7 +57,6 @@ namespace CiccioSoft.Collections
 #endif
 
         #endregion
-
 
         #region Overrides Method
 
@@ -188,7 +187,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region PropertyChanged
 
         /// <summary>
@@ -214,7 +212,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region CollectionChanged
 
@@ -261,13 +258,16 @@ namespace CiccioSoft.Collections
         }
 
         private void OnCollectionChanged(NotifyCollectionChangedAction action, object? item)
-            => OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item));
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item));
+        }
 
         private void OnCollectionChanged(IList newItems, IList oldItems)
-            => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItems, oldItems));
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItems, oldItems));
+        }
 
         #endregion
-
 
         #region Serializable
 
@@ -289,7 +289,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Private
 

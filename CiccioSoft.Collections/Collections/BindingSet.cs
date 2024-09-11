@@ -11,9 +11,9 @@ using System.Linq;
 
 namespace CiccioSoft.Collections
 {
+    [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    [Serializable]
     public class BindingSet<T> : SetBase<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, IBindingList, IRaiseItemChangedEvents
     {
         private bool raiseItemChangedEvents; // Do not rename (binary serialization)

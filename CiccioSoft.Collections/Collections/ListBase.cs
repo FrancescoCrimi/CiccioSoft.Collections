@@ -8,9 +8,9 @@ using System.Diagnostics;
 
 namespace CiccioSoft.Collections
 {
+    [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    [Serializable]
     public class ListBase<T> : IList<T>, IList, IReadOnlyList<T>
     {
         protected List<T> _list;

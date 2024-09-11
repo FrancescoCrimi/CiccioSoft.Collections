@@ -11,9 +11,9 @@ using System.Runtime.Serialization;
 
 namespace CiccioSoft.Collections
 {
+    [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    [Serializable]
     public class ObservableCollection<T> : ListBase<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
@@ -36,7 +36,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Overrides Method
 
@@ -100,7 +99,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region PropertyChanged
 
         /// <summary>
@@ -112,7 +110,7 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Raises a PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
         /// </summary>
-        private void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
@@ -120,15 +118,20 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Helper to raise a PropertyChanged event for the Count property
         /// </summary>
-        private void OnCountPropertyChanged() => OnPropertyChanged(EventArgsCache.CountPropertyChanged);
+        private void OnCountPropertyChanged()
+        {
+            OnPropertyChanged(EventArgsCache.CountPropertyChanged);
+        }
 
         /// <summary>
         /// Helper to raise a PropertyChanged event for the Indexer property
         /// </summary>
-        private void OnIndexerPropertyChanged() => OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+        private void OnIndexerPropertyChanged()
+        {
+            OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+        }
 
         #endregion
-
 
         #region CollectionChanged
 
@@ -136,7 +139,7 @@ namespace CiccioSoft.Collections
         /// Occurs when the collection changes, either by adding or removing an item.
         /// </summary>
         [field: NonSerialized]
-        public virtual event NotifyCollectionChangedEventHandler? CollectionChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         /// <summary> Check and assert for reentrant attempts to change this collection. </summary>
         /// <exception cref="InvalidOperationException"> raised when changing the collection
@@ -157,16 +160,15 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Raise CollectionChanged event to any listeners.
         /// </summary>
-        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            NotifyCollectionChangedEventHandler? handler = CollectionChanged;
-            if (handler != null)
+            if (CollectionChanged != null)
             {
                 // Not calling BlockReentrancy() here to avoid the SimpleMonitor allocation.
                 _blockReentrancyCount++;
                 try
                 {
-                    handler(this, e);
+                    CollectionChanged.Invoke(this, e);
                 }
                 finally
                 {
@@ -202,10 +204,12 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Helper to raise CollectionChanged event with action == Reset to any listeners
         /// </summary>
-        private void OnCollectionReset() => OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+        private void OnCollectionReset()
+        {
+            OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+        }
 
         #endregion
-
 
         #region Serializable
 
@@ -227,7 +231,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Private
 

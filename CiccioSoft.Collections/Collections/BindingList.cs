@@ -9,9 +9,9 @@ using System.Diagnostics;
 
 namespace CiccioSoft.Collections
 {
+    [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    [Serializable]
     public class BindingList<T> : ListBase<T>, IList<T>, IList, IReadOnlyList<T>, IBindingList, IRaiseItemChangedEvents
     {
         private bool raiseItemChangedEvents; // Do not rename (binary serialization)

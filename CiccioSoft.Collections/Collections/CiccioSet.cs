@@ -13,9 +13,9 @@ using System.Runtime.Serialization;
 
 namespace CiccioSoft.Collections
 {
+    [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    [Serializable]
     public class CiccioSet<T> : SetBase<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
     {
         private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
@@ -355,7 +355,9 @@ namespace CiccioSoft.Collections
         }
 
         private void OnCollectionChanged(NotifyCollectionChangedAction action, object? item)
-            => OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item));
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item));
+        }
 
         private void OnCollectionChanged(IList newItems, IList oldItems)
             => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItems, oldItems));
