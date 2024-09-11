@@ -6,149 +6,145 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections;
-
-[DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
-[DebuggerDisplay("Count = {Count}")]
-[Serializable]
-public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>
+namespace CiccioSoft.Collections
 {
-    protected HashSet<T> _set;
+    [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
+    [DebuggerDisplay("Count = {Count}")]
+    [Serializable]
+    public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>
+    {
+        protected HashSet<T> _set;
 
-    #region Constructors
+        #region Constructors
 
-    public SetBase()
-        => _set = new HashSet<T>();
+        public SetBase()
+            => _set = new HashSet<T>();
 
-    public SetBase(IEqualityComparer<T>? comparer)
-        => _set = new HashSet<T>(comparer);
-
-#if NET6_0_OR_GREATER
-
-    public SetBase(int capacity)
-        => _set = new HashSet<T>(capacity);
-
-#endif
-
-    public SetBase(IEnumerable<T> collection)
-        => _set = new HashSet<T>(collection);
-
-    public SetBase(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
-        => _set = new HashSet<T>(collection, comparer);
+        public SetBase(IEqualityComparer<T>? comparer)
+            => _set = new HashSet<T>(comparer);
 
 #if NET6_0_OR_GREATER
 
-    public SetBase(int capacity, IEqualityComparer<T>? comparer)
-        => _set = new HashSet<T>(capacity, comparer);
+        public SetBase(int capacity)
+            => _set = new HashSet<T>(capacity);
 
 #endif
 
-    #endregion
+        public SetBase(IEnumerable<T> collection)
+            => _set = new HashSet<T>(collection);
 
+        public SetBase(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            => _set = new HashSet<T>(collection, comparer);
 
-    #region Public Property
+#if NET6_0_OR_GREATER
 
-    /// <summary>Gets the <see cref="IEqualityComparer"/> object that is used to determine equality for the values in the set.</summary>
-    public IEqualityComparer<T> Comparer => _set.Comparer;
+        public SetBase(int capacity, IEqualityComparer<T>? comparer)
+            => _set = new HashSet<T>(capacity, comparer);
 
-    #endregion
+#endif
 
+        #endregion
 
-    #region ISet<T>
+        #region Public Property
 
-    public bool Add(T item)
-        => AddItem(item);
+        /// <summary>Gets the <see cref="IEqualityComparer"/> object that is used to determine equality for the values in the set.</summary>
+        public IEqualityComparer<T> Comparer => _set.Comparer;
 
-    public void ExceptWith(IEnumerable<T> other)
-        => ExceptWithItems(other);
+        #endregion
 
-    public void IntersectWith(IEnumerable<T> other)
-        => IntersectWithItems(other);
+        #region ISet<T>
 
-    public bool IsProperSubsetOf(IEnumerable<T> other)
-        => _set.IsProperSubsetOf(other);
+        public bool Add(T item)
+            => AddItem(item);
 
-    public bool IsProperSupersetOf(IEnumerable<T> other)
-        => _set.IsProperSupersetOf(other);
+        public void ExceptWith(IEnumerable<T> other)
+            => ExceptWithItems(other);
 
-    public bool IsSubsetOf(IEnumerable<T> other)
-        => _set.IsSubsetOf(other);
+        public void IntersectWith(IEnumerable<T> other)
+            => IntersectWithItems(other);
 
-    public bool IsSupersetOf(IEnumerable<T> other)
-        => _set.IsSupersetOf(other);
+        public bool IsProperSubsetOf(IEnumerable<T> other)
+            => _set.IsProperSubsetOf(other);
 
-    public bool Overlaps(IEnumerable<T> other)
-        => _set.Overlaps(other);
+        public bool IsProperSupersetOf(IEnumerable<T> other)
+            => _set.IsProperSupersetOf(other);
 
-    public bool SetEquals(IEnumerable<T> other)
-        => _set.SetEquals(other);
+        public bool IsSubsetOf(IEnumerable<T> other)
+            => _set.IsSubsetOf(other);
 
-    public void SymmetricExceptWith(IEnumerable<T> other)
-        => SymmetricExceptWithItems(other);
+        public bool IsSupersetOf(IEnumerable<T> other)
+            => _set.IsSupersetOf(other);
 
-    public void UnionWith(IEnumerable<T> other)
-        => UnionWithItems(other);
+        public bool Overlaps(IEnumerable<T> other)
+            => _set.Overlaps(other);
 
-    #endregion
+        public bool SetEquals(IEnumerable<T> other)
+            => _set.SetEquals(other);
 
+        public void SymmetricExceptWith(IEnumerable<T> other)
+            => SymmetricExceptWithItems(other);
 
-    #region ICollection<T>
+        public void UnionWith(IEnumerable<T> other)
+            => UnionWithItems(other);
 
-    public int Count => _set.Count;
+        #endregion
 
-    bool ICollection<T>.IsReadOnly => false;
+        #region ICollection<T>
 
-    void ICollection<T>.Add(T item)
-        => Add(item);
+        public int Count => _set.Count;
 
-    public void Clear()
-        => ClearItems();
+        bool ICollection<T>.IsReadOnly => false;
 
-    public bool Contains(T item)
-        => _set.Contains(item);
+        void ICollection<T>.Add(T item)
+            => Add(item);
 
-    public void CopyTo(T[] array, int arrayIndex)
-        => _set.CopyTo(array, arrayIndex);
+        public void Clear()
+            => ClearItems();
 
-    public bool Remove(T item)
-        => RemoveItem(item);
+        public bool Contains(T item)
+            => _set.Contains(item);
 
-    #endregion
+        public void CopyTo(T[] array, int arrayIndex)
+            => _set.CopyTo(array, arrayIndex);
 
+        public bool Remove(T item)
+            => RemoveItem(item);
 
-    #region IEnumerable
+        #endregion
 
-    public IEnumerator<T> GetEnumerator()
-        => _set.GetEnumerator();
+        #region IEnumerable
 
-    IEnumerator IEnumerable.GetEnumerator()
-        => GetEnumerator();
+        public IEnumerator<T> GetEnumerator()
+            => _set.GetEnumerator();
 
-    #endregion
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
 
+        #endregion
 
-    #region Virtual Methods
+        #region Virtual Methods
 
-    protected virtual bool AddItem(T item)
-        => _set.Add(item);
+        protected virtual bool AddItem(T item)
+            => _set.Add(item);
 
-    protected virtual void ClearItems()
-        => _set.Clear();
+        protected virtual void ClearItems()
+            => _set.Clear();
 
-    protected virtual void ExceptWithItems(IEnumerable<T> other)
-        => _set.ExceptWith(other);
+        protected virtual void ExceptWithItems(IEnumerable<T> other)
+            => _set.ExceptWith(other);
 
-    protected virtual void IntersectWithItems(IEnumerable<T> other)
-        => _set.IntersectWith(other);
+        protected virtual void IntersectWithItems(IEnumerable<T> other)
+            => _set.IntersectWith(other);
 
-    protected virtual bool RemoveItem(T item)
-        => _set.Remove(item);
+        protected virtual bool RemoveItem(T item)
+            => _set.Remove(item);
 
-    protected virtual void SymmetricExceptWithItems(IEnumerable<T> other)
-        => _set.SymmetricExceptWith(other);
+        protected virtual void SymmetricExceptWithItems(IEnumerable<T> other)
+            => _set.SymmetricExceptWith(other);
 
-    protected virtual void UnionWithItems(IEnumerable<T> other)
-        => _set.UnionWith(other);
+        protected virtual void UnionWithItems(IEnumerable<T> other)
+            => _set.UnionWith(other);
 
-    #endregion
+        #endregion
+    }
 }

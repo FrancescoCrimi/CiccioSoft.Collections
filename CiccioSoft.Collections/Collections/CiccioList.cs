@@ -21,25 +21,20 @@ namespace CiccioSoft.Collections
         [NonSerialized]
         private int _blockReentrancyCount;
 
-
         private bool raiseItemChangedEvents; // Do not rename (binary serialization)
 
         [NonSerialized]
         private PropertyDescriptorCollection? _itemTypeProperties;
 
-        //[NonSerialized]
-        //private PropertyChangedEventHandler? _propertyChangedEventHandler;
-
-        //[NonSerialized]
-        //private ListChangedEventHandler? _onListChanged;
-
         [NonSerialized]
         private int _lastChangeIndex = -1;
 
-
         #region Constructors
 
-        public CiccioList() => Initialize();
+        public CiccioList()
+        {
+            Initialize();
+        }
 
         public CiccioList(IEnumerable<T> collection) : base(collection)
         {
@@ -48,6 +43,7 @@ namespace CiccioSoft.Collections
 
         public CiccioList(int capacity) : base(capacity)
         {
+            Initialize();
         }
 
         private void Initialize()
@@ -67,7 +63,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Overrides Method
 
@@ -154,7 +149,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region PropertyChanged
 
         /// <summary>
@@ -182,7 +176,6 @@ namespace CiccioSoft.Collections
         private void OnIndexerPropertyChanged() => OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
 
         #endregion
-
 
         #region CollectionChanged
 
@@ -260,56 +253,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
-        #region Serializable
-
-        [OnSerializing]
-        private void OnSerializing(StreamingContext context)
-        {
-            EnsureMonitorInitialized();
-            _monitor!._busyCount = _blockReentrancyCount;
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context)
-        {
-            if (_monitor != null)
-            {
-                _blockReentrancyCount = _monitor._busyCount;
-                _monitor._collection = this;
-            }
-        }
-
-        #endregion
-
-
-        #region Private
-
-        private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
-
-        // this class helps prevent reentrant calls
-        [Serializable]
-        private sealed class SimpleMonitor : IDisposable
-        {
-            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
-
-            [NonSerialized]
-            internal CiccioList<T> _collection;
-
-            public SimpleMonitor(CiccioList<T> collection)
-            {
-                Debug.Assert(collection != null);
-                _collection = collection;
-            }
-
-            public void Dispose() => _collection._blockReentrancyCount--;
-        }
-
-        #endregion
-
-
-
-
         #region ListChanged event
 
         /// <summary>
@@ -333,7 +276,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Property Change Support
 
@@ -423,7 +365,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region IBindingList interface
 
         public T AddNew() => throw new NotSupportedException();
@@ -472,7 +413,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region IRaiseItemChangedEvents interface
 
         /// <summary>
@@ -480,7 +420,52 @@ namespace CiccioSoft.Collections
         /// of type ItemChanged as a result of property changes on individual list items
         /// unless those items support INotifyPropertyChanged.
         /// </summary>
-        bool IRaiseItemChangedEvents.RaisesItemChangedEvents => raiseItemChangedEvents;
+        public bool RaisesItemChangedEvents => raiseItemChangedEvents;
+
+        #endregion
+
+        #region Serializable
+
+        [OnSerializing]
+        private void OnSerializing(StreamingContext context)
+        {
+            EnsureMonitorInitialized();
+            _monitor!._busyCount = _blockReentrancyCount;
+        }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            if (_monitor != null)
+            {
+                _blockReentrancyCount = _monitor._busyCount;
+                _monitor._collection = this;
+            }
+        }
+
+        #endregion
+
+        #region Private
+
+        private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
+
+        // this class helps prevent reentrant calls
+        [Serializable]
+        private sealed class SimpleMonitor : IDisposable
+        {
+            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
+
+            [NonSerialized]
+            internal CiccioList<T> _collection;
+
+            public SimpleMonitor(CiccioList<T> collection)
+            {
+                Debug.Assert(collection != null);
+                _collection = collection;
+            }
+
+            public void Dispose() => _collection._blockReentrancyCount--;
+        }
 
         #endregion
     }

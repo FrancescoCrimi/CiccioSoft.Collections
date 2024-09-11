@@ -31,14 +31,12 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region Public Property
 
         /// <summary>Gets an empty <see cref="ReadOnlySet{T}"/>.</summary>
         public static ReadOnlySet<T> Empty { get; } = new ReadOnlySet<T>(new HashSet<T>());
 
         #endregion
-
 
         #region ISet<T>
 
@@ -77,7 +75,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region ICollection<T>
 
         /// <inheritdoc/>
@@ -103,20 +100,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
-        #region IEnumerable
-
-        /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() =>
-            _set.Count == 0 ? ((IEnumerable<T>)Array.Empty<T>()).GetEnumerator() :
-            _set.GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        #endregion
-
-
         #region ICollection
 
         /// <inheritdoc/>
@@ -127,6 +110,18 @@ namespace CiccioSoft.Collections
 
         /// <inheritdoc/>
         object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
+
+        #endregion
+
+        #region IEnumerable
+
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator() =>
+            _set.Count == 0 ? ((IEnumerable<T>)Array.Empty<T>()).GetEnumerator() :
+            _set.GetEnumerator();
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         #endregion
     }

@@ -1,9 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections.Collections
+namespace CiccioSoft.Collections
 {
     /// <summary>
     /// Read-only wrapper around an BindingList.
@@ -31,6 +34,7 @@ namespace CiccioSoft.Collections.Collections
         /// <summary>
         /// Event that reports changes to the list or to items in the list.
         /// </summary>
+        [field: NonSerialized]
         public event ListChangedEventHandler? ListChanged;
 
         /// <summary>

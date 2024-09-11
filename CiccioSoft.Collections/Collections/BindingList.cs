@@ -22,7 +22,6 @@ namespace CiccioSoft.Collections
         [NonSerialized]
         private int _lastChangeIndex = -1;
 
-
         #region Constructors
 
         public BindingList()
@@ -57,7 +56,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Overrides Method
 
@@ -117,8 +115,7 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
-        #region ListChanged event
+        #region ListChanged
 
         /// <summary>
         /// Event that reports changes to the list or to items in the list.
@@ -141,7 +138,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Property Change Support
 
@@ -231,7 +227,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region IBindingList interface
 
         public T AddNew() => throw new NotSupportedException();
@@ -279,7 +274,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region IRaiseItemChangedEvents interface
 

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -10,9 +13,9 @@ namespace CiccioSoft.Collections
     /// <summary>
     /// Read-only wrapper around an CiccioList.
     /// </summary>
+    [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    [Serializable]
     public class ReadOnlyCiccioList<T> : ReadOnlyCollection<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
     {
         #region Constructors
@@ -87,6 +90,7 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Event that reports changes to the list or to items in the list.
         /// </summary>
+        [field: NonSerialized]
         public event ListChangedEventHandler? ListChanged;
 
         /// <summary>

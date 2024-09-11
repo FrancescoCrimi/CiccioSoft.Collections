@@ -1,11 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CiccioSoft.Collections
 {
@@ -21,7 +22,7 @@ namespace CiccioSoft.Collections
 
         /// <summary>
         /// Initializes a new instance of ReadOnlyBindingSet that
-        /// wraps the given ObservableCollection.
+        /// wraps the given BindingSet.
         /// </summary>
         public ReadOnlyBindingSet(BindingSet<T> set) : base(set)
         {
@@ -55,21 +56,13 @@ namespace CiccioSoft.Collections
 
         #region IBindingList interface
 
-        public T AddNew() => throw new NotSupportedException();
-
         object? IBindingList.AddNew() => throw new NotSupportedException();
-
-        public bool AllowNew => false;
 
         bool IBindingList.AllowNew => false;
 
-        public bool AllowEdit => true;
+        bool IBindingList.AllowEdit => false;
 
-        bool IBindingList.AllowEdit => AllowEdit;
-
-        public bool AllowRemove => true;
-
-        bool IBindingList.AllowRemove => AllowRemove;
+        bool IBindingList.AllowRemove => false;
 
         bool IBindingList.SupportsChangeNotification => true;
 
@@ -104,7 +97,7 @@ namespace CiccioSoft.Collections
         #region IRaiseItemChangedEvents interface
 
         /// <summary>
-        /// Returns false to indicate that BindingList&lt;T&gt; does NOT raise ListChanged events
+        /// Returns false to indicate that ReadOnlyBindingSet&lt;T&gt; does NOT raise ListChanged events
         /// of type ItemChanged as a result of property changes on individual list items
         /// unless those items support INotifyPropertyChanged.
         /// </summary>

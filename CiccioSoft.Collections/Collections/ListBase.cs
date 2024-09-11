@@ -34,8 +34,17 @@ namespace CiccioSoft.Collections
 
         #endregion
 
+        #region Public Property
 
-        #region Interface Implementation
+        public int Capacity
+        {
+            get => _list.Capacity;
+            set => _list.Capacity = value;
+        }
+
+        #endregion
+
+        #region IList<T>
 
         public T this[int index]
         {
@@ -55,6 +64,63 @@ namespace CiccioSoft.Collections
                 SetItem(index, value);
             }
         }
+
+        public int IndexOf(T item) => _list.IndexOf(item);
+
+        public void Insert(int index, T item)
+        {
+            if ((uint)index > (uint)_list.Count)
+            {
+                ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException();
+            }
+
+            InsertItem(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            if ((uint)index >= (uint)_list.Count)
+            {
+                ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessException();
+            }
+
+            RemoveItem(index);
+        }
+
+        #endregion
+
+        #region ICollection<T>
+
+        public int Count => _list.Count;
+
+        public bool IsReadOnly => false;
+
+        public void Add(T item)
+        {
+            int index = _list.Count;
+            InsertItem(index, item);
+        }
+
+        public void Clear()
+        {
+            ClearItems();
+        }
+
+        public bool Contains(T item) => _list.Contains(item);
+
+        public void CopyTo(T[] array, int arrayIndex) => _list.CopyTo(array, arrayIndex);
+
+        public bool Remove(T item)
+        {
+            int index = _list.IndexOf(item);
+            if (index < 0) return false;
+            RemoveItem(index);
+            return true;
+        }
+
+        #endregion
+
+        #region IList
 
         object? IList.this[int index]
         {
@@ -78,23 +144,7 @@ namespace CiccioSoft.Collections
             }
         }
 
-        T IReadOnlyList<T>.this[int index] => _list[index];
-
-        public int Count => _list.Count;
-
-        public bool IsReadOnly => false;
-
         bool IList.IsFixedSize => ((IList)_list).IsFixedSize;
-
-        bool ICollection.IsSynchronized => false;
-
-        object ICollection.SyncRoot => ((ICollection)_list).SyncRoot;
-
-        public void Add(T item)
-        {
-            int index = _list.Count;
-            InsertItem(index, item);
-        }
 
         int IList.Add(object? value)
         {
@@ -116,36 +166,9 @@ namespace CiccioSoft.Collections
             return this.Count - 1;
         }
 
-        public void Clear()
-        {
-            ClearItems();
-        }
-
-        public bool Contains(T item) => _list.Contains(item);
-
         bool IList.Contains(object? value) => ((IList)_list).Contains(value);
 
-        public void CopyTo(T[] array, int arrayIndex)  => _list.CopyTo(array, arrayIndex);
-
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)_list).CopyTo(array, index);
-
-        public IEnumerator<T> GetEnumerator() => _list.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_list).GetEnumerator();
-
-        public int IndexOf(T item) => _list.IndexOf(item);
-
         int IList.IndexOf(object? value) => ((IList)_list).IndexOf(value);
-
-        public void Insert(int index, T item)
-        {
-            if ((uint)index > (uint)_list.Count)
-            {
-                ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException();
-            }
-
-            InsertItem(index, item);
-        }
 
         void IList.Insert(int index, object? value)
         {
@@ -165,14 +188,6 @@ namespace CiccioSoft.Collections
             Insert(index, item);
         }
 
-        public bool Remove(T item)
-        {
-            int index = _list.IndexOf(item);
-            if (index < 0) return false;
-            RemoveItem(index);
-            return true;
-        }
-
         void IList.Remove(object? value)
         {
             if (IsCompatibleObject(value))
@@ -181,29 +196,31 @@ namespace CiccioSoft.Collections
             }
         }
 
-        public void RemoveAt(int index)
-        {
-            if ((uint)index >= (uint)_list.Count)
-            {
-                ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessException();
-            }
+        #endregion
 
-            RemoveItem(index);
-        }
+        #region ICollection
+
+        bool ICollection.IsSynchronized => false;
+
+        object ICollection.SyncRoot => ((ICollection)_list).SyncRoot;
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_list).CopyTo(array, index);
 
         #endregion
 
+        #region IReadOnlyList<T>
 
-        #region Public Property
-
-        public int Capacity
-        {
-            get => _list.Capacity;
-            set => _list.Capacity = value;
-        }
+        T IReadOnlyList<T>.this[int index] => _list[index];
 
         #endregion
 
+        #region IEnumerable
+
+        public IEnumerator<T> GetEnumerator() => _list.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_list).GetEnumerator();
+
+        #endregion
 
         #region Virtual Method 
 
@@ -228,7 +245,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Private Method
 

@@ -175,7 +175,7 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-        #region IEnumerable methods
+        #region IEnumerable
 
         public IEnumerator<T> GetEnumerator() =>
             _list.Count == 0 ? SZGenericArrayEnumerator<T>.Empty :

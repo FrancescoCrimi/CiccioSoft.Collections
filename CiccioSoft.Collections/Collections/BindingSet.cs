@@ -24,7 +24,6 @@ namespace CiccioSoft.Collections
         [NonSerialized]
         private int _lastChangeIndex = -1;
 
-
         #region Constructors
 
         public BindingSet()
@@ -82,7 +81,6 @@ namespace CiccioSoft.Collections
         }
 
 #endregion
-
 
         #region Overrides Method
 
@@ -246,7 +244,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region ListChanged
 
         /// <summary>
@@ -270,7 +267,6 @@ namespace CiccioSoft.Collections
         }
 
         #endregion
-
 
         #region Property Change Support
 
@@ -360,7 +356,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region IBindingList interface
 
         public T AddNew() => throw new NotSupportedException();
@@ -409,7 +404,6 @@ namespace CiccioSoft.Collections
 
         #endregion
 
-
         #region IRaiseItemChangedEvents interface
 
         /// <summary>
@@ -420,18 +414,6 @@ namespace CiccioSoft.Collections
         public bool RaisesItemChangedEvents => raiseItemChangedEvents;
 
         #endregion
-
-
-        #region ICollection
-
-        bool ICollection.IsSynchronized => false;
-
-        object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
-
-        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
-
-        #endregion
-
 
         #region IList
 
@@ -503,8 +485,17 @@ namespace CiccioSoft.Collections
 
         #endregion
 
+        #region ICollection
 
-        #region Private method
+        bool ICollection.IsSynchronized => false;
+
+        object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
+
+        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
+
+        #endregion
+
+        #region Private
 
         private static bool IsCompatibleObject(object? value)
         {

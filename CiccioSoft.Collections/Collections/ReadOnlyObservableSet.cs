@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -7,7 +10,7 @@ using System.Diagnostics;
 namespace CiccioSoft.Collections
 {
     /// <summary>
-    /// Read-only wrapper around an ObservableHashSet.
+    /// Read-only wrapper around an ObservableSet.
     /// </summary>
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
@@ -17,8 +20,8 @@ namespace CiccioSoft.Collections
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of ReadOnlyObservableHashSet that
-        /// wraps the given ObservableHashSet.
+        /// Initializes a new instance of ReadOnlyObservableSet that
+        /// wraps the given ObservableSet.
         /// </summary>
         public ReadOnlyObservableSet(ObservableSet<T> set) : base(set)
         {
