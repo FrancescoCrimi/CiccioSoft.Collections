@@ -8,7 +8,7 @@ using Xunit;
 
 namespace CiccioSoft.Collections.Tests.BindingSet
 {
-    public class BindingHashSet_Test
+    public class BindingSet_Test
     {
         [Fact]
         public void Ctor_Default()

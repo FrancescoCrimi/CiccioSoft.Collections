@@ -59,53 +59,53 @@ namespace System
         //    GetOpenSslVersion() >= s_openssl3Version :
         //    false;
 
-        /// <summary>
-        /// If gnulibc is available, returns the release, such as "stable".
-        /// Otherwise returns "glibc_not_found".
-        /// </summary>
-        public static string LibcRelease
-        {
-            get
-            {
-                if (IsWindows)
-                {
-                    return "glibc_not_found";
-                }
+        ///// <summary>
+        ///// If gnulibc is available, returns the release, such as "stable".
+        ///// Otherwise returns "glibc_not_found".
+        ///// </summary>
+        //public static string LibcRelease
+        //{
+        //    get
+        //    {
+        //        if (IsWindows)
+        //        {
+        //            return "glibc_not_found";
+        //        }
 
-                try
-                {
-                    return Marshal.PtrToStringAnsi(libc.gnu_get_libc_release());
-                }
-                catch (Exception e) when (e is DllNotFoundException || e is EntryPointNotFoundException)
-                {
-                    return "glibc_not_found";
-                }
-            }
-        }
+        //        try
+        //        {
+        //            return Marshal.PtrToStringAnsi(libc.gnu_get_libc_release());
+        //        }
+        //        catch (Exception e) when (e is DllNotFoundException || e is EntryPointNotFoundException)
+        //        {
+        //            return "glibc_not_found";
+        //        }
+        //    }
+        //}
 
-        /// <summary>
-        /// If gnulibc is available, returns the version, such as "2.22".
-        /// Otherwise returns "glibc_not_found". (In future could run "ldd -version" for musl)
-        /// </summary>
-        public static string LibcVersion
-        {
-            get
-            {
-                if (IsWindows)
-                {
-                    return "glibc_not_found";
-                }
+        ///// <summary>
+        ///// If gnulibc is available, returns the version, such as "2.22".
+        ///// Otherwise returns "glibc_not_found". (In future could run "ldd -version" for musl)
+        ///// </summary>
+        //public static string LibcVersion
+        //{
+        //    get
+        //    {
+        //        if (IsWindows)
+        //        {
+        //            return "glibc_not_found";
+        //        }
 
-                try
-                {
-                    return Marshal.PtrToStringAnsi(libc.gnu_get_libc_version());
-                }
-                catch (Exception e) when (e is DllNotFoundException || e is EntryPointNotFoundException)
-                {
-                    return "glibc_not_found";
-                }
-            }
-        }
+        //        try
+        //        {
+        //            return Marshal.PtrToStringAnsi(libc.gnu_get_libc_version());
+        //        }
+        //        catch (Exception e) when (e is DllNotFoundException || e is EntryPointNotFoundException)
+        //        {
+        //            return "glibc_not_found";
+        //        }
+        //    }
+        //}
 
         //public static bool OpenSslPresentOnSystem
         //{
@@ -336,16 +336,16 @@ namespace System
             public Version VersionId { get; set; }
         }
 
-        private static partial class @libc
-        {
-            [LibraryImport("libc", SetLastError = true)]
-            public static unsafe partial uint geteuid();
+        //private static partial class @libc
+        //{
+        //    [LibraryImport("libc", SetLastError = true)]
+        //    public static unsafe partial uint geteuid();
 
-            [LibraryImport("libc")]
-            public static partial IntPtr gnu_get_libc_release();
+        //    [LibraryImport("libc")]
+        //    public static partial IntPtr gnu_get_libc_release();
 
-            [LibraryImport("libc")]
-            public static partial IntPtr gnu_get_libc_version();
-        }
+        //    [LibraryImport("libc")]
+        //    public static partial IntPtr gnu_get_libc_version();
+        //}
     }
 }

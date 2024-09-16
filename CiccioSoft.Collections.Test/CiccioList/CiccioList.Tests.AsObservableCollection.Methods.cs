@@ -15,7 +15,7 @@ namespace CiccioSoft.Collections.Tests.CiccioList
     /// that the CollectionChanged events and eventargs are fired and populated
     /// properly.
     /// </summary>
-    public static class PublicMethodsTest
+    public static class CiccioList_As_ObservableCollection_PublicMethodsTest
     {
         /// <summary>
         /// Tests that is possible to Add an item to the collection.

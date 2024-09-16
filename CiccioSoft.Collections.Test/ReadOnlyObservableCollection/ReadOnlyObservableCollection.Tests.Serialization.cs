@@ -8,7 +8,7 @@ using Xunit;
 
 namespace CiccioSoft.Collections.Tests.ReadOnlyObservableCollection
 {
-    public partial class ReadOnlyObservableCollection_Serialization
+    public partial class ReadOnlyObservableCollection_Tests_Serialization
     {
         public static IEnumerable<object[]> SerializeDeserialize_Roundtrips_MemberData()
         {

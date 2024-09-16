@@ -44,6 +44,11 @@ namespace CiccioSoft.Collections
 
         #endregion
 
+        public ReadOnlyCollection<T> AsReadOnly()
+        {
+            return new ReadOnlyCollection<T>(this);
+        }
+
         #region IList<T>
 
         public T this[int index]

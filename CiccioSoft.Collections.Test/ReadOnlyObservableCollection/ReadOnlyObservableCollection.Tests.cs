@@ -14,7 +14,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyObservableCollection
     /// <summary>
     /// Tests the public properties and constructor in ObservableCollection<T>.
     /// </summary>
-    public class ReadOnlyObservableCollectionTests
+    public partial class ReadOnlyObservableCollection_Tests
     {
         [Fact]
         public static void Ctor_Tests()
@@ -34,13 +34,13 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyObservableCollection
             AssertExtensions.Throws<ArgumentNullException>("list", () => new ReadOnlyObservableCollection<string>(null));
         }
 
-        [Fact]
-        public static void Empty_Idempotent()
-        {
-            Assert.NotNull(ReadOnlyObservableCollection<int>.Empty);
-            Assert.Equal(0, ReadOnlyObservableCollection<int>.Empty.Count);
-            Assert.Same(ReadOnlyObservableCollection<int>.Empty, ReadOnlyObservableCollection<int>.Empty);
-        }
+        //[Fact]
+        //public static void Empty_Idempotent()
+        //{
+        //    Assert.NotNull(ReadOnlyObservableCollection<int>.Empty);
+        //    Assert.Equal(0, ReadOnlyObservableCollection<int>.Empty.Count);
+        //    Assert.Same(ReadOnlyObservableCollection<int>.Empty, ReadOnlyObservableCollection<int>.Empty);
+        //}
 
         [Fact]
         public static void GetItemTests()

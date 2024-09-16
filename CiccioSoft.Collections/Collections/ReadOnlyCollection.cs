@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace CiccioSoft.Collections
@@ -14,27 +13,14 @@ namespace CiccioSoft.Collections
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyCollection<T> : IList<T>, IList, IReadOnlyList<T>
     {
-        protected readonly IList<T> _list; // Do not rename (binary serialization)
+        protected readonly ListBase<T> _list; // Do not rename (binary serialization)
 
         #region Constructors
 
-        public ReadOnlyCollection(IList<T> list)
+        public ReadOnlyCollection(ListBase<T> list)
         {
-            if (list == null)
-            {
-                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.list);
-            }
-            _list = list!;
+            _list = list ?? throw new ArgumentNullException(nameof(list))!;
         }
-
-        #endregion
-
-        #region Public Property
-
-        /// <summary>Gets an empty <see cref="ReadOnlyCollection{T}"/>.</summary>
-        /// <value>An empty <see cref="ReadOnlyCollection{T}"/>.</value>
-        /// <remarks>The returned instance is immutable and will always be empty.</remarks>
-        public static ReadOnlyCollection<T> Empty { get; } = new ReadOnlyCollection<T>(Array.Empty<T>());
 
         #endregion
 
@@ -171,7 +157,7 @@ namespace CiccioSoft.Collections
 
         object ICollection.SyncRoot => _list is ICollection coll ? coll.SyncRoot : this;
 
-        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_list, array, index);
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_list).CopyTo(array, index);
 
         #endregion
 

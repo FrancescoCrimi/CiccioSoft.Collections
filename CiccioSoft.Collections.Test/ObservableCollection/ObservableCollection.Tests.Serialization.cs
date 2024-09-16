@@ -9,7 +9,7 @@ using Xunit;
 
 namespace CiccioSoft.Collections.Tests.ObservableCollection
 {
-    public partial class ObservableCollection_Serialization
+    public partial class ObservableCollection_Test
     {
         public static IEnumerable<object[]> SerializeDeserialize_Roundtrips_MemberData()
         {

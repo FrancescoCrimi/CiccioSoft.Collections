@@ -148,7 +148,7 @@ namespace System
         }
 
         // Drawing is not supported on non windows platforms in .NET 7.0+.
-        public static bool IsDrawingSupported => IsWindows && IsNotWindowsNanoServer && IsNotWindowsServerCore;
+        //public static bool IsDrawingSupported => IsWindows && IsNotWindowsNanoServer && IsNotWindowsServerCore;
 
         public static bool IsAsyncFileIOSupported => !IsBrowser && !IsWasi;
 
@@ -170,7 +170,7 @@ namespace System
         // Automation refers to OLE Automation support. Automation support here means the OS
         // and runtime provide support for the following: IDispatch, STA apartments, etc. This
         // is typically available whenever COM support is enabled, but Windows Nano Server is an exception.
-        public static bool IsBuiltInComEnabledWithOSAutomationSupport => IsBuiltInComEnabled && IsNotWindowsNanoServer;
+        //public static bool IsBuiltInComEnabledWithOSAutomationSupport => IsBuiltInComEnabled && IsNotWindowsNanoServer;
 
         //public static bool SupportsSsl3 => GetSsl3Support();
         //public static bool SupportsSsl2 => IsWindows && !PlatformDetection.IsWindows10Version1607OrGreater;
@@ -333,23 +333,23 @@ namespace System
             }
         }
 
-        public static string GetDistroVersionString()
-        {
-            if (IsWindows)
-            {
-                return "WindowsProductType=" + GetWindowsProductType() + " WindowsInstallationType=" + GetWindowsInstallationType();
-            }
-            else if (IsOSX)
-            {
-                return "OSX Version=" + Environment.OSVersion.Version.ToString();
-            }
-            else
-            {
-                DistroInfo v = GetDistroInfo();
+        //public static string GetDistroVersionString()
+        //{
+        //    if (IsWindows)
+        //    {
+        //        return "WindowsProductType=" + GetWindowsProductType() + " WindowsInstallationType=" + GetWindowsInstallationType();
+        //    }
+        //    else if (IsOSX)
+        //    {
+        //        return "OSX Version=" + Environment.OSVersion.Version.ToString();
+        //    }
+        //    else
+        //    {
+        //        DistroInfo v = GetDistroInfo();
 
-                return $"Distro={v.Id} VersionId={v.VersionId}";
-            }
-        }
+        //        return $"Distro={v.Id} VersionId={v.VersionId}";
+        //    }
+        //}
 
         private static readonly Lazy<bool> m_isInvariant = new Lazy<bool>(()
             => (bool?)Type.GetType("System.Globalization.GlobalizationMode")?.GetProperty("Invariant", BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null) == true);

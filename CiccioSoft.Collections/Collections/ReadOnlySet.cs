@@ -4,7 +4,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace CiccioSoft.Collections
@@ -16,25 +15,16 @@ namespace CiccioSoft.Collections
     public class ReadOnlySet<T> : IReadOnlySet<T>, ISet<T>, ICollection
     {
         /// <summary>The wrapped set.</summary>
-        protected readonly ISet<T> _set;
+        protected readonly SetBase<T> _set;
 
         #region Constructors
 
         /// <summary>Initializes a new instance of the <see cref="ReadOnlySet{T}"/> class that is a wrapper around the specified set.</summary>
         /// <param name="set">The set to wrap.</param>
-        public ReadOnlySet(ISet<T> set)
+        public ReadOnlySet(SetBase<T> set)
         {
-            //ArgumentNullException.ThrowIfNull(set);
-            _set = set
-                ?? throw new ArgumentNullException(nameof(set));
+            _set = set ?? throw new ArgumentNullException(nameof(set));
         }
-
-        #endregion
-
-        #region Public Property
-
-        /// <summary>Gets an empty <see cref="ReadOnlySet{T}"/>.</summary>
-        public static ReadOnlySet<T> Empty { get; } = new ReadOnlySet<T>(new HashSet<T>());
 
         #endregion
 
@@ -103,7 +93,7 @@ namespace CiccioSoft.Collections
         #region ICollection
 
         /// <inheritdoc/>
-        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_set).CopyTo(array, index);
 
         /// <inheritdoc/>
         bool ICollection.IsSynchronized => false;

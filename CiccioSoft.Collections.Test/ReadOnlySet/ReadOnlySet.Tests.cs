@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.ReadOnlyHashSet
+namespace CiccioSoft.Collections.Tests.ReadOnlySet
 {
-    public class ReadOnlyHashSetTests
+    public class ReadOnlySet_Tests
     {
         [Fact]
         public void Ctor_NullSet_ThrowsArgumentNullException()
@@ -19,22 +19,22 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyHashSet
         [Fact]
         public void Ctor_SetProperty_Roundtrips()
         {
-            var set = new HashSet<int>();
+            var set = new SetBase<int>();
             Assert.Same(set, new DerivedReadOnlySet<int>(set).Set);
         }
 
-        [Fact]
-        public void Empty_EmptyAndIdempotent()
-        {
-            Assert.Same(ReadOnlySet<int>.Empty, ReadOnlySet<int>.Empty);
-            Assert.Empty(ReadOnlySet<int>.Empty);
-            Assert.Same(ReadOnlySet<int>.Empty.GetEnumerator(), ReadOnlySet<int>.Empty.GetEnumerator());
-        }
+        //[Fact]
+        //public void Empty_EmptyAndIdempotent()
+        //{
+        //    Assert.Same(ReadOnlySet<int>.Empty, ReadOnlySet<int>.Empty);
+        //    Assert.Empty(ReadOnlySet<int>.Empty);
+        //    Assert.Same(ReadOnlySet<int>.Empty.GetEnumerator(), ReadOnlySet<int>.Empty.GetEnumerator());
+        //}
 
         [Fact]
         public void MembersDelegateToWrappedSet()
         {
-            var set = new ReadOnlySet<int>(new HashSet<int>() { 1, 2, 3 });
+            var set = new ReadOnlySet<int>(new SetBase<int>() { 1, 2, 3 });
 
             Assert.True(set.Contains(2));
             Assert.False(set.Contains(4));
@@ -63,7 +63,8 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyHashSet
             ((ICollection<int>)set).CopyTo(result, 0);
             Assert.Equal(result, new int[] { 1, 2, 3 });
 
-            Array.Clear(result);
+            //Array.Clear(result);
+            ((IList)result).Clear();
             ((ICollection)set).CopyTo(result, 0);
             Assert.Equal(result, new int[] { 1, 2, 3 });
 
@@ -73,7 +74,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyHashSet
         [Fact]
         public void ChangesToUnderlyingSetReflected()
         {
-            var set = new HashSet<int> { 1, 2, 3 };
+            var set = new SetBase<int> { 1, 2, 3 };
             var readOnlySet = new ReadOnlySet<int>(set);
 
             set.Add(4);
@@ -88,14 +89,14 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyHashSet
         [Fact]
         public void IsReadOnly_True()
         {
-            var set = new ReadOnlySet<int>(new HashSet<int> { 1, 2, 3 });
+            var set = new ReadOnlySet<int>(new SetBase<int> { 1, 2, 3 });
             Assert.True(((ICollection<int>)set).IsReadOnly);
         }
 
         [Fact]
         public void MutationThrows_CollectionUnmodified()
         {
-            var set = new HashSet<int> { 1, 2, 3 };
+            var set = new SetBase<int> { 1, 2, 3 };
             var readOnlySet = new ReadOnlySet<int>(set);
 
             Assert.Throws<NotSupportedException>(() => ((ICollection<int>)readOnlySet).Add(4));
@@ -114,15 +115,16 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyHashSet
         [Fact]
         public void ICollection_Synchronization()
         {
-            var set = new ReadOnlySet<int>(new HashSet<int> { 1, 2, 3 });
+            var set = new SetBase<int> { 1, 2, 3 };
+            var roset = new ReadOnlySet<int>(set);
 
-            Assert.False(((ICollection)set).IsSynchronized);
-            Assert.Same(set, ((ICollection)set).SyncRoot);
+            Assert.False(((ICollection)roset).IsSynchronized);
+            Assert.Same(((ICollection)set).SyncRoot, ((ICollection)roset).SyncRoot);
         }
 
         private class DerivedReadOnlySet<T> : ReadOnlySet<T>
         {
-            public DerivedReadOnlySet(HashSet<T> set) : base(set) { }
+            public DerivedReadOnlySet(SetBase<T> set) : base(set) { }
 
             public new ISet<T> Set => base._set;
         }

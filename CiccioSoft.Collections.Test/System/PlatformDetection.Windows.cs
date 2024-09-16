@@ -19,24 +19,24 @@ namespace System
 
         public static bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         public static bool IsNetFramework => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
-        public static bool HasWindowsShell => IsWindows && IsNotWindowsServerCore && IsNotWindowsNanoServer && IsNotWindowsIoTCore;
+        //public static bool HasWindowsShell => IsWindows && IsNotWindowsServerCore && IsNotWindowsNanoServer && IsNotWindowsIoTCore;
         //public static bool IsWindows7 => IsWindows && GetWindowsVersion() == 6 && GetWindowsMinorVersion() == 1;
         //public static bool IsWindows8x => IsWindows && GetWindowsVersion() == 6 && (GetWindowsMinorVersion() == 2 || GetWindowsMinorVersion() == 3);
         //public static bool IsWindows8xOrLater => IsWindowsVersionOrLater(6, 2);
         //public static bool IsWindows10OrLater => IsWindowsVersionOrLater(10, 0);
         //public static bool IsWindowsServer2019 => IsWindows && IsNotWindowsNanoServer && GetWindowsVersion() == 10 && GetWindowsMinorVersion() == 0 && GetWindowsBuildVersion() == 17763;
-        public static bool IsWindowsNanoServer => IsWindows && (IsNotWindowsIoTCore && GetWindowsInstallationType().Equals("Nano Server", StringComparison.OrdinalIgnoreCase));
+        //public static bool IsWindowsNanoServer => IsWindows && (IsNotWindowsIoTCore && GetWindowsInstallationType().Equals("Nano Server", StringComparison.OrdinalIgnoreCase));
         public static bool IsWindowsServerCore => IsWindows && GetWindowsInstallationType().Equals("Server Core", StringComparison.OrdinalIgnoreCase);
         //public static int WindowsVersion => IsWindows ? (int)GetWindowsVersion() : -1;
         //public static bool IsNotWindows7 => !IsWindows7;
         //public static bool IsNotWindows8x => !IsWindows8x;
-        public static bool IsNotWindowsNanoServer => !IsWindowsNanoServer;
+        //public static bool IsNotWindowsNanoServer => !IsWindowsNanoServer;
         public static bool IsNotWindowsServerCore => !IsWindowsServerCore;
-        public static bool IsNotWindowsNanoNorServerCore => IsNotWindowsNanoServer && IsNotWindowsServerCore;
-        public static bool IsNotWindowsIoTCore => !IsWindowsIoTCore;
-        public static bool IsNotWindowsHomeEdition => !IsWindowsHomeEdition;
+        //public static bool IsNotWindowsNanoNorServerCore => IsNotWindowsNanoServer && IsNotWindowsServerCore;
+        //public static bool IsNotWindowsIoTCore => !IsWindowsIoTCore;
+        //public static bool IsNotWindowsHomeEdition => !IsWindowsHomeEdition;
         //public static bool IsNotInAppContainer => !IsInAppContainer;
-        public static bool IsSoundPlaySupported => IsWindows && IsNotWindowsNanoServer;
+        //public static bool IsSoundPlaySupported => IsWindows && IsNotWindowsNanoServer;
         public static bool IsBrowserOnWindows => IsBrowser && Path.DirectorySeparatorChar == '\\';
 
         //// >= Windows 10 Anniversary Update
@@ -67,51 +67,51 @@ namespace System
         //// Windows 11 aka 21H2
         //public static bool IsWindows10Version22000OrGreater => IsWindowsVersionOrLater(10, 0, 22000);
 
-        public static bool IsWindowsIoTCore
-        {
-            get
-            {
-                if (!IsWindows)
-                {
-                    return false;
-                }
+        //public static bool IsWindowsIoTCore
+        //{
+        //    get
+        //    {
+        //        if (!IsWindows)
+        //        {
+        //            return false;
+        //        }
 
-                int productType = GetWindowsProductType();
-                if ((productType == PRODUCT_IOTUAPCOMMERCIAL) ||
-                    (productType == PRODUCT_IOTUAP))
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
+        //        int productType = GetWindowsProductType();
+        //        if ((productType == PRODUCT_IOTUAPCOMMERCIAL) ||
+        //            (productType == PRODUCT_IOTUAP))
+        //        {
+        //            return true;
+        //        }
+        //        return false;
+        //    }
+        //}
 
-        public static bool IsWindowsHomeEdition
-        {
-            get
-            {
-                if (!IsWindows)
-                {
-                    return false;
-                }
+        //public static bool IsWindowsHomeEdition
+        //{
+        //    get
+        //    {
+        //        if (!IsWindows)
+        //        {
+        //            return false;
+        //        }
 
-                int productType = GetWindowsProductType();
-                switch (productType)
-                {
-                    case PRODUCT_CORE:
-                    case PRODUCT_CORE_COUNTRYSPECIFIC:
-                    case PRODUCT_CORE_N:
-                    case PRODUCT_CORE_SINGLELANGUAGE:
-                    case PRODUCT_HOME_BASIC:
-                    case PRODUCT_HOME_BASIC_N:
-                    case PRODUCT_HOME_PREMIUM:
-                    case PRODUCT_HOME_PREMIUM_N:
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        }
+        //        int productType = GetWindowsProductType();
+        //        switch (productType)
+        //        {
+        //            case PRODUCT_CORE:
+        //            case PRODUCT_CORE_COUNTRYSPECIFIC:
+        //            case PRODUCT_CORE_N:
+        //            case PRODUCT_CORE_SINGLELANGUAGE:
+        //            case PRODUCT_HOME_BASIC:
+        //            case PRODUCT_HOME_BASIC_N:
+        //            case PRODUCT_HOME_PREMIUM:
+        //            case PRODUCT_HOME_PREMIUM_N:
+        //                return true;
+        //            default:
+        //                return false;
+        //        }
+        //    }
+        //}
 
         private static string GetWindowsInstallationType()
         {
@@ -129,11 +129,11 @@ namespace System
             return value;
         }
 
-        private static int GetWindowsProductType()
-        {
-            Assert.True(GetProductInfo(Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor, 0, 0, out int productType));
-            return productType;
-        }
+        //private static int GetWindowsProductType()
+        //{
+        //    Assert.True(GetProductInfo(Environment.OSVersion.Version.Major, Environment.OSVersion.Version.Minor, 0, 0, out int productType));
+        //    return productType;
+        //}
 
         private const int PRODUCT_IOTUAP = 0x0000007B;
         private const int PRODUCT_IOTUAPCOMMERCIAL = 0x00000083;
@@ -146,18 +146,18 @@ namespace System
         private const int PRODUCT_HOME_PREMIUM = 0x00000003;
         private const int PRODUCT_HOME_PREMIUM_N = 0x0000001A;
 
-        [LibraryImport("kernel32.dll", SetLastError = false)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static partial bool GetProductInfo(
-            int dwOSMajorVersion,
-            int dwOSMinorVersion,
-            int dwSpMajorVersion,
-            int dwSpMinorVersion,
-            out int pdwReturnedProductType
-        );
+        //[LibraryImport("kernel32.dll", SetLastError = false)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //private static partial bool GetProductInfo(
+        //    int dwOSMajorVersion,
+        //    int dwOSMinorVersion,
+        //    int dwSpMajorVersion,
+        //    int dwSpMinorVersion,
+        //    out int pdwReturnedProductType
+        //);
 
-        [LibraryImport("kernel32.dll")]
-        private static partial int GetCurrentApplicationUserModelId(ref uint applicationUserModelIdLength, byte[] applicationUserModelId);
+        //[LibraryImport("kernel32.dll")]
+        //private static partial int GetCurrentApplicationUserModelId(ref uint applicationUserModelIdLength, byte[] applicationUserModelId);
 
         private static volatile Version s_windowsVersionObject;
         //internal static Version GetWindowsVersionObject()

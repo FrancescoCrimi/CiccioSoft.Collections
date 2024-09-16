@@ -6,7 +6,7 @@ using Xunit;
 
 namespace CiccioSoft.Collections.Tests.ObservableCollection
 {
-    public partial class ObservableCollectionTests
+    public partial class ObservableCollection_Test
     {
         [Fact]
         public void Reentrancy_SingleListener_DoesNotThrow()

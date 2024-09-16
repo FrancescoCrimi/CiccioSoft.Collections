@@ -13,7 +13,7 @@ namespace CiccioSoft.Collections.Tests.ObservableCollection
     /// <summary>
     /// Tests the public properties and constructor in ObservableList<T>.
     /// </summary>
-    public partial class ConstructorAndPropertyTests
+    public partial class ObservableCollection_Test
     {
         /// <summary>
         /// Tests that the parameterless constructor works.

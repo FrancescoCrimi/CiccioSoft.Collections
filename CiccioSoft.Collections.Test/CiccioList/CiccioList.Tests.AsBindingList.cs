@@ -396,7 +396,7 @@ namespace CiccioSoft.Collections.Tests.CiccioList
 
 
         [Fact]
-        public void AddNew_Invoke__ThrowsNotSupportedException()
+        public void AddNew_Invoke_ThrowsNotSupportedException()
         {
             var bindingList = new CiccioList<object>();
             Assert.Throws<NotSupportedException>(() =>

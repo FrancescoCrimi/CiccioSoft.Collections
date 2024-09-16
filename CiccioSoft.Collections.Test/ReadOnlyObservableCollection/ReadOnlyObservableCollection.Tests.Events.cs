@@ -13,7 +13,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyObservableCollection
     /// Tests that the INotifyCollectionChanged and IPropertyChanged events are fired
     /// when an item is changed in the underlying ObservableCollection<T>.
     /// </summary>
-    public class ReadOnlyObservableCollection_EventsTests
+    public partial class ReadOnlyObservableCollection_Tests_Events
     {
         /// <summary>
         /// Tests for an Add action.

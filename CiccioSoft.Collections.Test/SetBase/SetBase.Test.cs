@@ -354,6 +354,8 @@ namespace CiccioSoft.Collections.Tests.SetBase
             Assert.NotNull(iset);
         }
 
+#if NET6_0_OR_GREATER
+
         [Theory]
         [MemberData(nameof(ValidCollectionSizes))]
         public void HashSet_Generic_Constructor_int(int capacity)
@@ -375,6 +377,8 @@ namespace CiccioSoft.Collections.Tests.SetBase
             Assert.Equal(capacity + 1, set.Count);
         }
 
+#endif
+
         //[Fact]
         //public void HashSet_Generic_Constructor_Capacity_ToNextPrimeNumber()
         //{
@@ -387,6 +391,8 @@ namespace CiccioSoft.Collections.Tests.SetBase
         //    Assert.Equal(NextPrime, set.EnsureCapacity(0));
         //}
 
+#if NET6_0_OR_GREATER
+
         [Fact]
         public void HashSet_Generic_Constructor_int_Negative_ThrowsArgumentOutOfRangeException()
         {
@@ -394,12 +400,18 @@ namespace CiccioSoft.Collections.Tests.SetBase
             AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new SetBase<T>(int.MinValue));
         }
 
+#endif
+
         [Theory]
         [MemberData(nameof(ValidCollectionSizes))]
         public void HashSet_Generic_Constructor_int_IEqualityComparer(int capacity)
         {
             IEqualityComparer<T> comparer = GetIEqualityComparer();
+#if NET6_0_OR_GREATER
             SetBase<T> set = new SetBase<T>(capacity, comparer);
+#else
+            SetBase<T> set = new SetBase<T>(comparer);
+#endif
             Assert.Equal(0, set.Count);
             if (comparer == null)
                 Assert.Equal(EqualityComparer<T>.Default, set.Comparer);
@@ -412,7 +424,11 @@ namespace CiccioSoft.Collections.Tests.SetBase
         public void HashSet_Generic_Constructor_int_IEqualityComparer_AddUpToAndBeyondCapacity(int capacity)
         {
             IEqualityComparer<T> comparer = GetIEqualityComparer();
+#if NET6_0_OR_GREATER
             SetBase<T> set = new SetBase<T>(capacity, comparer);
+#else
+            SetBase<T> set = new SetBase<T>(comparer);
+#endif
 
             AddToCollection(set, capacity);
             Assert.Equal(capacity, set.Count);
@@ -421,6 +437,8 @@ namespace CiccioSoft.Collections.Tests.SetBase
             Assert.Equal(capacity + 1, set.Count);
         }
 
+#if NET6_0_OR_GREATER
+
         [Fact]
         public void HashSet_Generic_Constructor_int_IEqualityComparer_Negative_ThrowsArgumentOutOfRangeException()
         {
@@ -428,6 +446,8 @@ namespace CiccioSoft.Collections.Tests.SetBase
             AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new SetBase<T>(-1, comparer));
             AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new SetBase<T>(int.MinValue, comparer));
         }
+
+#endif
 
         //#region TryGetValue
 
@@ -643,8 +663,12 @@ namespace CiccioSoft.Collections.Tests.SetBase
         public void Remove_NonDefaultComparer_ComparerUsed(int capacity)
         {
             var c = new TrackingEqualityComparer<T>();
-            var set = new SetBase<T>(capacity, c);
 
+#if NET6_0_OR_GREATER
+            var set = new SetBase<T>(capacity, c);
+#else
+            var set = new SetBase<T>(c);
+#endif
             AddToCollection(set, capacity);
             T first = set.First();
             c.EqualsCalls = 0;
@@ -658,7 +682,7 @@ namespace CiccioSoft.Collections.Tests.SetBase
             Assert.InRange(c.GetHashCodeCalls, 1, int.MaxValue);
         }
 
-        #endregion
+#endregion
 
         #region Serialization
 

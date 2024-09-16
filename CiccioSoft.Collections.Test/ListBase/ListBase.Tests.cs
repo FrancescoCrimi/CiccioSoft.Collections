@@ -13,7 +13,11 @@ namespace CiccioSoft.Collections.Tests.ListBase
     {
         #region IList<T> Helper Methods
 
+#if NET8_0
         protected override bool Enumerator_Empty_UsesSingletonInstance => true;
+#else
+        protected override bool Enumerator_Empty_UsesSingletonInstance => false;
+#endif
         //protected override bool Enumerator_Empty_Current_UndefinedOperation_Throws => true;
         //protected override bool Enumerator_Empty_ModifiedDuringEnumeration_ThrowsInvalidOperationException => false;
 
@@ -27,7 +31,7 @@ namespace CiccioSoft.Collections.Tests.ListBase
             return GenericListFactory(count);
         }
 
-        #endregion
+#endregion
 
         #region ListBase<T> Helper Methods
 

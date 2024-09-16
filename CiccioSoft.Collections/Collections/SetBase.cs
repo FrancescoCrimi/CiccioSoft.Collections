@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace CiccioSoft.Collections
@@ -11,7 +12,7 @@ namespace CiccioSoft.Collections
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class SetBase<T> : ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>
+    public class SetBase<T> : ISet<T>, ICollection<T>, IReadOnlySet<T>, IReadOnlyCollection<T>, ICollection
     {
         protected HashSet<T> _set;
 
@@ -112,11 +113,26 @@ namespace CiccioSoft.Collections
 
         #endregion
 
+        #region ICollection
+
+        /// <inheritdoc/>
+        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
+
+        /// <inheritdoc/>
+        bool ICollection.IsSynchronized => false;
+
+        /// <inheritdoc/>
+        object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
+
+        #endregion
+
         #region IEnumerable
 
+        /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator()
             => _set.GetEnumerator();
 
+        /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
 

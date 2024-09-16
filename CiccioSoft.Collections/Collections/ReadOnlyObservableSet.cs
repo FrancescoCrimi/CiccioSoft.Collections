@@ -29,10 +29,10 @@ namespace CiccioSoft.Collections
             set.PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
         }
 
-        /// <summary>Gets an empty <see cref="ReadOnlyObservableSet{T}"/>.</summary>
-        /// <value>An empty <see cref="ReadOnlyObservableSet{T}"/>.</value>
-        /// <remarks>The returned instance is immutable and will always be empty.</remarks>
-        public static new ReadOnlyObservableSet<T> Empty { get; } = new ReadOnlyObservableSet<T>(new ObservableSet<T>());
+        ///// <summary>Gets an empty <see cref="ReadOnlyObservableSet{T}"/>.</summary>
+        ///// <value>An empty <see cref="ReadOnlyObservableSet{T}"/>.</value>
+        ///// <remarks>The returned instance is immutable and will always be empty.</remarks>
+        //public static new ReadOnlyObservableSet<T> Empty { get; } = new ReadOnlyObservableSet<T>(new ObservableSet<T>());
 
         #endregion
 
