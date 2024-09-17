@@ -31,7 +31,7 @@ namespace CiccioSoft.Collections.Tests.ListBase
             return GenericListFactory(count);
         }
 
-#endregion
+        #endregion
 
         #region ListBase<T> Helper Methods
 
