@@ -16,7 +16,7 @@ namespace CiccioSoft.Collections
     [DebuggerDisplay("Count = {Count}")]
     public class ObservableCollection<T> : ListBase<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
+        //private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
 
         [NonSerialized]
         private int _blockReentrancyCount;
@@ -213,46 +213,46 @@ namespace CiccioSoft.Collections
 
         #region Serializable
 
-        [OnSerializing]
-        private void OnSerializing(StreamingContext context)
-        {
-            EnsureMonitorInitialized();
-            _monitor!._busyCount = _blockReentrancyCount;
-        }
+        //[OnSerializing]
+        //private void OnSerializing(StreamingContext context)
+        //{
+        //    EnsureMonitorInitialized();
+        //    _monitor!._busyCount = _blockReentrancyCount;
+        //}
 
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context)
-        {
-            if (_monitor != null)
-            {
-                _blockReentrancyCount = _monitor._busyCount;
-                _monitor._collection = this;
-            }
-        }
+        //[OnDeserialized]
+        //private void OnDeserialized(StreamingContext context)
+        //{
+        //    if (_monitor != null)
+        //    {
+        //        _blockReentrancyCount = _monitor._busyCount;
+        //        _monitor._collection = this;
+        //    }
+        //}
 
         #endregion
 
         #region Private
 
-        private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
+        //private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
 
-        // this class helps prevent reentrant calls
-        [Serializable]
-        private sealed class SimpleMonitor : IDisposable
-        {
-            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
+        //// this class helps prevent reentrant calls
+        //[Serializable]
+        //private sealed class SimpleMonitor : IDisposable
+        //{
+        //    internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
 
-            [NonSerialized]
-            internal ObservableCollection<T> _collection;
+        //    [NonSerialized]
+        //    internal ObservableCollection<T> _collection;
 
-            public SimpleMonitor(ObservableCollection<T> collection)
-            {
-                Debug.Assert(collection != null);
-                _collection = collection;
-            }
+        //    public SimpleMonitor(ObservableCollection<T> collection)
+        //    {
+        //        Debug.Assert(collection != null);
+        //        _collection = collection;
+        //    }
 
-            public void Dispose() => _collection._blockReentrancyCount--;
-        }
+        //    public void Dispose() => _collection._blockReentrancyCount--;
+        //}
 
         #endregion
     }

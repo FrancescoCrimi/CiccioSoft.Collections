@@ -10,15 +10,7 @@
 		<EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
 		<RootNamespace>CiccioSoft.Collections.Tests</RootNamespace>
 		<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
-
-		<!--<AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
-		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>-->
 	</PropertyGroup>
-
-	<!--<PropertyGroup>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-	</PropertyGroup>-->
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
 		<LangVersion>12.0</LangVersion>
@@ -41,9 +33,6 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.24463.6" />
-		<!--<PackageReference Include="Microsoft.DotNet.XUnitAssert" Version="8.0.0-beta.24413.2" />-->
-		<!--<PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="8.0.0-beta.24360.5" />-->
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
 		<PackageReference Include="xunit" Version="2.9.0" />
 		<PackageReference Include="xunit.assert" Version="2.9.0" />

@@ -447,7 +447,7 @@ namespace System.Collections.Tests
 
         [Theory]
         [MemberData(nameof(ValidCollectionSizes))]
-        [SkipOnTargetFramework(TargetFrameworkMonikers.NetFramework, ".NET Framework throws InvalidOperationException")]
+        //[SkipOnTargetFramework(TargetFrameworkMonikers.NetFramework, ".NET Framework throws InvalidOperationException")]
         public void ISet_Generic_IntersectWith_Itself(int setLength)
         {
             if (!IsReadOnly)
@@ -532,7 +532,7 @@ namespace System.Collections.Tests
         #region Set Function tests on a large Set
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_ExceptWith_LargeSet()
         {
             if (!IsReadOnly)
@@ -544,7 +544,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_IntersectWith_LargeSet()
         {
             if (!IsReadOnly)
@@ -556,7 +556,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_IsProperSubsetOf_LargeSet()
         {
             ISet<T> set = GenericISetFactory(ISet_Large_Capacity);
@@ -565,7 +565,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_IsProperSupersetOf_LargeSet()
         {
             ISet<T> set = GenericISetFactory(ISet_Large_Capacity);
@@ -574,7 +574,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_IsSubsetOf_LargeSet()
         {
             ISet<T> set = GenericISetFactory(ISet_Large_Capacity);
@@ -583,7 +583,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_IsSupersetOf_LargeSet()
         {
             ISet<T> set = GenericISetFactory(ISet_Large_Capacity);
@@ -592,7 +592,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_Overlaps_LargeSet()
         {
             ISet<T> set = GenericISetFactory(ISet_Large_Capacity);
@@ -601,7 +601,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_SetEquals_LargeSet()
         {
             ISet<T> set = GenericISetFactory(ISet_Large_Capacity);
@@ -610,7 +610,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_SymmetricExceptWith_LargeSet()
         {
             if (!IsReadOnly)
@@ -622,7 +622,7 @@ namespace System.Collections.Tests
         }
 
         [Fact]
-        [OuterLoop]
+        //[OuterLoop]
         public void ISet_Generic_UnionWith_LargeSet()
         {
             if (!IsReadOnly)

@@ -14,7 +14,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
     {
         private static readonly Random _random = new();
 
-        [ConditionalFact]
+        [Fact]
         public void Can_construct()
         {
             Assert.Same(
@@ -41,7 +41,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             Assert.Same(rh2.Comparer, ohs2.Comparer);
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Can_add()
         {
             var hashSet = new ObservableSet<string>();
@@ -86,7 +86,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             Assert.Equal(new[] { "Carmack", "Palmer" }, hashSet.OrderBy(i => i));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Can_clear()
         {
             var testData = new HashSet<int>(CreateTestData());
@@ -123,7 +123,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             Assert.Empty(hashSet);
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Contains_works()
         {
             var testData = CreateTestData();
@@ -140,7 +140,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             }
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Can_copy_to_array()
         {
             var testData = CreateTestData();
@@ -170,7 +170,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             //}
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Can_remove()
         {
             var hashSet = new ObservableSet<string> { "Palmer", "Carmack" };
@@ -215,11 +215,11 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             Assert.Empty(hashSet);
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Not_read_only()
             => Assert.False(((ICollection<Random>)new ObservableSet<Random>()).IsReadOnly);
 
-        [ConditionalFact]
+        [Fact]
         public void Can_union_with()
         {
             var hashSet = new ObservableSet<string> { "Palmer", "Carmack" };
@@ -255,7 +255,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             Assert.Equal(new[] { "Brendan", "Carmack", "Nate", "Palmer" }, hashSet.OrderBy(i => i));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Can_intersect_with()
         {
             var hashSet = new ObservableSet<string>
@@ -297,7 +297,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             Assert.Equal(new[] { "Carmack", "Palmer" }, hashSet.OrderBy(i => i));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Can_except_with()
         {
             var hashSet = new ObservableSet<string>
@@ -339,7 +339,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             Assert.Equal(new[] { "Brendan", "Nate" }, hashSet.OrderBy(i => i));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Can_symmetrical_except_with()
         {
             var hashSet = new ObservableSet<string>
@@ -382,7 +382,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             Assert.Equal(new[] { "Abrash", "Brendan", "Nate" }, hashSet.OrderBy(i => i));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void IsSubsetOf_works_like_normal_hashset()
         {
             var bigData = CreateTestData();
@@ -393,7 +393,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
                 new ObservableSet<int>(smallData).IsSubsetOf(bigData));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void IsProperSubsetOf_works_like_normal_hashset()
         {
             var bigData = CreateTestData();
@@ -404,7 +404,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
                 new ObservableSet<int>(smallData).IsProperSubsetOf(bigData));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void IsSupersetOf_works_like_normal_hashset()
         {
             var bigData = CreateTestData();
@@ -415,7 +415,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
                 new ObservableSet<int>(bigData).IsSupersetOf(smallData));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void IsProperSupersetOf_works_like_normal_hashset()
         {
             var bigData = CreateTestData();
@@ -426,7 +426,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
                 new ObservableSet<int>(bigData).IsProperSupersetOf(smallData));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void Overlaps_works_like_normal_hashset()
         {
             var bigData = CreateTestData();
@@ -437,7 +437,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
                 new ObservableSet<int>(bigData).Overlaps(smallData));
         }
 
-        [ConditionalFact]
+        [Fact]
         public void SetEquals_works_like_normal_hashset()
         {
             var data1 = CreateTestData(5);

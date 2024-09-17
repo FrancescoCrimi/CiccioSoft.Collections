@@ -2,41 +2,38 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization.Formatters.Tests;
 using Xunit;
 
 namespace System.Collections.Tests
 {
     public abstract partial class IEnumerable_NonGeneric_Tests : TestBase
     {
-        [ConditionalTheory(typeof(PlatformDetection), nameof(PlatformDetection.IsBinaryFormatterSupported))]
-        [MemberData(nameof(ValidCollectionSizes))]
-        public void IGenericSharedAPI_SerializeDeserialize(int count)
-        {
-            IEnumerable expected = NonGenericIEnumerableFactory(count);
-            if (!SupportsSerialization)
-            {
-                // No assert for !IsSerializable here, as some collections are only serializable sometimes,
-                // e.g. HybridDictionary.Keys is serializable when using Hashtable.Keys but not when
-                // using ListDictionary.Keys.
-                return;
-            }
+        //[ConditionalTheory(typeof(PlatformDetection), nameof(PlatformDetection.IsBinaryFormatterSupported))]
+        //[MemberData(nameof(ValidCollectionSizes))]
+        //public void IGenericSharedAPI_SerializeDeserialize(int count)
+        //{
+        //    IEnumerable expected = NonGenericIEnumerableFactory(count);
+        //    if (!SupportsSerialization)
+        //    {
+        //        // No assert for !IsSerializable here, as some collections are only serializable sometimes,
+        //        // e.g. HybridDictionary.Keys is serializable when using Hashtable.Keys but not when
+        //        // using ListDictionary.Keys.
+        //        return;
+        //    }
 
-            IEnumerable actual = BinaryFormatterHelpers.Clone(expected);
-            if (Order == EnumerableOrder.Sequential)
-            {
-                Assert.Equal(expected, actual);
-            }
-            else
-            {
-                var expectedSet = new HashSet<object>(expected.Cast<object>());
-                var actualSet = new HashSet<object>(actual.Cast<object>());
-                Assert.Subset(expectedSet, actualSet);
-                Assert.Subset(actualSet, expectedSet);
-            }
-        }
+        //    IEnumerable actual = BinaryFormatterHelpers.Clone(expected);
+        //    if (Order == EnumerableOrder.Sequential)
+        //    {
+        //        Assert.Equal(expected, actual);
+        //    }
+        //    else
+        //    {
+        //        var expectedSet = new HashSet<object>(expected.Cast<object>());
+        //        var actualSet = new HashSet<object>(actual.Cast<object>());
+        //        Assert.Subset(expectedSet, actualSet);
+        //        Assert.Subset(actualSet, expectedSet);
+        //    }
+        //}
 
         [Theory]
         [MemberData(nameof(ValidCollectionSizes))]

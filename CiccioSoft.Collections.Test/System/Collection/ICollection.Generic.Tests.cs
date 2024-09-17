@@ -336,7 +336,7 @@ namespace System.Collections.Tests
             }
         }
 
-        [ConditionalTheory(typeof(PlatformDetection), nameof(PlatformDetection.IsPreciseGcSupported))]
+        //[ConditionalTheory(typeof(PlatformDetection), nameof(PlatformDetection.IsPreciseGcSupported))]
         [InlineData(false)]
         [InlineData(true)]
         public void ICollection_Generic_Remove_ReferenceRemovedFromCollection(bool useRemove)

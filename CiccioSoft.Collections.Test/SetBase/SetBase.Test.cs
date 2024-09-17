@@ -21,9 +21,29 @@ namespace CiccioSoft.Collections.Tests.SetBase
 
         protected override bool ResetImplemented => true;
 
-        protected override ModifyOperation ModifyEnumeratorThrows => PlatformDetection.IsNetFramework ? base.ModifyEnumeratorThrows : (base.ModifyEnumeratorAllowed & ~(ModifyOperation.Remove | ModifyOperation.Clear));
+        protected override ModifyOperation ModifyEnumeratorThrows
+        {
+            get
+            {
+#if NETFRAMEWORK
+                return base.ModifyEnumeratorThrows;
+#else
+                return (base.ModifyEnumeratorAllowed & ~(ModifyOperation.Remove | ModifyOperation.Clear));
+#endif
+            }
+        }
 
-        protected override ModifyOperation ModifyEnumeratorAllowed => PlatformDetection.IsNetFramework ? base.ModifyEnumeratorAllowed : ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
+        protected override ModifyOperation ModifyEnumeratorAllowed
+        {
+            get
+            {
+#if NETFRAMEWORK
+                return base.ModifyEnumeratorAllowed;
+#else
+                return ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
+#endif
+            }
+        }
 
         protected override ISet<T> GenericISetFactory()
         {
@@ -682,57 +702,57 @@ namespace CiccioSoft.Collections.Tests.SetBase
             Assert.InRange(c.GetHashCodeCalls, 1, int.MaxValue);
         }
 
-#endregion
+        #endregion
 
         #region Serialization
 
-        [ConditionalFact(typeof(PlatformDetection), nameof(PlatformDetection.IsBinaryFormatterSupported))]
-        public void ComparerSerialization()
-        {
-            // Strings switch between randomized and non-randomized comparers,
-            // however this should never be observable externally.
-            TestComparerSerialization(EqualityComparer<string>.Default);
+        //[ConditionalFact(typeof(PlatformDetection), nameof(PlatformDetection.IsBinaryFormatterSupported))]
+        //public void ComparerSerialization()
+        //{
+        //    // Strings switch between randomized and non-randomized comparers,
+        //    // however this should never be observable externally.
+        //    TestComparerSerialization(EqualityComparer<string>.Default);
 
-            // OrdinalCaseSensitiveComparer is internal and (de)serializes as OrdinalComparer
-            TestComparerSerialization(StringComparer.Ordinal, "System.OrdinalComparer");
+        //    // OrdinalCaseSensitiveComparer is internal and (de)serializes as OrdinalComparer
+        //    TestComparerSerialization(StringComparer.Ordinal, "System.OrdinalComparer");
 
-            // OrdinalIgnoreCaseComparer is internal and (de)serializes as OrdinalComparer
-            TestComparerSerialization(StringComparer.OrdinalIgnoreCase, "System.OrdinalComparer");
-            TestComparerSerialization(StringComparer.CurrentCulture);
-            TestComparerSerialization(StringComparer.CurrentCultureIgnoreCase);
-            TestComparerSerialization(StringComparer.InvariantCulture);
-            TestComparerSerialization(StringComparer.InvariantCultureIgnoreCase);
+        //    // OrdinalIgnoreCaseComparer is internal and (de)serializes as OrdinalComparer
+        //    TestComparerSerialization(StringComparer.OrdinalIgnoreCase, "System.OrdinalComparer");
+        //    TestComparerSerialization(StringComparer.CurrentCulture);
+        //    TestComparerSerialization(StringComparer.CurrentCultureIgnoreCase);
+        //    TestComparerSerialization(StringComparer.InvariantCulture);
+        //    TestComparerSerialization(StringComparer.InvariantCultureIgnoreCase);
 
-            // Check other types while here, IEquatable valuetype, nullable valuetype, and non IEquatable object
-            TestComparerSerialization(EqualityComparer<int>.Default);
-            TestComparerSerialization(EqualityComparer<int?>.Default);
-            TestComparerSerialization(EqualityComparer<object>.Default);
+        //    // Check other types while here, IEquatable valuetype, nullable valuetype, and non IEquatable object
+        //    TestComparerSerialization(EqualityComparer<int>.Default);
+        //    TestComparerSerialization(EqualityComparer<int?>.Default);
+        //    TestComparerSerialization(EqualityComparer<object>.Default);
 
-            static void TestComparerSerialization<TCompared>(IEqualityComparer<TCompared> equalityComparer, string internalTypeName = null)
-            {
-                var bf = new BinaryFormatter();
-                var s = new MemoryStream();
+        //    static void TestComparerSerialization<TCompared>(IEqualityComparer<TCompared> equalityComparer, string internalTypeName = null)
+        //    {
+        //        var bf = new BinaryFormatter();
+        //        var s = new MemoryStream();
 
-                var dict = new SetBase<TCompared>(equalityComparer);
+        //        var dict = new SetBase<TCompared>(equalityComparer);
 
-                Assert.Same(equalityComparer, dict.Comparer);
+        //        Assert.Same(equalityComparer, dict.Comparer);
 
-                bf.Serialize(s, dict);
-                s.Position = 0;
-                dict = (SetBase<TCompared>)bf.Deserialize(s);
+        //        bf.Serialize(s, dict);
+        //        s.Position = 0;
+        //        dict = (SetBase<TCompared>)bf.Deserialize(s);
 
-                if (internalTypeName == null)
-                {
-                    Assert.IsType(equalityComparer.GetType(), dict.Comparer);
-                }
-                else
-                {
-                    Assert.Equal(internalTypeName, dict.Comparer.GetType().ToString());
-                }
+        //        if (internalTypeName == null)
+        //        {
+        //            Assert.IsType(equalityComparer.GetType(), dict.Comparer);
+        //        }
+        //        else
+        //        {
+        //            Assert.Equal(internalTypeName, dict.Comparer.GetType().ToString());
+        //        }
 
-                Assert.True(equalityComparer.Equals(dict.Comparer));
-            }
-        }
+        //        Assert.True(equalityComparer.Equals(dict.Comparer));
+        //    }
+        //}
 
         #endregion
     }

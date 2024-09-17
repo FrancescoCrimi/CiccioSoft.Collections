@@ -187,7 +187,8 @@ namespace System.Collections.Tests
         }
 
 #pragma warning disable xUnit1013 // xunit analyzer bug https://github.com/xunit/xunit/issues/1973
-        [ConditionalTheory(typeof(PlatformDetection), nameof(PlatformDetection.IsNonZeroLowerBoundArraySupported))]
+        //[ConditionalTheory(typeof(PlatformDetection), nameof(PlatformDetection.IsNonZeroLowerBoundArraySupported))]
+        [Theory]
         [MemberData(nameof(ValidCollectionSizes))]
         public virtual void ICollection_NonGeneric_CopyTo_NonZeroLowerBound(int count)
         {

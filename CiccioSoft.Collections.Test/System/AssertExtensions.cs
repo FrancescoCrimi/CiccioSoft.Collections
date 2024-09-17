@@ -14,7 +14,18 @@ namespace System
 {
     public static class AssertExtensions
     {
-        private static bool IsNetFramework => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework");
+        private static bool IsNetFramework
+        {
+            get
+            {
+#if NETFRAMEWORK
+                //return RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework");
+                return true;                
+#else
+                return false;
+#endif
+            }
+        }
 
 
         /// <summary>

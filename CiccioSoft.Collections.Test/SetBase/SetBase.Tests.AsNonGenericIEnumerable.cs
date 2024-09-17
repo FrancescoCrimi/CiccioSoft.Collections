@@ -22,9 +22,29 @@ namespace CiccioSoft.Collections.Tests.SetBase
         //protected override bool Enumerator_Empty_UsesSingletonInstance => true;
         protected override bool Enumerator_Current_UndefinedOperation_Throws => true;
 
-        protected override ModifyOperation ModifyEnumeratorThrows => PlatformDetection.IsNetFramework ? base.ModifyEnumeratorThrows : (base.ModifyEnumeratorAllowed & ~ModifyOperation.Remove);
+        protected override ModifyOperation ModifyEnumeratorThrows
+        {
+            get
+            {
+#if NETFRAMEWORK
+                return base.ModifyEnumeratorThrows;
+#else
+                return (base.ModifyEnumeratorAllowed & ~ModifyOperation.Remove);
+#endif
+            }
+        }
 
-        protected override ModifyOperation ModifyEnumeratorAllowed => PlatformDetection.IsNetFramework ? base.ModifyEnumeratorAllowed : ModifyOperation.Overwrite | ModifyOperation.Remove;
+        protected override ModifyOperation ModifyEnumeratorAllowed
+        {
+            get
+            {
+#if NETFRAMEWORK
+                return base.ModifyEnumeratorAllowed;
+#else
+                return ModifyOperation.Overwrite | ModifyOperation.Remove;
+#endif
+            }
+        }
 
         /// <summary>
         /// Returns a set of ModifyEnumerable delegates that modify the enumerable passed to them.

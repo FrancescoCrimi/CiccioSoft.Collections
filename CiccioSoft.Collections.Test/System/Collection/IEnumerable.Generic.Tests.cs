@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using Xunit;
 
 namespace System.Collections.Tests
