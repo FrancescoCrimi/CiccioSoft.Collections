@@ -59,7 +59,15 @@ namespace CiccioSoft.Collections
             => AddItem(item);
 
         public void ExceptWith(IEnumerable<T> other)
-            => ExceptWithItems(other);
+        {
+            // Special case if other is this; a set minus itself is the empty set.
+            if (other == this)
+            {
+                ClearItems();
+                return;
+            }
+            ExceptWithItems(other);
+        }
 
         public void IntersectWith(IEnumerable<T> other)
             => IntersectWithItems(other);
