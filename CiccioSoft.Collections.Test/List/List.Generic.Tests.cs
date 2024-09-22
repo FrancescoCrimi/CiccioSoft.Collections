@@ -4,12 +4,12 @@
 using System.Collections.Generic;
 using System.Collections.Tests;
 
-namespace CiccioSoft.Collections.Tests.ListBase
+namespace CiccioSoft.Collections.Tests.List
 {
     /// <summary>
     /// Contains tests that ensure the correctness of the List class.
     /// </summary>
-    public abstract partial class ListBase_Tests<T> : IList_Generic_Tests<T>
+    public abstract partial class List_Generic_Tests<T> : IList_Generic_Tests<T>
     {
         #region IList<T> Helper Methods
 
@@ -31,17 +31,17 @@ namespace CiccioSoft.Collections.Tests.ListBase
 
         #endregion
 
-        #region ListBase<T> Helper Methods
+        #region List<T> Helper Methods
 
-        protected virtual ListBase<T> GenericListFactory()
+        protected virtual List<T> GenericListFactory()
         {
-            return new ListBase<T>();
+            return new List<T>();
         }
 
-        protected virtual ListBase<T> GenericListFactory(int count)
+        protected virtual List<T> GenericListFactory(int count)
         {
             IEnumerable<T> toCreateFrom = CreateEnumerable(EnumerableType.List, null, count, 0, 0);
-            return new ListBase<T>(toCreateFrom);
+            return new List<T>(toCreateFrom);
         }
 
         #endregion

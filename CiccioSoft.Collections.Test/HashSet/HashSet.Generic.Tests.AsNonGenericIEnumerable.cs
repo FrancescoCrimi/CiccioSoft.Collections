@@ -6,13 +6,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Tests;
 
-namespace CiccioSoft.Collections.Tests.SetBase
+namespace CiccioSoft.Collections.Tests.HashSet
 {
-    public class SetBase_IEnumerable_NonGeneric_Tests : IEnumerable_NonGeneric_Tests
+    public class HashSet_IEnumerable_NonGeneric_Tests : IEnumerable_NonGeneric_Tests
     {
         protected override IEnumerable NonGenericIEnumerableFactory(int count)
         {
-            var set = new SetBase<string>();
+            var set = new HashSet<string>();
             int seed = 12354;
             while (set.Count < count)
                 set.Add(CreateT(set, seed++));
@@ -28,7 +28,7 @@ namespace CiccioSoft.Collections.Tests.SetBase
 #if NETFRAMEWORK
             base.ModifyEnumeratorThrows;
 #else
-            (base.ModifyEnumeratorAllowed & ~ModifyOperation.Remove);
+            base.ModifyEnumeratorAllowed & ~ModifyOperation.Remove;
 #endif
 
         protected override ModifyOperation ModifyEnumeratorAllowed =>
@@ -47,7 +47,7 @@ namespace CiccioSoft.Collections.Tests.SetBase
             {
                 yield return (IEnumerable enumerable) =>
                 {
-                    SetBase<string> casted = ((SetBase<string>)enumerable);
+                    HashSet<string> casted = ((HashSet<string>)enumerable);
                     if (casted.Count > 0)
                     {
                         casted.Clear();
@@ -58,7 +58,7 @@ namespace CiccioSoft.Collections.Tests.SetBase
             }
         }
 
-        protected string CreateT(SetBase<string> set, int seed)
+        protected string CreateT(HashSet<string> set, int seed)
         {
             int stringLength = seed % 10 + 5;
             Random rand = new Random(seed);

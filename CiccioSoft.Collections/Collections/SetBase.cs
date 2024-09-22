@@ -48,101 +48,19 @@ namespace CiccioSoft.Collections
 
         #region Public Property
 
-        /// <summary>Gets the <see cref="IEqualityComparer"/> object that is used to determine equality for the values in the set.</summary>
+        /// <summary>
+        /// Gets the <see cref="IEqualityComparer"/> object that is used to determine equality for the values in the set.
+        /// </summary>
         public IEqualityComparer<T> Comparer => _set.Comparer;
 
         #endregion
 
-        #region ISet<T>
+        #region Public Method
 
-        public bool Add(T item)
-            => AddItem(item);
-
-        public void ExceptWith(IEnumerable<T> other)
+        public ReadOnlySet<T> AsReadOnly()
         {
-            // Special case if other is this; a set minus itself is the empty set.
-            if (other == this)
-            {
-                ClearItems();
-                return;
-            }
-            ExceptWithItems(other);
+            return new ReadOnlySet<T>(this);
         }
-
-        public void IntersectWith(IEnumerable<T> other)
-            => IntersectWithItems(other);
-
-        public bool IsProperSubsetOf(IEnumerable<T> other)
-            => _set.IsProperSubsetOf(other);
-
-        public bool IsProperSupersetOf(IEnumerable<T> other)
-            => _set.IsProperSupersetOf(other);
-
-        public bool IsSubsetOf(IEnumerable<T> other)
-            => _set.IsSubsetOf(other);
-
-        public bool IsSupersetOf(IEnumerable<T> other)
-            => _set.IsSupersetOf(other);
-
-        public bool Overlaps(IEnumerable<T> other)
-            => _set.Overlaps(other);
-
-        public bool SetEquals(IEnumerable<T> other)
-            => _set.SetEquals(other);
-
-        public void SymmetricExceptWith(IEnumerable<T> other)
-            => SymmetricExceptWithItems(other);
-
-        public void UnionWith(IEnumerable<T> other)
-            => UnionWithItems(other);
-
-        #endregion
-
-        #region ICollection<T>
-
-        public int Count => _set.Count;
-
-        bool ICollection<T>.IsReadOnly => false;
-
-        void ICollection<T>.Add(T item)
-            => Add(item);
-
-        public void Clear()
-            => ClearItems();
-
-        public bool Contains(T item)
-            => _set.Contains(item);
-
-        public void CopyTo(T[] array, int arrayIndex)
-            => _set.CopyTo(array, arrayIndex);
-
-        public bool Remove(T item)
-            => RemoveItem(item);
-
-        #endregion
-
-        #region ICollection
-
-        /// <inheritdoc/>
-        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
-
-        /// <inheritdoc/>
-        bool ICollection.IsSynchronized => false;
-
-        /// <inheritdoc/>
-        object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
-
-        #endregion
-
-        #region IEnumerable
-
-        /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator()
-            => _set.GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
 
         #endregion
 
@@ -168,6 +86,103 @@ namespace CiccioSoft.Collections
 
         protected virtual void UnionWithItems(IEnumerable<T> other)
             => _set.UnionWith(other);
+
+        #endregion
+
+        #region ISet<T>
+
+        /// <inheritdoc/>
+        public bool Add(T item) => AddItem(item);
+
+        /// <inheritdoc/>
+        public void ExceptWith(IEnumerable<T> other)
+        {
+            // Special case if other is this; a set minus itself is the empty set.
+            if (other == this)
+            {
+                ClearItems();
+                return;
+            }
+            ExceptWithItems(other);
+        }
+
+        /// <inheritdoc/>
+        public void IntersectWith(IEnumerable<T> other) => IntersectWithItems(other);
+
+        /// <inheritdoc/>
+        public bool IsProperSubsetOf(IEnumerable<T> other) => _set.IsProperSubsetOf(other);
+
+        /// <inheritdoc/>
+        public bool IsProperSupersetOf(IEnumerable<T> other) => _set.IsProperSupersetOf(other);
+
+        /// <inheritdoc/>
+        public bool IsSubsetOf(IEnumerable<T> other) => _set.IsSubsetOf(other);
+
+        /// <inheritdoc/>
+        public bool IsSupersetOf(IEnumerable<T> other) => _set.IsSupersetOf(other);
+
+        /// <inheritdoc/>
+        public bool Overlaps(IEnumerable<T> other) => _set.Overlaps(other);
+
+        /// <inheritdoc/>
+        public bool SetEquals(IEnumerable<T> other) => _set.SetEquals(other);
+
+        /// <inheritdoc/>
+        public void SymmetricExceptWith(IEnumerable<T> other) => SymmetricExceptWithItems(other);
+
+        /// <inheritdoc/>
+        public void UnionWith(IEnumerable<T> other) => UnionWithItems(other);
+
+        #endregion
+
+        #region ICollection<T>
+
+        /// <inheritdoc/>
+        public int Count => _set.Count;
+
+        /// <inheritdoc/>
+        bool ICollection<T>.IsReadOnly => false;
+
+        /// <inheritdoc/>
+        void ICollection<T>.Add(T item) => Add(item);
+
+        /// <inheritdoc/>
+        public void Clear() => ClearItems();
+
+        /// <inheritdoc/>
+        public bool Contains(T item) => _set.Contains(item);
+
+        /// <inheritdoc/>
+        public void CopyTo(T[] array, int arrayIndex) => _set.CopyTo(array, arrayIndex);
+
+        /// <inheritdoc/>
+        public bool Remove(T item) => RemoveItem(item);
+
+        #endregion
+
+        #region ICollection
+
+        /// <inheritdoc/>
+        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
+
+        /// <inheritdoc/>
+        bool ICollection.IsSynchronized => false;
+
+        /// <inheritdoc/>
+        object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
+
+        #endregion
+
+        #region IEnumerable
+
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator() => _set.GetEnumerator();
+
+        /// <inheritdoc/>
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)_set).GetEnumerator();
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_set).GetEnumerator();
 
         #endregion
     }

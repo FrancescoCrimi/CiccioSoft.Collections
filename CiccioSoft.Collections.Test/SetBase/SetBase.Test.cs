@@ -2,48 +2,40 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Tests;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using Xunit;
 
 namespace CiccioSoft.Collections.Tests.SetBase
 {
-    public abstract partial class SetBase_Test<T> : ISet_Generic_Tests<T>
+    /// <summary>
+    /// Contains tests that ensure the correctness of the HashSet class.
+    /// </summary>
+    public abstract class SetBase_Test<T> : ISet_Generic_Tests<T>
     {
         #region ISet<T> Helper Methods
 
-        //protected override bool Enumerator_Empty_UsesSingletonInstance => true;
-        //protected override bool Enumerator_Empty_Current_UndefinedOperation_Throws => true;
+#if NET8_0
+        protected override bool Enumerator_Empty_UsesSingletonInstance => true;
+        protected override bool Enumerator_Empty_Current_UndefinedOperation_Throws => true;
+#endif
 
         protected override bool ResetImplemented => true;
 
-        protected override ModifyOperation ModifyEnumeratorThrows
-        {
-            get
-            {
+        protected override ModifyOperation ModifyEnumeratorThrows =>
 #if NETFRAMEWORK
-                return base.ModifyEnumeratorThrows;
+            base.ModifyEnumeratorThrows;
 #else
-                return (base.ModifyEnumeratorAllowed & ~(ModifyOperation.Remove | ModifyOperation.Clear));
+            base.ModifyEnumeratorAllowed & ~(ModifyOperation.Remove | ModifyOperation.Clear);
 #endif
-            }
-        }
 
-        protected override ModifyOperation ModifyEnumeratorAllowed
-        {
-            get
-            {
+        protected override ModifyOperation ModifyEnumeratorAllowed =>
 #if NETFRAMEWORK
-                return base.ModifyEnumeratorAllowed;
+            base.ModifyEnumeratorAllowed;
 #else
-                return ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
+            ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
 #endif
-            }
-        }
 
         protected override ISet<T> GenericISetFactory()
         {
@@ -51,7 +43,6 @@ namespace CiccioSoft.Collections.Tests.SetBase
         }
 
         #endregion
-
 
         #region Constructors
 
@@ -397,21 +388,17 @@ namespace CiccioSoft.Collections.Tests.SetBase
             Assert.Equal(capacity + 1, set.Count);
         }
 
-#endif
+        [Fact]
+        public void HashSet_Generic_Constructor_Capacity_ToNextPrimeNumber()
+        {
+            // Highest pre-computed number + 1.
+            const int Capacity = 7199370;
+            var set = new HashSet<T>(Capacity);
 
-        //[Fact]
-        //public void HashSet_Generic_Constructor_Capacity_ToNextPrimeNumber()
-        //{
-        //    // Highest pre-computed number + 1.
-        //    const int Capacity = 7199370;
-        //    var set = new HashSet<T>(Capacity);
-
-        //    // Assert that the HashTable's capacity is set to the descendant prime number of the given one.
-        //    const int NextPrime = 7199371;
-        //    Assert.Equal(NextPrime, set.EnsureCapacity(0));
-        //}
-
-#if NET6_0_OR_GREATER
+            // Assert that the HashTable's capacity is set to the descendant prime number of the given one.
+            const int NextPrime = 7199371;
+            Assert.Equal(NextPrime, set.EnsureCapacity(0));
+        }
 
         [Fact]
         public void HashSet_Generic_Constructor_int_Negative_ThrowsArgumentOutOfRangeException()
@@ -420,18 +407,12 @@ namespace CiccioSoft.Collections.Tests.SetBase
             AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new SetBase<T>(int.MinValue));
         }
 
-#endif
-
         [Theory]
         [MemberData(nameof(ValidCollectionSizes))]
         public void HashSet_Generic_Constructor_int_IEqualityComparer(int capacity)
         {
             IEqualityComparer<T> comparer = GetIEqualityComparer();
-#if NET6_0_OR_GREATER
             SetBase<T> set = new SetBase<T>(capacity, comparer);
-#else
-            SetBase<T> set = new SetBase<T>(comparer);
-#endif
             Assert.Equal(0, set.Count);
             if (comparer == null)
                 Assert.Equal(EqualityComparer<T>.Default, set.Comparer);
@@ -444,11 +425,7 @@ namespace CiccioSoft.Collections.Tests.SetBase
         public void HashSet_Generic_Constructor_int_IEqualityComparer_AddUpToAndBeyondCapacity(int capacity)
         {
             IEqualityComparer<T> comparer = GetIEqualityComparer();
-#if NET6_0_OR_GREATER
             SetBase<T> set = new SetBase<T>(capacity, comparer);
-#else
-            SetBase<T> set = new SetBase<T>(comparer);
-#endif
 
             AddToCollection(set, capacity);
             Assert.Equal(capacity, set.Count);
@@ -457,8 +434,6 @@ namespace CiccioSoft.Collections.Tests.SetBase
             Assert.Equal(capacity + 1, set.Count);
         }
 
-#if NET6_0_OR_GREATER
-
         [Fact]
         public void HashSet_Generic_Constructor_int_IEqualityComparer_Negative_ThrowsArgumentOutOfRangeException()
         {
@@ -466,8 +441,6 @@ namespace CiccioSoft.Collections.Tests.SetBase
             AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new SetBase<T>(-1, comparer));
             AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new SetBase<T>(int.MinValue, comparer));
         }
-
-#endif
 
         //#region TryGetValue
 
@@ -683,12 +656,8 @@ namespace CiccioSoft.Collections.Tests.SetBase
         public void Remove_NonDefaultComparer_ComparerUsed(int capacity)
         {
             var c = new TrackingEqualityComparer<T>();
-
-#if NET6_0_OR_GREATER
             var set = new SetBase<T>(capacity, c);
-#else
-            var set = new SetBase<T>(c);
-#endif
+
             AddToCollection(set, capacity);
             T first = set.First();
             c.EqualsCalls = 0;
@@ -704,7 +673,9 @@ namespace CiccioSoft.Collections.Tests.SetBase
 
         #endregion
 
-        #region Serialization
+#endif
+
+        //#region Serialization
 
         //[ConditionalFact(typeof(PlatformDetection), nameof(PlatformDetection.IsBinaryFormatterSupported))]
         //public void ComparerSerialization()
@@ -754,6 +725,6 @@ namespace CiccioSoft.Collections.Tests.SetBase
         //    }
         //}
 
-        #endregion
+        //#endregion
     }
 }

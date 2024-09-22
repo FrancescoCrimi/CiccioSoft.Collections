@@ -1,16 +1,16 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
 using System.Collections;
 using System.Collections.Tests;
 
-namespace CiccioSoft.Collections.Tests.ListBase
+namespace CiccioSoft.Collections.Tests.List
 {
     /// <summary>
-    /// Contains tests that ensure the correctness of the ListBase class.
+    /// Contains tests that ensure the correctness of the List class.
     /// </summary>
-    public class ListBase_Tests_AsNonGenericIList : IList_NonGeneric_Tests
+    public class List_Tests_AsNonGenericIList : IList_NonGeneric_Tests
     {
         #region IList Helper methods
 
@@ -28,7 +28,7 @@ namespace CiccioSoft.Collections.Tests.ListBase
 
         protected override IList NonGenericIListFactory()
         {
-            return new ListBase<object>();
+            return new System.Collections.Generic.List<object>();
         }
 
         #endregion

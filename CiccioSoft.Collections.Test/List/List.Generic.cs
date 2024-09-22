@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace CiccioSoft.Collections.Tests.ListBase
+namespace CiccioSoft.Collections.Tests.List
 {
-    public class ListBase_Test_string : ListBase_Tests<string>
+    public class List_Generic_Test_string : List_Generic_Tests<string>
     {
         protected override string CreateT(int seed)
         {
@@ -18,7 +18,7 @@ namespace CiccioSoft.Collections.Tests.ListBase
         }
     }
 
-    public class ListBase_Test_int : ListBase_Tests<int>
+    public class List_Generic_Tests_int : List_Generic_Tests<int>
     {
         protected override int CreateT(int seed)
         {
@@ -27,7 +27,7 @@ namespace CiccioSoft.Collections.Tests.ListBase
         }
     }
 
-    public class ListBase_Tests_string_ReadOnly : ListBase_Tests<string>
+    public class List_Generic_Tests_string_ReadOnly : List_Generic_Tests<string>
     {
         protected override string CreateT(int seed)
         {
@@ -57,7 +57,7 @@ namespace CiccioSoft.Collections.Tests.ListBase
 #endif
     }
 
-    public class ListBase_Tests_int_ReadOnly : ListBase_Tests<int>
+    public class List_Generic_Tests_int_ReadOnly : List_Generic_Tests<int>
     {
         protected override int CreateT(int seed)
         {

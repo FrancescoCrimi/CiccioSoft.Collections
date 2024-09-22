@@ -82,6 +82,7 @@ namespace System.Collections.Tests
         /// the same as Enumerator_Current_UndefinedOperation_Throws.
         /// </summary>
         protected virtual bool IList_CurrentAfterAdd_Throws => Enumerator_Current_UndefinedOperation_Throws;
+        protected virtual bool IList_Empty_CurrentAfterAdd_Throws => IList_CurrentAfterAdd_Throws;
 
         #endregion
 
@@ -1099,9 +1100,7 @@ namespace System.Collections.Tests
                 {
                     collection.Add(CreateT(seed++));
 
-                    // TODO: Ciccio Mod 
-                    //if (IList_CurrentAfterAdd_Throws)
-                    if (count == 0)
+                    if (count == 0 ? IList_Empty_CurrentAfterAdd_Throws : IList_CurrentAfterAdd_Throws)
                     {
                         Assert.Throws<InvalidOperationException>(() => enumerator.Current); // Enumerator.Current should fail
                     }
