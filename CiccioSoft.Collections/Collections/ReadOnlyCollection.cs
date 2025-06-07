@@ -163,10 +163,6 @@ namespace CiccioSoft.Collections
 
         #region IEnumerable
 
-        //public IEnumerator<T> GetEnumerator() =>
-        //    _list.Count == 0 ? SZGenericArrayEnumerator<T>.Empty :
-        //    _list.GetEnumerator();
-
         /// <inheritdoc/>
         public IEnumerator<T> GetEnumerator() => _list.GetEnumerator();
 

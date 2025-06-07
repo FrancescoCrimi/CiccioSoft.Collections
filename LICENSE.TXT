@@ -1,6 +1,7 @@
 The MIT License (MIT)
 
 Copyright (c) .NET Foundation and Contributors
+Copyright (c) 2019 - 2025 Francesco Crimi
 
 All rights reserved.
 

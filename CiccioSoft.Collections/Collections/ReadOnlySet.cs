@@ -106,12 +106,13 @@ namespace CiccioSoft.Collections
         #region IEnumerable
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() =>
-            _set.Count == 0 ? ((IEnumerable<T>)Array.Empty<T>()).GetEnumerator() :
-            _set.GetEnumerator();
+        public IEnumerator<T> GetEnumerator() => _set.GetEnumerator();
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)_set).GetEnumerator();
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_set).GetEnumerator();
 
         #endregion
     }
