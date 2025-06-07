@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections
     [DebuggerDisplay("Count = {Count}")]
     public class ListBase<T> : IList<T>, IList, IReadOnlyList<T>
     {
-        protected List<T> _list;
+        protected readonly List<T> items;
 
         #region Constructors
 
@@ -26,7 +26,7 @@ namespace CiccioSoft.Collections
         /// </summary>
         public ListBase()
         {
-            _list = new List<T>();
+            items = new List<T>();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace CiccioSoft.Collections
         /// </exception>
         public ListBase(IEnumerable<T> collection)
         {
-            _list = new List<T>(collection);
+            items = new List<T>(collection);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace CiccioSoft.Collections
         /// </exception>
         public ListBase(int capacity)
         {
-            _list = new List<T>(capacity);
+            items = new List<T>(capacity);
         }
 
         #endregion
@@ -71,8 +71,8 @@ namespace CiccioSoft.Collections
         /// </returns>
         public int Capacity
         {
-            get => _list.Capacity;
-            set => _list.Capacity = value;
+            get => items.Capacity;
+            set => items.Capacity = value;
         }
 
         #endregion
@@ -96,22 +96,22 @@ namespace CiccioSoft.Collections
 
         protected virtual void ClearItems()
         {
-            _list.Clear();
+            items.Clear();
         }
 
         protected virtual void InsertItem(int index, T item)
         {
-            _list.Insert(index, item);
+            items.Insert(index, item);
         }
 
         protected virtual void RemoveItem(int index)
         {
-            _list.RemoveAt(index);
+            items.RemoveAt(index);
         }
 
         protected virtual void SetItem(int index, T item)
         {
-            _list[index] = item;
+            items[index] = item;
         }
 
         #endregion
@@ -121,15 +121,15 @@ namespace CiccioSoft.Collections
         /// <inheritdoc/>
         public T this[int index]
         {
-            get => _list[index];
+            get => items[index];
             set
             {
-                if (((ICollection<T>)_list).IsReadOnly)
+                if (((ICollection<T>)items).IsReadOnly)
                 {
                     ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
                 }
 
-                if ((uint)index >= (uint)_list.Count)
+                if ((uint)index >= (uint)items.Count)
                 {
                     ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessException();
                 }
@@ -139,12 +139,12 @@ namespace CiccioSoft.Collections
         }
 
         /// <inheritdoc/>
-        public int IndexOf(T item) => _list.IndexOf(item);
+        public int IndexOf(T item) => items.IndexOf(item);
 
         /// <inheritdoc/>
         public void Insert(int index, T item)
         {
-            if ((uint)index > (uint)_list.Count)
+            if ((uint)index > (uint)items.Count)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException();
             }
@@ -155,7 +155,7 @@ namespace CiccioSoft.Collections
         /// <inheritdoc/>
         public void RemoveAt(int index)
         {
-            if ((uint)index >= (uint)_list.Count)
+            if ((uint)index >= (uint)items.Count)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessException();
             }
@@ -168,7 +168,7 @@ namespace CiccioSoft.Collections
         #region ICollection<T>
 
         /// <inheritdoc/>
-        public int Count => _list.Count;
+        public int Count => items.Count;
 
         /// <inheritdoc/>
         public bool IsReadOnly => false;
@@ -176,7 +176,7 @@ namespace CiccioSoft.Collections
         /// <inheritdoc/>
         public void Add(T item)
         {
-            int index = _list.Count;
+            int index = items.Count;
             InsertItem(index, item);
         }
 
@@ -187,15 +187,15 @@ namespace CiccioSoft.Collections
         }
 
         /// <inheritdoc/>
-        public bool Contains(T item) => _list.Contains(item);
+        public bool Contains(T item) => items.Contains(item);
 
         /// <inheritdoc/>
-        public void CopyTo(T[] array, int arrayIndex) => _list.CopyTo(array, arrayIndex);
+        public void CopyTo(T[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
 
         /// <inheritdoc/>
         public bool Remove(T item)
         {
-            int index = _list.IndexOf(item);
+            int index = items.IndexOf(item);
             if (index < 0) return false;
             RemoveItem(index);
             return true;
@@ -208,7 +208,7 @@ namespace CiccioSoft.Collections
         /// <inheritdoc/>
         object? IList.this[int index]
         {
-            get => _list[index];
+            get => items[index];
             set
             {
                 ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, ExceptionArgument.value);
@@ -229,7 +229,7 @@ namespace CiccioSoft.Collections
         }
 
         /// <inheritdoc/>
-        bool IList.IsFixedSize => ((IList)_list).IsFixedSize;
+        bool IList.IsFixedSize => ((IList)items).IsFixedSize;
 
         /// <inheritdoc/>
         int IList.Add(object? value)
@@ -253,10 +253,10 @@ namespace CiccioSoft.Collections
         }
 
         /// <inheritdoc/>
-        bool IList.Contains(object? value) => ((IList)_list).Contains(value);
+        bool IList.Contains(object? value) => ((IList)items).Contains(value);
 
         /// <inheritdoc/>
-        int IList.IndexOf(object? value) => ((IList)_list).IndexOf(value);
+        int IList.IndexOf(object? value) => ((IList)items).IndexOf(value);
 
         /// <inheritdoc/>
         void IList.Insert(int index, object? value)
@@ -294,30 +294,30 @@ namespace CiccioSoft.Collections
         bool ICollection.IsSynchronized => false;
 
         /// <inheritdoc/>
-        object ICollection.SyncRoot => ((ICollection)_list).SyncRoot;
+        object ICollection.SyncRoot => ((ICollection)items).SyncRoot;
 
         /// <inheritdoc/>
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)_list).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)items).CopyTo(array, index);
 
         #endregion
 
         #region IReadOnlyList<T>
 
         /// <inheritdoc/>
-        T IReadOnlyList<T>.this[int index] => _list[index];
+        T IReadOnlyList<T>.this[int index] => items[index];
 
         #endregion
 
         #region IEnumerable
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _list.GetEnumerator();
+        public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
 
         /// <inheritdoc/>
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)_list).GetEnumerator();
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)items).GetEnumerator();
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_list).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
 
         #endregion
 

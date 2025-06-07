@@ -73,7 +73,7 @@ namespace CiccioSoft.Collections
                 raiseItemChangedEvents = true;
 
                 // Loop thru the items already in the collection and hook their change notification.
-                foreach (T item in _set)
+                foreach (T item in items)
                 {
                     HookPropertyChanged(item);
                 }
@@ -86,14 +86,14 @@ namespace CiccioSoft.Collections
 
         protected override bool AddItem(T item)
         {
-            if (_set.Contains(item))
+            if (items.Contains(item))
             {
                 return false;
             }
 
-            _set.Add(item);
+            items.Add(item);
 
-            int index = _set.ToList().IndexOf(item);
+            int index = items.ToList().IndexOf(item);
             if (raiseItemChangedEvents)
             {
                 HookPropertyChanged(item);
@@ -105,33 +105,33 @@ namespace CiccioSoft.Collections
 
         protected override void ClearItems()
         {
-            if (_set.Count == 0)
+            if (items.Count == 0)
             {
                 return;
             }
 
             if (raiseItemChangedEvents)
             {
-                foreach (T item in _set)
+                foreach (T item in items)
                 {
                     UnhookPropertyChanged(item);
                 }
             }
 
-            _set.Clear();
+            items.Clear();
 
             FireListChanged(ListChangedType.Reset, -1);
         }
 
         protected override void ExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(_set, _set.Comparer);
+            var copy = new HashSet<T>(items, items.Comparer);
             copy.ExceptWith(other);
-            if (copy.Count == _set.Count)
+            if (copy.Count == items.Count)
             {
                 return;
             }
-            var removed = _set.Where(i => !copy.Contains(i)).ToList();
+            var removed = items.Where(i => !copy.Contains(i)).ToList();
 
             if (raiseItemChangedEvents)
             {
@@ -141,20 +141,20 @@ namespace CiccioSoft.Collections
                 }
             }
 
-            _set = copy;
+            items = copy;
 
             FireListChanged(ListChangedType.Reset, -1);
         }
 
         protected override void IntersectWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(_set, _set.Comparer);
+            var copy = new HashSet<T>(items, items.Comparer);
             copy.IntersectWith(other);
-            if (copy.Count == _set.Count)
+            if (copy.Count == items.Count)
             {
                 return;
             }
-            var removed = _set.Where(i => !copy.Contains(i)).ToList();
+            var removed = items.Where(i => !copy.Contains(i)).ToList();
 
             if (raiseItemChangedEvents)
             {
@@ -164,14 +164,14 @@ namespace CiccioSoft.Collections
                 }
             }
 
-            _set = copy;
+            items = copy;
 
             FireListChanged(ListChangedType.Reset, -1);
         }
 
         protected override bool RemoveItem(T item)
         {
-            if (!_set.Contains(item))
+            if (!items.Contains(item))
             {
                 return false;
             }
@@ -180,9 +180,9 @@ namespace CiccioSoft.Collections
             {
                 UnhookPropertyChanged(item);
             }
-            int index = _set.ToList().IndexOf(item);
+            int index = items.ToList().IndexOf(item);
 
-            _set.Remove(item);
+            items.Remove(item);
 
             FireListChanged(ListChangedType.ItemDeleted, index);
 
@@ -191,10 +191,10 @@ namespace CiccioSoft.Collections
 
         protected override void SymmetricExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(_set, _set.Comparer);
+            var copy = new HashSet<T>(items, items.Comparer);
             copy.SymmetricExceptWith(other);
-            var removed = _set.Where(i => !copy.Contains(i)).ToList();
-            var added = copy.Where(i => !_set.Contains(i)).ToList();
+            var removed = items.Where(i => !copy.Contains(i)).ToList();
+            var added = copy.Where(i => !items.Contains(i)).ToList();
 
             if (removed.Count == 0
                 && added.Count == 0)
@@ -214,20 +214,20 @@ namespace CiccioSoft.Collections
                 }
             }
 
-            _set = copy;
+            items = copy;
 
             FireListChanged(ListChangedType.Reset, -1);
         }
 
         protected override void UnionWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(_set, _set.Comparer);
+            var copy = new HashSet<T>(items, items.Comparer);
             copy.UnionWith(other);
-            if (copy.Count == _set.Count)
+            if (copy.Count == items.Count)
             {
                 return;
             }
-            var added = copy.Where(i => !_set.Contains(i)).ToList();
+            var added = copy.Where(i => !items.Contains(i)).ToList();
 
             if (raiseItemChangedEvents)
             {
@@ -237,7 +237,7 @@ namespace CiccioSoft.Collections
                 }
             }
 
-            _set = copy;
+            items = copy;
 
             FireListChanged(ListChangedType.Reset, -1);
         }
@@ -318,9 +318,9 @@ namespace CiccioSoft.Collections
                 // somehow the item has been removed from our list without our knowledge.
                 int pos = _lastChangeIndex;
 
-                if (pos < 0 || pos >= Count || !_set.ToList()[pos]!.Equals(item))
+                if (pos < 0 || pos >= Count || !items.ToList()[pos]!.Equals(item))
                 {
-                    pos = _set.ToList().IndexOf(item);
+                    pos = items.ToList().IndexOf(item);
                     _lastChangeIndex = pos;
                 }
 
@@ -419,7 +419,7 @@ namespace CiccioSoft.Collections
 
         object? IList.this[int index]
         {
-            get => _set.ToList()[index];
+            get => items.ToList()[index];
             set => throw new NotSupportedException("Mutating a value collection derived from a hashset is not allowed.");
         }
 
@@ -444,7 +444,7 @@ namespace CiccioSoft.Collections
 
             Add(item);
 
-            return _set.ToList().IndexOf(item);
+            return items.ToList().IndexOf(item);
         }
 
         bool IList.Contains(object? value)
@@ -460,7 +460,7 @@ namespace CiccioSoft.Collections
         {
             if (IsCompatibleObject(value))
             {
-                return _set.ToList().IndexOf((T)value!);
+                return items.ToList().IndexOf((T)value!);
             }
             return -1;
         }
@@ -489,9 +489,9 @@ namespace CiccioSoft.Collections
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
+        object ICollection.SyncRoot => items is ICollection c ? c.SyncRoot : this;
 
-        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
+        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(items, array, index);
 
         #endregion
 

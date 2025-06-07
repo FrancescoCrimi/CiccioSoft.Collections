@@ -14,33 +14,33 @@ namespace CiccioSoft.Collections
     [DebuggerDisplay("Count = {Count}")]
     public class SetBase<T> : ISet<T>, ICollection<T>, IReadOnlySet<T>, IReadOnlyCollection<T>, ICollection
     {
-        protected HashSet<T> _set;
+        protected HashSet<T> items;
 
         #region Constructors
 
         public SetBase()
-            => _set = new HashSet<T>();
+            => items = new HashSet<T>();
 
         public SetBase(IEqualityComparer<T>? comparer)
-            => _set = new HashSet<T>(comparer);
+            => items = new HashSet<T>(comparer);
 
 #if NET6_0_OR_GREATER
 
         public SetBase(int capacity)
-            => _set = new HashSet<T>(capacity);
+            => items = new HashSet<T>(capacity);
 
 #endif
 
         public SetBase(IEnumerable<T> collection)
-            => _set = new HashSet<T>(collection);
+            => items = new HashSet<T>(collection);
 
         public SetBase(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
-            => _set = new HashSet<T>(collection, comparer);
+            => items = new HashSet<T>(collection, comparer);
 
 #if NET6_0_OR_GREATER
 
         public SetBase(int capacity, IEqualityComparer<T>? comparer)
-            => _set = new HashSet<T>(capacity, comparer);
+            => items = new HashSet<T>(capacity, comparer);
 
 #endif
 
@@ -51,7 +51,7 @@ namespace CiccioSoft.Collections
         /// <summary>
         /// Gets the <see cref="IEqualityComparer"/> object that is used to determine equality for the values in the set.
         /// </summary>
-        public IEqualityComparer<T> Comparer => _set.Comparer;
+        public IEqualityComparer<T> Comparer => items.Comparer;
 
         #endregion
 
@@ -67,25 +67,25 @@ namespace CiccioSoft.Collections
         #region Virtual Methods
 
         protected virtual bool AddItem(T item)
-            => _set.Add(item);
+            => items.Add(item);
 
         protected virtual void ClearItems()
-            => _set.Clear();
+            => items.Clear();
 
         protected virtual void ExceptWithItems(IEnumerable<T> other)
-            => _set.ExceptWith(other);
+            => items.ExceptWith(other);
 
         protected virtual void IntersectWithItems(IEnumerable<T> other)
-            => _set.IntersectWith(other);
+            => items.IntersectWith(other);
 
         protected virtual bool RemoveItem(T item)
-            => _set.Remove(item);
+            => items.Remove(item);
 
         protected virtual void SymmetricExceptWithItems(IEnumerable<T> other)
-            => _set.SymmetricExceptWith(other);
+            => items.SymmetricExceptWith(other);
 
         protected virtual void UnionWithItems(IEnumerable<T> other)
-            => _set.UnionWith(other);
+            => items.UnionWith(other);
 
         #endregion
 
@@ -110,22 +110,22 @@ namespace CiccioSoft.Collections
         public void IntersectWith(IEnumerable<T> other) => IntersectWithItems(other);
 
         /// <inheritdoc/>
-        public bool IsProperSubsetOf(IEnumerable<T> other) => _set.IsProperSubsetOf(other);
+        public bool IsProperSubsetOf(IEnumerable<T> other) => items.IsProperSubsetOf(other);
 
         /// <inheritdoc/>
-        public bool IsProperSupersetOf(IEnumerable<T> other) => _set.IsProperSupersetOf(other);
+        public bool IsProperSupersetOf(IEnumerable<T> other) => items.IsProperSupersetOf(other);
 
         /// <inheritdoc/>
-        public bool IsSubsetOf(IEnumerable<T> other) => _set.IsSubsetOf(other);
+        public bool IsSubsetOf(IEnumerable<T> other) => items.IsSubsetOf(other);
 
         /// <inheritdoc/>
-        public bool IsSupersetOf(IEnumerable<T> other) => _set.IsSupersetOf(other);
+        public bool IsSupersetOf(IEnumerable<T> other) => items.IsSupersetOf(other);
 
         /// <inheritdoc/>
-        public bool Overlaps(IEnumerable<T> other) => _set.Overlaps(other);
+        public bool Overlaps(IEnumerable<T> other) => items.Overlaps(other);
 
         /// <inheritdoc/>
-        public bool SetEquals(IEnumerable<T> other) => _set.SetEquals(other);
+        public bool SetEquals(IEnumerable<T> other) => items.SetEquals(other);
 
         /// <inheritdoc/>
         public void SymmetricExceptWith(IEnumerable<T> other) => SymmetricExceptWithItems(other);
@@ -138,7 +138,7 @@ namespace CiccioSoft.Collections
         #region ICollection<T>
 
         /// <inheritdoc/>
-        public int Count => _set.Count;
+        public int Count => items.Count;
 
         /// <inheritdoc/>
         bool ICollection<T>.IsReadOnly => false;
@@ -150,10 +150,10 @@ namespace CiccioSoft.Collections
         public void Clear() => ClearItems();
 
         /// <inheritdoc/>
-        public bool Contains(T item) => _set.Contains(item);
+        public bool Contains(T item) => items.Contains(item);
 
         /// <inheritdoc/>
-        public void CopyTo(T[] array, int arrayIndex) => _set.CopyTo(array, arrayIndex);
+        public void CopyTo(T[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
 
         /// <inheritdoc/>
         public bool Remove(T item) => RemoveItem(item);
@@ -163,26 +163,26 @@ namespace CiccioSoft.Collections
         #region ICollection
 
         /// <inheritdoc/>
-        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
+        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(items, array, index);
 
         /// <inheritdoc/>
         bool ICollection.IsSynchronized => false;
 
         /// <inheritdoc/>
-        object ICollection.SyncRoot => _set is ICollection c ? c.SyncRoot : this;
+        object ICollection.SyncRoot => items is ICollection c ? c.SyncRoot : this;
 
         #endregion
 
         #region IEnumerable
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _set.GetEnumerator();
+        public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
 
         /// <inheritdoc/>
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)_set).GetEnumerator();
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)items).GetEnumerator();
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_set).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
 
         #endregion
     }

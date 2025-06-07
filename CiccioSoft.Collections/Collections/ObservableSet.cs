@@ -62,14 +62,14 @@ namespace CiccioSoft.Collections
 
         protected override bool AddItem(T item)
         {
-            if (_set.Contains(item))
+            if (items.Contains(item))
             {
                 return false;
             }
 
             CheckReentrancy();
 
-            _set.Add(item);
+            items.Add(item);
 
             OnCollectionChanged(NotifyCollectionChangedAction.Add, item);
             OnCountPropertyChanged();
@@ -79,7 +79,7 @@ namespace CiccioSoft.Collections
 
         protected override void ClearItems()
         {
-            if (_set.Count == 0)
+            if (items.Count == 0)
             {
                 return;
             }
@@ -87,7 +87,7 @@ namespace CiccioSoft.Collections
             CheckReentrancy();
             var removed = this.ToList();
 
-            _set.Clear();
+            items.Clear();
 
             OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
@@ -95,17 +95,17 @@ namespace CiccioSoft.Collections
 
         protected override void ExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(_set, _set.Comparer);
+            var copy = new HashSet<T>(items, items.Comparer);
             copy.ExceptWith(other);
-            if (copy.Count == _set.Count)
+            if (copy.Count == items.Count)
             {
                 return;
             }
-            var removed = _set.Where(i => !copy.Contains(i)).ToList();
+            var removed = items.Where(i => !copy.Contains(i)).ToList();
 
             CheckReentrancy();
 
-            _set = copy;
+            items = copy;
 
             OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
@@ -113,17 +113,17 @@ namespace CiccioSoft.Collections
 
         protected override void IntersectWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(_set, _set.Comparer);
+            var copy = new HashSet<T>(items, items.Comparer);
             copy.IntersectWith(other);
-            if (copy.Count == _set.Count)
+            if (copy.Count == items.Count)
             {
                 return;
             }
-            var removed = _set.Where(i => !copy.Contains(i)).ToList();
+            var removed = items.Where(i => !copy.Contains(i)).ToList();
 
             CheckReentrancy();
 
-            _set = copy;
+            items = copy;
 
             OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
@@ -131,14 +131,14 @@ namespace CiccioSoft.Collections
 
         protected override bool RemoveItem(T item)
         {
-            if (!_set.Contains(item))
+            if (!items.Contains(item))
             {
                 return false;
             }
 
             CheckReentrancy();
 
-            _set.Remove(item);
+            items.Remove(item);
 
             OnCollectionChanged(NotifyCollectionChangedAction.Remove, item);
             OnCountPropertyChanged();
@@ -148,10 +148,10 @@ namespace CiccioSoft.Collections
 
         protected override void SymmetricExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(_set, _set.Comparer);
+            var copy = new HashSet<T>(items, items.Comparer);
             copy.SymmetricExceptWith(other);
-            var removed = _set.Where(i => !copy.Contains(i)).ToList();
-            var added = copy.Where(i => !_set.Contains(i)).ToList();
+            var removed = items.Where(i => !copy.Contains(i)).ToList();
+            var added = copy.Where(i => !items.Contains(i)).ToList();
 
             if (removed.Count == 0
                 && added.Count == 0)
@@ -161,7 +161,7 @@ namespace CiccioSoft.Collections
 
             CheckReentrancy();
 
-            _set = copy;
+            items = copy;
 
             OnCollectionChanged(added, removed);
             OnCountPropertyChanged();
@@ -169,17 +169,17 @@ namespace CiccioSoft.Collections
 
         protected override void UnionWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(_set, _set.Comparer);
+            var copy = new HashSet<T>(items, items.Comparer);
             copy.UnionWith(other);
-            if (copy.Count == _set.Count)
+            if (copy.Count == items.Count)
             {
                 return;
             }
-            var added = copy.Where(i => !_set.Contains(i)).ToList();
+            var added = copy.Where(i => !items.Contains(i)).ToList();
 
             CheckReentrancy();
 
-            _set = copy;
+            items = copy;
 
             OnCollectionChanged(added, EventArgsCache.NoItems);
             OnCountPropertyChanged();
