@@ -23,7 +23,7 @@ namespace CiccioSoft.Collections
         /// Initializes a new instance of ReadOnlyObservableSet that
         /// wraps the given ObservableSet.
         /// </summary>
-        public ReadOnlyObservableSet(ObservableSet<T> set) : base(set)
+        public ReadOnlyObservableSet(ObservableHashSet<T> set) : base(set)
         {
             set.CollectionChanged += new NotifyCollectionChangedEventHandler(HandleCollectionChanged);
             set.PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);

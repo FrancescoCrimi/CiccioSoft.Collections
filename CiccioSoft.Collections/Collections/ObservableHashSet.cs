@@ -15,7 +15,7 @@ namespace CiccioSoft.Collections
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ObservableSet<T> : SetBase<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableHashSet<T> : SetBase<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         //private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
 
@@ -24,33 +24,33 @@ namespace CiccioSoft.Collections
 
         #region Constructors
 
-        public ObservableSet()
+        public ObservableHashSet()
         {
         }
 
-        public ObservableSet(IEqualityComparer<T>? comparer) : base(comparer)
+        public ObservableHashSet(IEqualityComparer<T>? comparer) : base(comparer)
         {
         }
 
 #if NET6_0_OR_GREATER
 
-        public ObservableSet(int capacity) : base(capacity)
+        public ObservableHashSet(int capacity) : base(capacity)
         {
         }
 
 #endif
 
-        public ObservableSet(IEnumerable<T> collection) : base(collection)
+        public ObservableHashSet(IEnumerable<T> collection) : base(collection)
         {
         }
 
-        public ObservableSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer) : base(collection, comparer)
+        public ObservableHashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer) : base(collection, comparer)
         {
         }
 
 #if NET6_0_OR_GREATER
 
-        public ObservableSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
+        public ObservableHashSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
         {
         }
 

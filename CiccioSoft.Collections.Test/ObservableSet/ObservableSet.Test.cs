@@ -10,7 +10,7 @@ using Xunit;
 
 namespace CiccioSoft.Collections.Tests.ObservableSet
 {
-    public class ObservableSet_Test
+    public class ObservableHashSet_Test
     {
         private static readonly Random _random = new();
 
@@ -19,24 +19,24 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         {
             Assert.Same(
                 new HashSet<int>().Comparer,
-                new ObservableSet<int>().Comparer);
+                new ObservableHashSet<int>().Comparer);
 
             var comparer = new HashSet<object>().Comparer;
             Assert.Same(
                 comparer,
-                new ObservableSet<object>(comparer).Comparer);
+                new ObservableHashSet<object>(comparer).Comparer);
 
             var testData1 = CreateTestData();
 
             var rh1 = new HashSet<int>(testData1);
-            var ohs1 = new ObservableSet<int>(testData1);
+            var ohs1 = new ObservableHashSet<int>(testData1);
             Assert.Equal(rh1.OrderBy(i => i), ohs1.OrderBy(i => i));
             Assert.Same(rh1.Comparer, ohs1.Comparer);
 
             var testData2 = CreateTestData().Cast<object>();
 
             var rh2 = new HashSet<object>(testData2, comparer);
-            var ohs2 = new ObservableSet<object>(testData2, comparer);
+            var ohs2 = new ObservableHashSet<object>(testData2, comparer);
             Assert.Equal(rh2.OrderBy(i => i), ohs2.OrderBy(i => i));
             Assert.Same(rh2.Comparer, ohs2.Comparer);
         }
@@ -44,7 +44,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         [Fact]
         public void Can_add()
         {
-            var hashSet = new ObservableSet<string>();
+            var hashSet = new ObservableHashSet<string>();
             //var countChanging = 0;
             var countChanged = 0;
             var collectionChanged = 0;
@@ -91,7 +91,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         {
             var testData = new HashSet<int>(CreateTestData());
 
-            var hashSet = new ObservableSet<int>(testData);
+            var hashSet = new ObservableHashSet<int>(testData);
             //var countChanging = 0;
             var countChanged = 0;
             var collectionChanged = 0;
@@ -127,7 +127,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         public void Contains_works()
         {
             var testData = CreateTestData();
-            var hashSet = new ObservableSet<int>(testData);
+            var hashSet = new ObservableHashSet<int>(testData);
 
             foreach (var item in testData)
             {
@@ -146,7 +146,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
             var testData = CreateTestData();
             var orderedDistinct = testData.Distinct().OrderBy(i => i).ToList();
 
-            var hashSet = new ObservableSet<int>(testData);
+            var hashSet = new ObservableHashSet<int>(testData);
 
             Assert.Equal(orderedDistinct.Count, hashSet.Count);
 
@@ -173,7 +173,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         [Fact]
         public void Can_remove()
         {
-            var hashSet = new ObservableSet<string> { "Palmer", "Carmack" };
+            var hashSet = new ObservableHashSet<string> { "Palmer", "Carmack" };
             //var countChanging = 0;
             var countChanged = 0;
             var collectionChanged = 0;
@@ -217,12 +217,12 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
 
         [Fact]
         public void Not_read_only()
-            => Assert.False(((ICollection<Random>)new ObservableSet<Random>()).IsReadOnly);
+            => Assert.False(((ICollection<Random>)new ObservableHashSet<Random>()).IsReadOnly);
 
         [Fact]
         public void Can_union_with()
         {
-            var hashSet = new ObservableSet<string> { "Palmer", "Carmack" };
+            var hashSet = new ObservableHashSet<string> { "Palmer", "Carmack" };
             //var countChanging = 0;
             var countChanged = 0;
             var collectionChanged = 0;
@@ -258,7 +258,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         [Fact]
         public void Can_intersect_with()
         {
-            var hashSet = new ObservableSet<string>
+            var hashSet = new ObservableHashSet<string>
             {
                 "Brendan",
                 "Carmack",
@@ -300,7 +300,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         [Fact]
         public void Can_except_with()
         {
-            var hashSet = new ObservableSet<string>
+            var hashSet = new ObservableHashSet<string>
             {
                 "Brendan",
                 "Carmack",
@@ -342,7 +342,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         [Fact]
         public void Can_symmetrical_except_with()
         {
-            var hashSet = new ObservableSet<string>
+            var hashSet = new ObservableHashSet<string>
             {
                 "Brendan",
                 "Carmack",
@@ -390,7 +390,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
 
             Assert.Equal(
                 new HashSet<int>(smallData).IsSubsetOf(bigData),
-                new ObservableSet<int>(smallData).IsSubsetOf(bigData));
+                new ObservableHashSet<int>(smallData).IsSubsetOf(bigData));
         }
 
         [Fact]
@@ -401,7 +401,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
 
             Assert.Equal(
                 new HashSet<int>(smallData).IsProperSubsetOf(bigData),
-                new ObservableSet<int>(smallData).IsProperSubsetOf(bigData));
+                new ObservableHashSet<int>(smallData).IsProperSubsetOf(bigData));
         }
 
         [Fact]
@@ -412,7 +412,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
 
             Assert.Equal(
                 new HashSet<int>(bigData).IsSupersetOf(smallData),
-                new ObservableSet<int>(bigData).IsSupersetOf(smallData));
+                new ObservableHashSet<int>(bigData).IsSupersetOf(smallData));
         }
 
         [Fact]
@@ -423,7 +423,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
 
             Assert.Equal(
                 new HashSet<int>(bigData).IsProperSupersetOf(smallData),
-                new ObservableSet<int>(bigData).IsProperSupersetOf(smallData));
+                new ObservableHashSet<int>(bigData).IsProperSupersetOf(smallData));
         }
 
         [Fact]
@@ -434,7 +434,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
 
             Assert.Equal(
                 new HashSet<int>(bigData).Overlaps(smallData),
-                new ObservableSet<int>(bigData).Overlaps(smallData));
+                new ObservableHashSet<int>(bigData).Overlaps(smallData));
         }
 
         [Fact]
@@ -445,7 +445,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
 
             Assert.Equal(
                 new HashSet<int>(data1).SetEquals(data2),
-                new ObservableSet<int>(data1).SetEquals(data2));
+                new ObservableHashSet<int>(data1).SetEquals(data2));
         }
 
         //[ConditionalFact]
@@ -532,7 +532,7 @@ namespace CiccioSoft.Collections.Tests.ObservableSet
         //}
 
         private static void AssertCountChanged<T>(
-            ObservableSet<T> hashSet,
+            ObservableHashSet<T> hashSet,
             object sender,
             PropertyChangedEventArgs eventArgs,
             ref int expectedCount,
