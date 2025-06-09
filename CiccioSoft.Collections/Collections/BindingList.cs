@@ -18,14 +18,17 @@ namespace CiccioSoft.Collections
 #else
     public class BindingList<T>
 #endif
-        : ListBase<T>, IList<T>, IList, IReadOnlyList<T>, IBindingList, IRaiseItemChangedEvents
+        : Collection<T>, IList<T>, IList, IReadOnlyList<T>, IBindingList, IRaiseItemChangedEvents
     {
         //private int addNewPos = -1; // Do not rename (binary serialization)
-        //private bool raiseListChangedEvents = true; // Do not rename (binary serialization)
+        private bool raiseListChangedEvents = true; // Do not rename (binary serialization)
         private bool raiseItemChangedEvents; // Do not rename (binary serialization)
 
         [NonSerialized]
         private PropertyDescriptorCollection? _itemTypeProperties;
+
+        [NonSerialized]
+        private PropertyChangedEventHandler? _propertyChangedEventHandler;
 
         [NonSerialized]
         private ListChangedEventHandler? _onListChanged;
@@ -149,11 +152,11 @@ namespace CiccioSoft.Collections
         /// </summary>
         protected virtual void OnListChanged(ListChangedEventArgs e) => _onListChanged?.Invoke(this, e);
 
-        //public bool RaiseListChangedEvents
-        //{
-        //    get => raiseListChangedEvents;
-        //    set => raiseListChangedEvents = value;
-        //}
+        public bool RaiseListChangedEvents
+        {
+            get => raiseListChangedEvents;
+            set => raiseListChangedEvents = value;
+        }
 
         public void ResetBindings() => FireListChanged(ListChangedType.Reset, -1);
 
@@ -165,7 +168,10 @@ namespace CiccioSoft.Collections
         // Private helper method
         private void FireListChanged(ListChangedType type, int index)
         {
-            OnListChanged(new ListChangedEventArgs(type, index));
+            if (raiseListChangedEvents)
+            {
+                OnListChanged(new ListChangedEventArgs(type, index));
+            }
         }
 
         #endregion
@@ -355,79 +361,83 @@ namespace CiccioSoft.Collections
             // Note: inpc may be null if item is null, so always check.
             if (item is INotifyPropertyChanged inpc)
             {
-                inpc.PropertyChanged += Child_PropertyChanged;
+                _propertyChangedEventHandler ??= new PropertyChangedEventHandler(Child_PropertyChanged);
+                inpc.PropertyChanged += _propertyChangedEventHandler;
             }
         }
 
         private void UnhookPropertyChanged(T item)
         {
             // Note: inpc may be null if item is null, so always check.
-            if (item is INotifyPropertyChanged inpc)
+            if (item is INotifyPropertyChanged inpc && _propertyChangedEventHandler != null)
             {
-                inpc.PropertyChanged -= Child_PropertyChanged;
+                inpc.PropertyChanged -= _propertyChangedEventHandler;
             }
         }
 
         private void Child_PropertyChanged(object? sender, PropertyChangedEventArgs? e)
         {
-            if (sender == null || e == null || string.IsNullOrEmpty(e.PropertyName))
+            if (RaiseListChangedEvents)
             {
-                // Fire reset event (per INotifyPropertyChanged spec)
-                ResetBindings();
-            }
-            else
-            {
-                // The change event is broken should someone pass an item to us that is not
-                // of type T. Still, if they do so, detect it and ignore. It is an incorrect
-                // and rare enough occurrence that we do not want to slow the mainline path
-                // with "is" checks.
-                T item;
-
-                try
+                if (sender == null || e == null || string.IsNullOrEmpty(e.PropertyName))
                 {
-                    item = (T)sender;
-                }
-                catch (InvalidCastException)
-                {
-                    ResetBindings();
-                    return;
-                }
-
-                // Find the position of the item. This should never be -1. If it is,
-                // somehow the item has been removed from our list without our knowledge.
-                int pos = _lastChangeIndex;
-
-                if (pos < 0 || pos >= Count || !this[pos]!.Equals(item))
-                {
-                    pos = IndexOf(item);
-                    _lastChangeIndex = pos;
-                }
-
-                if (pos == -1)
-                {
-                    // The item was removed from the list but we still get change notifications or
-                    // the sender is invalid and was never added to the list.
-                    UnhookPropertyChanged(item);
+                    // Fire reset event (per INotifyPropertyChanged spec)
                     ResetBindings();
                 }
                 else
                 {
-                    // Get the property descriptor
-                    if (null == _itemTypeProperties)
+                    // The change event is broken should someone pass an item to us that is not
+                    // of type T. Still, if they do so, detect it and ignore. It is an incorrect
+                    // and rare enough occurrence that we do not want to slow the mainline path
+                    // with "is" checks.
+                    T item;
+
+                    try
                     {
-                        // Get Shape
-                        _itemTypeProperties = TypeDescriptor.GetProperties(typeof(T));
-                        Debug.Assert(_itemTypeProperties != null);
+                        item = (T)sender;
+                    }
+                    catch (InvalidCastException)
+                    {
+                        ResetBindings();
+                        return;
                     }
 
-                    PropertyDescriptor? pd = _itemTypeProperties.Find(e.PropertyName, true);
+                    // Find the position of the item. This should never be -1. If it is,
+                    // somehow the item has been removed from our list without our knowledge.
+                    int pos = _lastChangeIndex;
 
-                    // Create event args. If there was no matching property descriptor,
-                    // we raise the list changed anyway.
-                    ListChangedEventArgs args = new ListChangedEventArgs(ListChangedType.ItemChanged, pos, pd);
+                    if (pos < 0 || pos >= Count || !this[pos]!.Equals(item))
+                    {
+                        pos = IndexOf(item);
+                        _lastChangeIndex = pos;
+                    }
 
-                    // Fire the ItemChanged event
-                    OnListChanged(args);
+                    if (pos == -1)
+                    {
+                        // The item was removed from the list but we still get change notifications or
+                        // the sender is invalid and was never added to the list.
+                        UnhookPropertyChanged(item);
+                        ResetBindings();
+                    }
+                    else
+                    {
+                        // Get the property descriptor
+                        if (null == _itemTypeProperties)
+                        {
+                            // Get Shape
+                            _itemTypeProperties = TypeDescriptor.GetProperties(typeof(T));
+                            Debug.Assert(_itemTypeProperties != null);
+                        }
+
+                        PropertyDescriptor? pd = _itemTypeProperties.Find(e.PropertyName, true);
+
+                        // Create event args. If there was no matching property descriptor,
+                        // we raise the list changed anyway.
+                        ListChangedEventArgs args = new ListChangedEventArgs(ListChangedType.ItemChanged, pos, pd);
+
+                        // Fire the ItemChanged event
+                        OnListChanged(args);
+                    }
                 }
             }
         }

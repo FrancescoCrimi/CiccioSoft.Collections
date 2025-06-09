@@ -15,13 +15,13 @@ namespace CiccioSoft.Collections
     public class ReadOnlySet<T> : IReadOnlySet<T>, ISet<T>, ICollection
     {
         /// <summary>The wrapped set.</summary>
-        protected readonly SetBase<T> _set;
+        protected readonly Set<T> _set;
 
         #region Constructors
 
         /// <summary>Initializes a new instance of the <see cref="ReadOnlySet{T}"/> class that is a wrapper around the specified set.</summary>
         /// <param name="set">The set to wrap.</param>
-        public ReadOnlySet(SetBase<T> set)
+        public ReadOnlySet(Set<T> set)
         {
             _set = set ?? throw new ArgumentNullException(nameof(set));
         }

@@ -19,7 +19,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyCollection
         [Fact]
         public void Ctor_SetProperty_Roundtrips()
         {
-            var set = new ListBase<int>();
+            var set = new Collection<int>();
             Assert.Same(set, new DerivedReadOnlyCollection<int>(set).List);
         }
 
@@ -34,7 +34,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyCollection
         [Fact]
         public void MembersDelegateToWrappedSet()
         {
-            var set = new ReadOnlyCollection<int>(new ListBase<int>() { 1, 2, 3 });
+            var set = new ReadOnlyCollection<int>(new Collection<int>() { 1, 2, 3 });
 
             Assert.True(set.Contains(2));
             Assert.False(set.Contains(4));
@@ -74,7 +74,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyCollection
         [Fact]
         public void ChangesToUnderlyingSetReflected()
         {
-            var set = new ListBase<int> { 1, 2, 3 };
+            var set = new Collection<int> { 1, 2, 3 };
             var readOnlySet = new ReadOnlyCollection<int>(set);
 
             set.Add(4);
@@ -89,14 +89,14 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyCollection
         [Fact]
         public void IsReadOnly_True()
         {
-            var set = new ReadOnlyCollection<int>(new ListBase<int> { 1, 2, 3 });
+            var set = new ReadOnlyCollection<int>(new Collection<int> { 1, 2, 3 });
             Assert.True(((ICollection<int>)set).IsReadOnly);
         }
 
         [Fact]
         public void MutationThrows_CollectionUnmodified()
         {
-            var set = new ListBase<int> { 1, 2, 3 };
+            var set = new Collection<int> { 1, 2, 3 };
             var readOnlySet = new ReadOnlyCollection<int>(set);
 
             Assert.Throws<NotSupportedException>(() => ((ICollection<int>)readOnlySet).Add(4));
@@ -115,7 +115,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyCollection
         [Fact]
         public void ICollection_Synchronization()
         {
-            var list = new ListBase<int> { 1, 2, 3 };
+            var list = new Collection<int> { 1, 2, 3 };
             var rolist = new ReadOnlyCollection<int>(list);
 
             Assert.False(((ICollection)rolist).IsSynchronized);
@@ -124,7 +124,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyCollection
 
         private class DerivedReadOnlyCollection<T> : ReadOnlyCollection<T>
         {
-            public DerivedReadOnlyCollection(ListBase<T> set) : base(set) { }
+            public DerivedReadOnlyCollection(Collection<T> set) : base(set) { }
 
             public new IList<T> List => base._list;
         }

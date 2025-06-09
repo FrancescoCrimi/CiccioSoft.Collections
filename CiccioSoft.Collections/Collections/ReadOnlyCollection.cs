@@ -13,11 +13,11 @@ namespace CiccioSoft.Collections
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyCollection<T> : IList<T>, IList, IReadOnlyList<T>
     {
-        protected readonly ListBase<T> _list; // Do not rename (binary serialization)
+        protected readonly Collection<T> _list; // Do not rename (binary serialization)
 
         #region Constructors
 
-        public ReadOnlyCollection(ListBase<T> list)
+        public ReadOnlyCollection(Collection<T> list)
         {
             _list = list ?? throw new ArgumentNullException(nameof(list))!;
         }
