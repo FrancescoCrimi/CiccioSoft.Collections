@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.ObservableSet
+namespace CiccioSoft.Collections.Tests.ObservableHashSet
 {
     public class ObservableHashSet_Test
     {

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace CiccioSoft.Collections.Tests.SetBase
+namespace CiccioSoft.Collections.Tests.Set
 {
     public class Set_Generic_Test_string : Set_Generic_Test<string>
     {

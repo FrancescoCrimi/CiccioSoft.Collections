@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Tests;
 
-namespace CiccioSoft.Collections.Tests.SetBase
+namespace CiccioSoft.Collections.Tests.Set
 {
     public class Set_Generic_IEnumerable_NonGeneric_Tests : IEnumerable_NonGeneric_Tests
     {

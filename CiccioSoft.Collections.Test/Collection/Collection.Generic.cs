@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CiccioSoft.Collections.Tests.ListBase
+namespace CiccioSoft.Collections.Tests.Collection
 {
     public class Collection_Generic_Test_string : Collection_Generic_Tests<string>
     {

@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.Tests;
 
-namespace CiccioSoft.Collections.Tests.ListBase
+namespace CiccioSoft.Collections.Tests.Collection
 {
     /// <summary>
     /// Contains tests that ensure the correctness of the List class.

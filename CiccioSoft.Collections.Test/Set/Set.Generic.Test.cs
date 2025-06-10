@@ -7,7 +7,7 @@ using System.Collections.Tests;
 using System.Linq;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.SetBase
+namespace CiccioSoft.Collections.Tests.Set
 {
     /// <summary>
     /// Contains tests that ensure the correctness of the HashSet class.

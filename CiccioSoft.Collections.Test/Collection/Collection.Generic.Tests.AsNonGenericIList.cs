@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Tests;
 
-namespace CiccioSoft.Collections.Tests.ListBase
+namespace CiccioSoft.Collections.Tests.Collection
 {
     /// <summary>
     /// Contains tests that ensure the correctness of the ListBase class.
