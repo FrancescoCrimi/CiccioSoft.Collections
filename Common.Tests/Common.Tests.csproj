@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-		<!--<TargetFrameworks>net8.0;net6.0;net462</TargetFrameworks>-->
-		<TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net6.0;net472</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -10,11 +9,11 @@
 		<NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
 		<LangVersion>12.0</LangVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net472|AnyCPU'">
 		<LangVersion>12.0</LangVersion>
 	</PropertyGroup>
 
@@ -32,7 +31,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-		<PackageReference Include="Microsoft.DotNet.XUnitAssert" Version="8.0.0-beta.25264.2" />
+		<!--<PackageReference Include="Microsoft.DotNet.XUnitAssert" Version="8.0.0-beta.25264.2" />-->
 		<PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="8.0.0-beta.25264.2" />
 		<PackageReference Include="xunit" Version="2.9.3" />
 	</ItemGroup>

@@ -28,7 +28,8 @@ namespace CiccioSoft.Collections
         public Set(IEqualityComparer<T>? comparer)
             => items = new HashSet<T>(comparer);
 
-#if NET6_0_OR_GREATER
+        //#if NET6_0_OR_GREATER
+#if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER || NET8_0_OR_GREATER
 
         public Set(int capacity)
             => items = new HashSet<T>(capacity);
@@ -41,7 +42,9 @@ namespace CiccioSoft.Collections
         public Set(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             => items = new HashSet<T>(collection, comparer);
 
-#if NET6_0_OR_GREATER
+        //#if NET6_0_OR_GREATER
+#if NET472_OR_GREATER || NET6_0_OR_GREATER || NET8_0_OR_GREATER
+
 
         public Set(int capacity, IEqualityComparer<T>? comparer)
             => items = new HashSet<T>(capacity, comparer);
