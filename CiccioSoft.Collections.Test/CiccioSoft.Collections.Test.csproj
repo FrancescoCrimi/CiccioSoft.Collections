@@ -43,6 +43,7 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\CiccioSoft.Collections\CiccioSoft.Collections.csproj" />
+    <ProjectReference Include="..\Common.Tests\Common.Tests.csproj" />
   </ItemGroup>
 
 </Project>

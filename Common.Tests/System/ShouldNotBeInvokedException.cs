@@ -3,7 +3,7 @@
 
 namespace System
 {
-    internal class ShouldNotBeInvokedException : Exception
+    public class ShouldNotBeInvokedException : Exception
     {
     }
 }
