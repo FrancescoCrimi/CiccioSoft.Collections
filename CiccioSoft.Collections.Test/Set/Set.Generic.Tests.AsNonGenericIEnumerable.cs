@@ -8,7 +8,7 @@ using System.Collections.Tests;
 
 namespace CiccioSoft.Collections.Tests.Set
 {
-    public class Set_Generic_IEnumerable_NonGeneric_Tests : IEnumerable_NonGeneric_Tests
+    public class Set_IEnumerable_NonGeneric_Tests : IEnumerable_NonGeneric_Tests
     {
         protected override IEnumerable NonGenericIEnumerableFactory(int count)
         {

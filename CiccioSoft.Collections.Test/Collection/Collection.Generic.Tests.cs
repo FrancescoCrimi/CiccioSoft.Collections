@@ -21,24 +21,24 @@ namespace CiccioSoft.Collections.Tests.Collection
 
         protected override IList<T> GenericIListFactory()
         {
-            return GenericListFactory();
+            return GenericCollectionFactory();
         }
 
         protected override IList<T> GenericIListFactory(int count)
         {
-            return GenericListFactory(count);
+            return GenericCollectionFactory(count);
         }
 
         #endregion
 
-        #region ListBase<T> Helper Methods
+        #region Collection<T> Helper Methods
 
-        protected virtual Collection<T> GenericListFactory()
+        protected virtual Collection<T> GenericCollectionFactory()
         {
             return new Collection<T>();
         }
 
-        protected virtual Collection<T> GenericListFactory(int count)
+        protected virtual Collection<T> GenericCollectionFactory(int count)
         {
             IEnumerable<T> toCreateFrom = CreateEnumerable(EnumerableType.List, null, count, 0, 0);
             return new Collection<T>(toCreateFrom);

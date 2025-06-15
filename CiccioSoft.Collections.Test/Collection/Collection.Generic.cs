@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace CiccioSoft.Collections.Tests.Collection
 {
-    public class Collection_Generic_Test_string : Collection_Generic_Tests<string>
+    public class Collection_Generic_Tests_string : Collection_Generic_Tests<string>
     {
         protected override string CreateT(int seed)
         {
@@ -18,7 +18,7 @@ namespace CiccioSoft.Collections.Tests.Collection
         }
     }
 
-    public class Collection_Generic_Test_int : Collection_Generic_Tests<int>
+    public class Collection_Generic_Tests_int : Collection_Generic_Tests<int>
     {
         protected override int CreateT(int seed)
         {
@@ -42,12 +42,12 @@ namespace CiccioSoft.Collections.Tests.Collection
 
         protected override IList<string> GenericIListFactory(int setLength)
         {
-            return GenericListFactory(setLength).AsReadOnly();
+            return GenericCollectionFactory(setLength).AsReadOnly();
         }
 
         protected override IList<string> GenericIListFactory()
         {
-            return GenericListFactory().AsReadOnly();
+            return GenericCollectionFactory().AsReadOnly();
         }
 
         protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new List<ModifyEnumerable>();
@@ -69,12 +69,12 @@ namespace CiccioSoft.Collections.Tests.Collection
 
         protected override IList<int> GenericIListFactory(int setLength)
         {
-            return GenericListFactory(setLength).AsReadOnly();
+            return GenericCollectionFactory(setLength).AsReadOnly();
         }
 
         protected override IList<int> GenericIListFactory()
         {
-            return GenericListFactory().AsReadOnly();
+            return GenericCollectionFactory().AsReadOnly();
         }
 
         protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new List<ModifyEnumerable>();
