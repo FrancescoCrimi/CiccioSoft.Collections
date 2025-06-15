@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace CiccioSoft.Collections.Tests.Collection
@@ -15,10 +16,6 @@ namespace CiccioSoft.Collections.Tests.Collection
     {
         internal class Driver<T>
         {
-            public Driver()
-            {
-            }
-
             #region Insert
 
             public void BasicInsert(T[] items, T item, int index, int repeat)

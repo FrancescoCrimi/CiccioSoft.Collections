@@ -1,10 +1,14 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CiccioSoft.Collections;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Tests;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using Xunit;
 
 namespace CiccioSoft.Collections.Tests.Set
@@ -12,7 +16,7 @@ namespace CiccioSoft.Collections.Tests.Set
     /// <summary>
     /// Contains tests that ensure the correctness of the HashSet class.
     /// </summary>
-    public abstract class Set_Generic_Test<T> : ISet_Generic_Tests<T>
+    public abstract class Set_Generic_Tests<T> : ISet_Generic_Tests<T>
     {
         #region ISet<T> Helper Methods
 
@@ -23,19 +27,9 @@ namespace CiccioSoft.Collections.Tests.Set
 
         protected override bool ResetImplemented => true;
 
-        protected override ModifyOperation ModifyEnumeratorThrows =>
-#if NETFRAMEWORK
-            base.ModifyEnumeratorThrows;
-#else
-            base.ModifyEnumeratorAllowed & ~(ModifyOperation.Remove | ModifyOperation.Clear);
-#endif
+        protected override ModifyOperation ModifyEnumeratorThrows => PlatformDetection.IsNetFramework ? base.ModifyEnumeratorThrows : (base.ModifyEnumeratorAllowed & ~(ModifyOperation.Remove | ModifyOperation.Clear));
 
-        protected override ModifyOperation ModifyEnumeratorAllowed =>
-#if NETFRAMEWORK
-            base.ModifyEnumeratorAllowed;
-#else
-            ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
-#endif
+        protected override ModifyOperation ModifyEnumeratorAllowed => PlatformDetection.IsNetFramework ? base.ModifyEnumeratorAllowed : ModifyOperation.Overwrite | ModifyOperation.Remove | ModifyOperation.Clear;
 
         protected override ISet<T> GenericISetFactory()
         {
@@ -110,7 +104,7 @@ namespace CiccioSoft.Collections.Tests.Set
         [MemberData(nameof(ValidCollectionSizes))]
         public void HashSet_Generic_Constructor_HashSet_SparselyFilled(int count)
         {
-            HashSet<T> source = (HashSet<T>)CreateEnumerable(EnumerableType.HashSet, null, count, 0, 0);
+            Set<T> source = new Set<T>(CreateEnumerable(EnumerableType.HashSet, null, count, 0, 0));
             List<T> sourceElements = source.ToList();
             foreach (int i in NonSquares(count))
                 source.Remove(sourceElements[i]);// Unevenly spaced survivors increases chance of catching any spacing-related bugs.
@@ -141,7 +135,7 @@ namespace CiccioSoft.Collections.Tests.Set
 
         #endregion
 
-        //#region RemoveWhere
+        #region RemoveWhere
 
         //[Theory]
         //[MemberData(nameof(ValidCollectionSizes))]
@@ -184,9 +178,9 @@ namespace CiccioSoft.Collections.Tests.Set
         //    Assert.Throws<ArgumentNullException>(() => set.RemoveWhere(null));
         //}
 
-        //#endregion
+        #endregion
 
-        //#region TrimExcess
+        #region TrimExcess
 
         //[Theory]
         //[MemberData(nameof(ValidCollectionSizes))]
@@ -289,73 +283,73 @@ namespace CiccioSoft.Collections.Tests.Set
         //    Assert.True(arr1.SequenceEqual(arr2));
         //}
 
-        //#endregion
+        #endregion
 
-        //#region CreateSetComparer
+        #region CreateSetComparer
 
-        //[Fact]
-        //public void SetComparer_SetEqualsTests()
-        //{
-        //    List<T> objects = new List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
+        [Fact]
+        public void SetComparer_SetEqualsTests()
+        {
+            List<T> objects = new List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
 
-        //    var set = new HashSet<HashSet<T>>()
-        //    {
-        //        new HashSet<T> { objects[0], objects[1], objects[2] },
-        //        new HashSet<T> { objects[3], objects[4], objects[5] }
-        //    };
+            var set = new Set<HashSet<T>>()
+            {
+                new HashSet<T> { objects[0], objects[1], objects[2] },
+                new HashSet<T> { objects[3], objects[4], objects[5] }
+            };
 
-        //    var noComparerSet = new HashSet<HashSet<T>>()
-        //    {
-        //        new HashSet<T> { objects[0], objects[1], objects[2] },
-        //        new HashSet<T> { objects[3], objects[4], objects[5] }
-        //    };
+            var noComparerSet = new Set<HashSet<T>>()
+            {
+                new HashSet<T> { objects[0], objects[1], objects[2] },
+                new HashSet<T> { objects[3], objects[4], objects[5] }
+            };
 
-        //    var comparerSet1 = new HashSet<HashSet<T>>(HashSet<T>.CreateSetComparer())
-        //    {
-        //        new HashSet<T> { objects[0], objects[1], objects[2] },
-        //        new HashSet<T> { objects[3], objects[4], objects[5] }
-        //    };
+            var comparerSet1 = new Set<HashSet<T>>(HashSet<T>.CreateSetComparer())
+            {
+                new HashSet<T> { objects[0], objects[1], objects[2] },
+                new HashSet<T> { objects[3], objects[4], objects[5] }
+            };
 
-        //    var comparerSet2 = new HashSet<HashSet<T>>(HashSet<T>.CreateSetComparer())
-        //    {
-        //        new HashSet<T> { objects[3], objects[4], objects[5] },
-        //        new HashSet<T> { objects[0], objects[1], objects[2] }
-        //    };
+            var comparerSet2 = new Set<HashSet<T>>(HashSet<T>.CreateSetComparer())
+            {
+                new HashSet<T> { objects[3], objects[4], objects[5] },
+                new HashSet<T> { objects[0], objects[1], objects[2] }
+            };
 
-        //    Assert.False(noComparerSet.SetEquals(set));
-        //    Assert.True(comparerSet1.SetEquals(set));
-        //    Assert.True(comparerSet2.SetEquals(set));
-        //}
+            Assert.False(noComparerSet.SetEquals(set));
+            Assert.True(comparerSet1.SetEquals(set));
+            Assert.True(comparerSet2.SetEquals(set));
+        }
 
-        //[Fact]
-        //public void SetComparer_SequenceEqualTests()
-        //{
-        //    List<T> objects = new List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
+        [Fact]
+        public void SetComparer_SequenceEqualTests()
+        {
+            List<T> objects = new List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
 
-        //    var set = new HashSet<HashSet<T>>()
-        //    {
-        //        new HashSet<T> { objects[0], objects[1], objects[2] },
-        //        new HashSet<T> { objects[3], objects[4], objects[5] }
-        //    };
+            var set = new Set<HashSet<T>>()
+            {
+                new HashSet<T> { objects[0], objects[1], objects[2] },
+                new HashSet<T> { objects[3], objects[4], objects[5] }
+            };
 
-        //    var noComparerSet = new HashSet<HashSet<T>>()
-        //    {
-        //        new HashSet<T> { objects[0], objects[1], objects[2] },
-        //        new HashSet<T> { objects[3], objects[4], objects[5] }
-        //    };
+            var noComparerSet = new Set<HashSet<T>>()
+            {
+                new HashSet<T> { objects[0], objects[1], objects[2] },
+                new HashSet<T> { objects[3], objects[4], objects[5] }
+            };
 
-        //    var comparerSet = new HashSet<HashSet<T>>(HashSet<T>.CreateSetComparer())
-        //    {
-        //        new HashSet<T> { objects[0], objects[1], objects[2] },
-        //        new HashSet<T> { objects[3], objects[4], objects[5] }
-        //    };
+            var comparerSet = new Set<HashSet<T>>(HashSet<T>.CreateSetComparer())
+            {
+                new HashSet<T> { objects[0], objects[1], objects[2] },
+                new HashSet<T> { objects[3], objects[4], objects[5] }
+            };
 
-        //    Assert.False(noComparerSet.SequenceEqual(set));
-        //    Assert.True(noComparerSet.SequenceEqual(set, HashSet<T>.CreateSetComparer()));
-        //    Assert.False(comparerSet.SequenceEqual(set));
-        //}
+            Assert.False(noComparerSet.SequenceEqual(set));
+            Assert.True(noComparerSet.SequenceEqual(set, HashSet<T>.CreateSetComparer()));
+            Assert.False(comparerSet.SequenceEqual(set));
+        }
 
-        //#endregion
+        #endregion
 
         [Fact]
         public void CanBeCastedToISet()
@@ -364,8 +358,6 @@ namespace CiccioSoft.Collections.Tests.Set
             ISet<T> iset = (set as ISet<T>);
             Assert.NotNull(iset);
         }
-
-#if NET6_0_OR_GREATER
 
         [Theory]
         [MemberData(nameof(ValidCollectionSizes))]
@@ -393,7 +385,7 @@ namespace CiccioSoft.Collections.Tests.Set
         //{
         //    // Highest pre-computed number + 1.
         //    const int Capacity = 7199370;
-        //    var set = new HashSet<T>(Capacity);
+        //    var set = new Set<T>(Capacity);
 
         //    // Assert that the HashTable's capacity is set to the descendant prime number of the given one.
         //    const int NextPrime = 7199371;
@@ -442,7 +434,7 @@ namespace CiccioSoft.Collections.Tests.Set
             AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new Set<T>(int.MinValue, comparer));
         }
 
-        //#region TryGetValue
+        #region TryGetValue
 
         //[Fact]
         //public void HashSet_Generic_TryGetValue_Contains()
@@ -496,9 +488,9 @@ namespace CiccioSoft.Collections.Tests.Set
         //    Assert.Equal(default(T), actualValue);
         //}
 
-        //#endregion
+        #endregion
 
-        //#region EnsureCapacity
+        #region EnsureCapacity
 
         //[Theory]
         //[MemberData(nameof(ValidCollectionSizes))]
@@ -647,7 +639,7 @@ namespace CiccioSoft.Collections.Tests.Set
         //    Assert.True(newCapacity > currentCapacity);
         //}
 
-        //#endregion
+        #endregion
 
         #region Remove
 
@@ -673,58 +665,56 @@ namespace CiccioSoft.Collections.Tests.Set
 
         #endregion
 
-#endif
+        #region Serialization
 
-        //#region Serialization
+        [ConditionalFact(typeof(PlatformDetection), nameof(PlatformDetection.IsBinaryFormatterSupported))]
+        public void ComparerSerialization()
+        {
+            // Strings switch between randomized and non-randomized comparers,
+            // however this should never be observable externally.
+            TestComparerSerialization(EqualityComparer<string>.Default);
 
-        //[ConditionalFact(typeof(PlatformDetection), nameof(PlatformDetection.IsBinaryFormatterSupported))]
-        //public void ComparerSerialization()
-        //{
-        //    // Strings switch between randomized and non-randomized comparers,
-        //    // however this should never be observable externally.
-        //    TestComparerSerialization(EqualityComparer<string>.Default);
+            // OrdinalCaseSensitiveComparer is internal and (de)serializes as OrdinalComparer
+            TestComparerSerialization(StringComparer.Ordinal, "System.OrdinalComparer");
 
-        //    // OrdinalCaseSensitiveComparer is internal and (de)serializes as OrdinalComparer
-        //    TestComparerSerialization(StringComparer.Ordinal, "System.OrdinalComparer");
+            // OrdinalIgnoreCaseComparer is internal and (de)serializes as OrdinalComparer
+            TestComparerSerialization(StringComparer.OrdinalIgnoreCase, "System.OrdinalComparer");
+            TestComparerSerialization(StringComparer.CurrentCulture);
+            TestComparerSerialization(StringComparer.CurrentCultureIgnoreCase);
+            TestComparerSerialization(StringComparer.InvariantCulture);
+            TestComparerSerialization(StringComparer.InvariantCultureIgnoreCase);
 
-        //    // OrdinalIgnoreCaseComparer is internal and (de)serializes as OrdinalComparer
-        //    TestComparerSerialization(StringComparer.OrdinalIgnoreCase, "System.OrdinalComparer");
-        //    TestComparerSerialization(StringComparer.CurrentCulture);
-        //    TestComparerSerialization(StringComparer.CurrentCultureIgnoreCase);
-        //    TestComparerSerialization(StringComparer.InvariantCulture);
-        //    TestComparerSerialization(StringComparer.InvariantCultureIgnoreCase);
+            // Check other types while here, IEquatable valuetype, nullable valuetype, and non IEquatable object
+            TestComparerSerialization(EqualityComparer<int>.Default);
+            TestComparerSerialization(EqualityComparer<int?>.Default);
+            TestComparerSerialization(EqualityComparer<object>.Default);
 
-        //    // Check other types while here, IEquatable valuetype, nullable valuetype, and non IEquatable object
-        //    TestComparerSerialization(EqualityComparer<int>.Default);
-        //    TestComparerSerialization(EqualityComparer<int?>.Default);
-        //    TestComparerSerialization(EqualityComparer<object>.Default);
+            static void TestComparerSerialization<TCompared>(IEqualityComparer<TCompared> equalityComparer, string internalTypeName = null)
+            {
+                var bf = new BinaryFormatter();
+                var s = new MemoryStream();
 
-        //    static void TestComparerSerialization<TCompared>(IEqualityComparer<TCompared> equalityComparer, string internalTypeName = null)
-        //    {
-        //        var bf = new BinaryFormatter();
-        //        var s = new MemoryStream();
+                var dict = new HashSet<TCompared>(equalityComparer);
 
-        //        var dict = new SetBase<TCompared>(equalityComparer);
+                Assert.Same(equalityComparer, dict.Comparer);
 
-        //        Assert.Same(equalityComparer, dict.Comparer);
+                bf.Serialize(s, dict);
+                s.Position = 0;
+                dict = (HashSet<TCompared>)bf.Deserialize(s);
 
-        //        bf.Serialize(s, dict);
-        //        s.Position = 0;
-        //        dict = (SetBase<TCompared>)bf.Deserialize(s);
+                if (internalTypeName == null)
+                {
+                    Assert.IsType(equalityComparer.GetType(), dict.Comparer);
+                }
+                else
+                {
+                    Assert.Equal(internalTypeName, dict.Comparer.GetType().ToString());
+                }
 
-        //        if (internalTypeName == null)
-        //        {
-        //            Assert.IsType(equalityComparer.GetType(), dict.Comparer);
-        //        }
-        //        else
-        //        {
-        //            Assert.Equal(internalTypeName, dict.Comparer.GetType().ToString());
-        //        }
+                Assert.True(equalityComparer.Equals(dict.Comparer));
+            }
+        }
 
-        //        Assert.True(equalityComparer.Equals(dict.Comparer));
-        //    }
-        //}
-
-        //#endregion
+        #endregion
     }
 }

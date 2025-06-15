@@ -1,8 +1,10 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Tests;
+using Xunit;
 
 namespace CiccioSoft.Collections.Tests.Collection
 {
@@ -44,6 +46,27 @@ namespace CiccioSoft.Collections.Tests.Collection
             return new Collection<T>(toCreateFrom);
         }
 
+        //protected void VerifyList(List<T> list, List<T> expectedItems)
+        //{
+        //    Assert.Equal(expectedItems.Count, list.Count);
+
+        //    //Only verify the indexer. List should be in a good enough state that we
+        //    //do not have to verify consistency with any other method.
+        //    for (int i = 0; i < list.Count; ++i)
+        //    {
+        //        Assert.True(list[i] == null ? expectedItems[i] == null : list[i].Equals(expectedItems[i]));
+        //    }
+        //}
+
         #endregion
+
+        //[Theory]
+        //[MemberData(nameof(ValidCollectionSizes))]
+        //public void CopyTo_ArgumentValidity(int count)
+        //{
+        //    List<T> list = GenericListFactory(count);
+        //    AssertExtensions.Throws<ArgumentException>(null, () => list.CopyTo(0, new T[0], 0, count + 1));
+        //    AssertExtensions.Throws<ArgumentException>(null, () => list.CopyTo(count, new T[0], 0, 1));
+        //}
     }
 }

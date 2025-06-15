@@ -35,6 +35,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+		<PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="8.0.0-beta.25264.2" />
 		<PackageReference Include="xunit" Version="2.9.3" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
 		  <PrivateAssets>all</PrivateAssets>
@@ -44,7 +45,8 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\CiccioSoft.Collections\CiccioSoft.Collections.csproj" />
-    <ProjectReference Include="..\Common.Tests\Common.Tests.csproj" />
   </ItemGroup>
+
+	<Import Project="..\Common.Tests\Common.Tests.projitems" Label="Shared" />
 
 </Project>

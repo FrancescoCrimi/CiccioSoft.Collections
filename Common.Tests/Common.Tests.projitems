@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ae02a1a4-33d0-49e5-9de8-e5c327541e24</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Common.Tests</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\CollectionAsserts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\ICollection.Generic.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IEnumerable.Generic.Serialization.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IEnumerable.Generic.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IEnumerable.NonGeneric.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IList.Generic.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\ISet.Generic.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\TestBase.Generic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\TestBase.NonGeneric.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\TestingTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics\DebuggerAttributes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Serialization\Formatters\BinaryFormatterHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ShouldNotBeInvokedException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestUtilities\System\AssertExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestUtilities\System\PlatformDetection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestUtilities\System\PlatformDetection.Unix.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestUtilities\System\PlatformDetection.Windows.cs" />
+  </ItemGroup>
+</Project>
