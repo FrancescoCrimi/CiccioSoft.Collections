@@ -44,8 +44,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\CiccioSoft.Collections\CiccioSoft.Collections.csproj" />
-  </ItemGroup>
+	  <ProjectReference Include="..\CiccioSoft.Collections.Binding\CiccioSoft.Collections.Binding.csproj" />
+	  <ProjectReference Include="..\CiccioSoft.Collections.Ciccio\CiccioSoft.Collections.Ciccio.csproj" />
+	  <ProjectReference Include="..\CiccioSoft.Collections.Core\CiccioSoft.Collections.Core.csproj" />
+	  <ProjectReference Include="..\CiccioSoft.Collections.Observable\CiccioSoft.Collections.Observable.csproj" />
+	</ItemGroup>
 
 	<Import Project="..\Common.Tests\Common.Tests.projitems" Label="Shared" />
 

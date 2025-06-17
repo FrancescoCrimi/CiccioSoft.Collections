@@ -49,14 +49,8 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE.TXT">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-		<None Include="..\README.md">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-		</None>		
+    <None Include="..\LICENSE.TXT" PackagePath="LICENSE.TXT" Pack="true" />
+		<None Include="..\README.md" PackagePath="README.md" Pack="true" />
   </ItemGroup>
 
 </Project>
