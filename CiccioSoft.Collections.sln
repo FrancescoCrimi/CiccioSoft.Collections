@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CiccioSoft.Collections", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CiccioSoft.Collections.Test", "CiccioSoft.Collections.Test\CiccioSoft.Collections.Test.csproj", "{D4039985-161E-4B6E-BE8F-5327E5884548}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common.Tests", "Common.Tests\Common.Tests.shproj", "{AE02A1A4-33D0-49E5-9DE8-E5C327541E24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,5 +29,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0186A1BE-204F-4E7D-935A-8EF8409AE4C6}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Common.Tests\Common.Tests.projitems*{ae02a1a4-33d0-49e5-9de8-e5c327541e24}*SharedItemsImports = 13
+		Common.Tests\Common.Tests.projitems*{d4039985-161e-4b6e-be8f-5327e5884548}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
