@@ -35,7 +35,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-		<PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="8.0.0-beta.25264.2" />
+		<PackageReference Include="Unofficial.Microsoft.DotNet.XUnitExtensions" Version="8.0.0-beta.25310.3" />
 		<PackageReference Include="xunit" Version="2.9.3" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
 		  <PrivateAssets>all</PrivateAssets>
