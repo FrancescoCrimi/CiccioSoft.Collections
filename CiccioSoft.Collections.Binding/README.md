@@ -18,8 +18,14 @@ These collections are ideal for scenarios where you need change notifications an
 ## Installation
 
 Install via NuGet Package Manager:
+```
+Install-Package CiccioSoft.Collections.Binding
+```
 
 Or via .NET CLI:
+```
+dotnet add package CiccioSoft.Collections.Binding
+```
 
 ## Usage Example
 

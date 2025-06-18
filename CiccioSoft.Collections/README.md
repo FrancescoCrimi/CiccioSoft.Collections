@@ -24,8 +24,14 @@ When you install CiccioSoft.Collections, you automatically get all the above pac
 ## Installation
 
 Install via NuGet Package Manager:
+```
+Install-Package CiccioSoft.Collections
+```
 
 Or via .NET CLI:
+```
+dotnet add package CiccioSoft.Collections
+```
 
 ## License
 

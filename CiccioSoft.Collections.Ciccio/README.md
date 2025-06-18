@@ -24,6 +24,14 @@ This unique combination makes the library especially useful for backend logic th
 ## Installation
 
 Install via NuGet Package Manager:
+```
+Install-Package CiccioSoft.Collections.Ciccio
+```
+
+Or via .NET CLI:
+```
+dotnet add package CiccioSoft.Collections.Ciccio
+```
 
 ## Usage Example
 ```csharp

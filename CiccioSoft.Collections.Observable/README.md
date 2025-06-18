@@ -22,8 +22,14 @@ These collections are ideal for data-binding scenarios in .NET applications, inc
 ## Installation
 
 Install via NuGet Package Manager:
+```
+Install-Package CiccioSoft.Collections.Observable
+```
 
 Or via .NET CLI:
+```
+dotnet add package CiccioSoft.Collections.Observable
+```
 
 ## Usage Example
 ```csharp
