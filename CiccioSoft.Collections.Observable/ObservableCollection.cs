@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CiccioSoft.Collections.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-namespace CiccioSoft.Collections
+namespace CiccioSoft.Collections.Observable
 {
     /// <summary>
     /// Implementation of a dynamic data collection based on generic Collection&lt;T&gt;,

@@ -4,7 +4,20 @@
 		<TargetFrameworks>net8.0;net6.0;net472;netstandard2.0</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-  </PropertyGroup>
+		<Authors>Francesco Crimi</Authors>
+		<Company>CiccioSoft</Company>
+		<AssemblyName>CiccioSoft.Collections.Ciccio</AssemblyName>
+		<RootNamespace>CiccioSoft.Collections.Ciccio</RootNamespace>
+		<Version>8.0.0</Version>
+		<Description>Provides generic implementations of IList&lt;T&gt; and ISet&lt;T&gt; that implement both IBindingList and INotifyCollectionChanged, making them extremely useful for backend logic shared across multiple UI frontends such as WinForms, WPF, UWP, and WinUI 3.</Description>
+		<PackageVersion>8.0.0-alpha</PackageVersion>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://francescocrimi.github.io/CiccioSoft.Collections/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>IBindingList; INotifyCollectionChanged; IList&lt;T&gt;; ISet&lt;T&gt;; DataBinding; WinForms; WPF; UWP; WinUI3; MultiUI; .NET; GenericCollections; Collection; Backend</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
 		<LangVersion>12.0</LangVersion>
@@ -33,6 +46,10 @@
 	<ItemGroup>
 		<None Include="..\LICENSE.TXT" PackagePath="LICENSE.TXT" Pack="true" />
 		<None Include="README.md" PackagePath="README.md" Pack="true" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CiccioSoft.Collections.Core\CiccioSoft.Collections.Core.csproj" />
 	</ItemGroup>
 
 	<Import Project="..\CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems" Label="Shared" />

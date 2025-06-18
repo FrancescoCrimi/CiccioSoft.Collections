@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections
+namespace CiccioSoft.Collections.Core
 {
     /// <summary>
     /// Provides the base class for a generic collection.
@@ -249,7 +249,7 @@ namespace CiccioSoft.Collections
 
             Add(item);
 
-            return this.Count - 1;
+            return Count - 1;
         }
 
         /// <inheritdoc/>
@@ -327,7 +327,7 @@ namespace CiccioSoft.Collections
         {
             // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
             // Note that default(T) is not equal to null for value types except when T is Nullable<U>.
-            return (value is T) || (value == null && default(T) == null);
+            return value is T || value == null && default(T) == null;
         }
 
         #endregion

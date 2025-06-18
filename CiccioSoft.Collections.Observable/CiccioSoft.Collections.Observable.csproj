@@ -4,7 +4,20 @@
 		<TargetFrameworks>net8.0;net6.0;net472;netstandard2.0</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-  </PropertyGroup>
+		<Authors>Francesco Crimi</Authors>
+		<Company>CiccioSoft</Company>
+		<AssemblyName>CiccioSoft.Collections.Observable</AssemblyName>
+		<RootNamespace>CiccioSoft.Collections.Observable</RootNamespace>
+		<Version>8.0.0</Version>
+		<Description>Observable generic implementations of IList&lt;T&gt; and ISet&lt;T&gt; that automatically notify changes, ideal for data-binding in .NET applications.</Description>
+		<PackageVersion>8.0.0-alpha</PackageVersion>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://francescocrimi.github.io/CiccioSoft.Collections/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>ObservableCollection; ObservableSet; IList&lt;T&gt;; ISet&lt;T&gt;; INotifyCollectionChanged; INotifyPropertyChanged; DataBinding; .NET; WPF; WinForms</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
 		<LangVersion>12.0</LangVersion>
