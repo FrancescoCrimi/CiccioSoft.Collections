@@ -1,55 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+	<PropertyGroup>
 		<TargetFrameworks>net8.0;net6.0;net472;netstandard2.0</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Authors>Francesco Crimi</Authors>
 		<Company>CiccioSoft</Company>
-		<AssemblyName>CiccioSoft.Collections</AssemblyName>
-		<RootNamespace>CiccioSoft.Collections</RootNamespace>
 		<Version>8.0.0</Version>
-		<Description>Generic IList and ISet implementations that implement INotifyCollectionChanged and IBindinList</Description>
+		<Description>Meta-package for CiccioSoft.Collections suite. For compatibility with previous versions. Depends on CiccioSoft.Collections.Binding, CiccioSoft.Collections.Observable, and CiccioSoft.Collections.Ciccio.</Description>
 		<PackageVersion>8.0.0-alpha</PackageVersion>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://francescocrimi.github.io/CiccioSoft.Collections/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-    <PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;; WinForms; WPF; UWP;</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-		<DefineConstants>CORECLR;NETCOREAPP</DefineConstants>
-		<!--<AssemblyVersion>8.0.0.0</AssemblyVersion>-->
-		<!--<FileVersion>8.0.0.0</FileVersion>-->
-		<!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
+		<PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;; WinForms; WPF; UWP; CiccioSoft; Collections</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<IsPackable>true</IsPackable>
+		<!--<DefineConstants>CORECLR;NETCOREAPP</DefineConstants>-->
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
-		<LangVersion>12.0</LangVersion>
-	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="CiccioSoft.Collections.Binding" Version="8.0.0" />
+		<PackageReference Include="CiccioSoft.Collections.Observable" Version="8.0.0" />
+		<PackageReference Include="CiccioSoft.Collections.Ciccio" Version="8.0.0" />
+	</ItemGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net472|AnyCPU'">
-		<LangVersion>12.0</LangVersion>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-		<LangVersion>12.0</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-		<LangVersion>12.0</LangVersion>
-  </PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
-		<LangVersion>12.0</LangVersion>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
-		<LangVersion>12.0</LangVersion>
-	</PropertyGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENSE.TXT" PackagePath="LICENSE.TXT" Pack="true" />
-		<None Include="..\README.md" PackagePath="README.md" Pack="true" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\LICENSE.TXT" PackagePath="LICENSE.TXT" Pack="true" />
+		<None Include="README.md" PackagePath="README.md" Pack="true" />
+	</ItemGroup>
 
 </Project>
