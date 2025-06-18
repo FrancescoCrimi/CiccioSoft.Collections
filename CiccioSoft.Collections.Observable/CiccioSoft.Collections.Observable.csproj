@@ -10,7 +10,7 @@
 		<RootNamespace>CiccioSoft.Collections.Observable</RootNamespace>
 		<Version>8.0.0</Version>
 		<Description>Observable generic implementations of IList&lt;T&gt; and ISet&lt;T&gt; that automatically notify changes, ideal for data-binding in .NET applications.</Description>
-		<PackageVersion>8.0.0-alpha</PackageVersion>
+		<PackageVersion>8.0.0-alpha.2</PackageVersion>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://francescocrimi.github.io/CiccioSoft.Collections/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
@@ -50,6 +50,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\CiccioSoft.Collections.Core\CiccioSoft.Collections.Core.csproj" />
+	  <PackageReference Include="CiccioSoft.Collections.Core" Version="8.0.0-alpha.2" />
 	</ItemGroup>
 
 	<Import Project="..\CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems" Label="Shared" />

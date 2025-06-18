@@ -10,7 +10,7 @@
 		<RootNamespace>CiccioSoft.Collections.Core</RootNamespace>
 		<Version>8.0.0</Version>
 		<Description>Provides core abstractions, utilities, and base classes for building advanced and extensible generic collections in .NET, serving as the foundation for the CiccioSoft.Collections suite.</Description>
-		<PackageVersion>8.0.0-alpha</PackageVersion>
+		<PackageVersion>8.0.0-alpha.2</PackageVersion>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://francescocrimi.github.io/CiccioSoft.Collections/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>

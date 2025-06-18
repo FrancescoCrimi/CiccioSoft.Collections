@@ -8,7 +8,7 @@
 		<Company>CiccioSoft</Company>
 		<Version>8.0.0</Version>
 		<Description>Meta-package for CiccioSoft.Collections suite. For compatibility with previous versions. Depends on CiccioSoft.Collections.Binding, CiccioSoft.Collections.Observable, and CiccioSoft.Collections.Ciccio.</Description>
-		<PackageVersion>8.0.0-alpha</PackageVersion>
+		<PackageVersion>8.0.0-alpha.2</PackageVersion>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://francescocrimi.github.io/CiccioSoft.Collections/</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/FrancescoCrimi/CiccioSoft.Collections.git</RepositoryUrl>
@@ -20,9 +20,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CiccioSoft.Collections.Binding" Version="8.0.0" />
-		<PackageReference Include="CiccioSoft.Collections.Observable" Version="8.0.0" />
-		<PackageReference Include="CiccioSoft.Collections.Ciccio" Version="8.0.0" />
+		<PackageReference Include="CiccioSoft.Collections.Binding" Version="8.0.0-alpha.2" />
+		<PackageReference Include="CiccioSoft.Collections.Observable" Version="8.0.0-alpha.2" />
+		<PackageReference Include="CiccioSoft.Collections.Ciccio" Version="8.0.0-alpha.2" />
 	</ItemGroup>
 
 	<ItemGroup>
