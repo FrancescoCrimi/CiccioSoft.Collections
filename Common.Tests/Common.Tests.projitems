@@ -11,10 +11,12 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\CollectionAsserts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\ICollection.Generic.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\ICollection.NonGeneric.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IEnumerable.Generic.Serialization.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IEnumerable.Generic.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IEnumerable.NonGeneric.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IList.Generic.Tests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\IList.NonGeneric.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\ISet.Generic.Tests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\TestBase.Generic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\TestBase.NonGeneric.cs" />

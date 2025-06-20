@@ -48,6 +48,10 @@
 		<None Include="README.md" PackagePath="README.md" Pack="true" />
 	</ItemGroup>
 
-	<Import Project="..\CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems" Label="Shared" />
+	<ItemGroup>
+	  <Folder Include="System\" />
+	</ItemGroup>
+
+	<Import Project="..\CiccioSoft.Collections.CoreLib\CiccioSoft.Collections.CoreLib.projitems" Label="Shared" />
 
 </Project>

@@ -3,20 +3,17 @@
   <PropertyGroup>
     <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>9bbbe92c-e58c-40a4-a3b0-fd76ee16b8d4</SharedGUID>
+    <SharedGUID>37505167-73c6-4f5f-947c-15aa399e93d8</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>CiccioSoft.Collections.Shared</Import_RootNamespace>
+    <Import_RootNamespace>CiccioSoft.Collections.CoreLib</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\CollectionHelpers.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\EventArgsCache.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Collections\ICollectionDebugView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CiccioSoft\Collections\EventArgsCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\Generic\ICollectionDebugView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Collections\ObjectModel\CollectionHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\SR.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\SR.generated.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\ThrowHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Collections\" />
   </ItemGroup>
 </Project>

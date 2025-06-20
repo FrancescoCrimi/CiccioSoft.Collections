@@ -53,6 +53,6 @@
 		<PackageReference Include="CiccioSoft.Collections.Core" Version="8.0.0-alpha.2" />
 	</ItemGroup>
 
-	<Import Project="..\CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems" Label="Shared" />
+	<Import Project="..\CiccioSoft.Collections.CoreLib\CiccioSoft.Collections.CoreLib.projitems" Label="Shared" />
 
 </Project>
