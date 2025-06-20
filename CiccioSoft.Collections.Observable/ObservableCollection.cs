@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace CiccioSoft.Collections.Observable
@@ -23,7 +24,7 @@ namespace CiccioSoft.Collections.Observable
     //[System.Runtime.CompilerServices.TypeForwardedFrom("WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")]
     public class ObservableCollection<T> : Collection<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        //private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
+        private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
 
         [NonSerialized]
         private int _blockReentrancyCount;
@@ -56,12 +57,21 @@ namespace CiccioSoft.Collections.Observable
         {
         }
 
-        #endregion
+        /// <summary>
+        /// Initializes a new instance of the ObservableCollection class
+        /// that contains elements copied from the specified list
+        /// </summary>
+        /// <param name="list">The list whose elements are copied to the new list.</param>
+        /// <remarks>
+        /// The elements are copied onto the ObservableCollection in the
+        /// same order they are read by the enumerator of the list.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException"> list is a null reference </exception>
+        //public ObservableCollection(List<T> list) : base(new List<T>(list ?? throw new ArgumentNullException(nameof(list))))
+        //{
+        //}
 
-        ///// <summary>
-        ///// Move item at oldIndex to newIndex.
-        ///// </summary>
-        //public void Move(int oldIndex, int newIndex) => MoveItem(oldIndex, newIndex);
+        #endregion
 
 
         #region Overrides Method
@@ -125,23 +135,6 @@ namespace CiccioSoft.Collections.Observable
             OnCollectionChanged(NotifyCollectionChangedAction.Replace, originalItem, item, index);
         }
 
-        ///// <summary>
-        ///// Called by base class ObservableCollection&lt;T&gt; when an item is to be moved within the list;
-        ///// raises a CollectionChanged event to any listeners.
-        ///// </summary>
-        //protected virtual void MoveItem(int oldIndex, int newIndex)
-        //{
-        //    CheckReentrancy();
-
-        //    T removedItem = this[oldIndex];
-
-        //    base.RemoveItem(oldIndex);
-        //    base.InsertItem(newIndex, removedItem);
-
-        //    OnIndexerPropertyChanged();
-        //    OnCollectionChanged(NotifyCollectionChangedAction.Move, removedItem, newIndex, oldIndex);
-        //}
-
         #endregion
 
 
@@ -166,7 +159,9 @@ namespace CiccioSoft.Collections.Observable
         /// Raises a PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
         /// </summary>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
-            => PropertyChanged?.Invoke(this, e);
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
 
         /// <summary>
         /// Helper to raise a PropertyChanged event for the Count property
@@ -224,14 +219,6 @@ namespace CiccioSoft.Collections.Observable
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index));
         }
 
-        ///// <summary>
-        ///// Helper to raise CollectionChanged event to any listeners
-        ///// </summary>
-        //private void OnCollectionChanged(NotifyCollectionChangedAction action, object? item, int index, int oldIndex)
-        //{
-        //    OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index, oldIndex));
-        //}
-
         /// <summary>
         /// Helper to raise CollectionChanged event to any listeners
         /// </summary>
@@ -245,10 +232,29 @@ namespace CiccioSoft.Collections.Observable
         /// </summary>
         private void OnCollectionReset() => OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
 
+        /// <summary>
+        /// Disallow reentrant attempts to change this collection. E.g. an event handler
+        /// of the CollectionChanged event is not allowed to make changes to this collection.
+        /// </summary>
+        /// <remarks>
+        /// typical usage is to wrap e.g. a OnCollectionChanged call with a using() scope:
+        /// <code>
+        ///         using (BlockReentrancy())
+        ///         {
+        ///             CollectionChanged(this, new NotifyCollectionChangedEventArgs(action, item, index));
+        ///         }
+        /// </code>
+        /// </remarks>
+        protected IDisposable BlockReentrancy()
+        {
+            _blockReentrancyCount++;
+            return EnsureMonitorInitialized();
+        }
+
         /// <summary> Check and assert for reentrant attempts to change this collection. </summary>
         /// <exception cref="InvalidOperationException"> raised when changing the collection
         /// while another collection change is still being notified to other listeners </exception>
-        private void CheckReentrancy()
+        protected void CheckReentrancy()
         {
             if (_blockReentrancyCount > 0)
             {
@@ -260,6 +266,8 @@ namespace CiccioSoft.Collections.Observable
                     throw new InvalidOperationException("Cannot change ObservableCollection during a CollectionChanged event.");
             }
         }
+
+        private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
 
         #endregion
 
@@ -285,29 +293,23 @@ namespace CiccioSoft.Collections.Observable
 
         #endregion
 
+        // this class helps prevent reentrant calls
+        [Serializable]
+        //[TypeForwardedFrom("WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")]
+        private sealed class SimpleMonitor : IDisposable
+        {
+            //internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
 
-        #region Private
+            [NonSerialized]
+            internal ObservableCollection<T> _collection;
 
-        //private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
+            public SimpleMonitor(ObservableCollection<T> collection)
+            {
+                Debug.Assert(collection != null);
+                _collection = collection;
+            }
 
-        //// this class helps prevent reentrant calls
-        //[Serializable]
-        //private sealed class SimpleMonitor : IDisposable
-        //{
-        //    internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
-
-        //    [NonSerialized]
-        //    internal ObservableCollection<T> _collection;
-
-        //    public SimpleMonitor(ObservableCollection<T> collection)
-        //    {
-        //        Debug.Assert(collection != null);
-        //        _collection = collection;
-        //    }
-
-        //    public void Dispose() => _collection._blockReentrancyCount--;
-        //}
-
-        #endregion
+            public void Dispose() => _collection._blockReentrancyCount--;
+        }
     }
 }

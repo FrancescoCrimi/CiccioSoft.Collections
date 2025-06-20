@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Binding
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ReadOnlyBindingSet<T> : ReadOnlySet<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, IBindingList, IRaiseItemChangedEvents
+    public class ReadOnlyBindingSet<T> : ReadOnlySetMoreIList<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, IBindingList, IRaiseItemChangedEvents
     {
         #region Constructors
 
@@ -103,75 +103,6 @@ namespace CiccioSoft.Collections.Binding
         /// unless those items support INotifyPropertyChanged.
         /// </summary>
         public bool RaisesItemChangedEvents => ((IRaiseItemChangedEvents)_set).RaisesItemChangedEvents;
-
-        #endregion
-
-        #region IList
-
-        object? IList.this[int index]
-        {
-            get => _set.ToList()[index];
-            set => ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-        }
-
-        bool IList.IsReadOnly => true;
-
-        bool IList.IsFixedSize => true;
-
-        int IList.Add(object? value)
-        {
-            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-            return -1;
-        }
-
-        void IList.Clear()
-        {
-            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-        }
-
-        bool IList.Contains(object? value)
-        {
-            if (IsCompatibleObject(value))
-            {
-                return Contains((T)value!);
-            }
-            return false;
-        }
-
-        int IList.IndexOf(object? value)
-        {
-            if (IsCompatibleObject(value))
-            {
-                return _set.ToList().IndexOf((T)value!);
-            }
-            return -1;
-        }
-
-        void IList.Insert(int index, object? value)
-        {
-            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-        }
-
-        void IList.Remove(object? value)
-        {
-            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-        }
-
-        void IList.RemoveAt(int index)
-        {
-            ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-        }
-
-        #endregion
-
-        #region Private Method
-
-        private static bool IsCompatibleObject(object? value)
-        {
-            // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
-            // Note that default(T) is not equal to null for value types except when T is Nullable<U>.
-            return value is T || value == null && default(T) == null;
-        }
 
         #endregion
     }

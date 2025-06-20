@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Ciccio
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class CiccioSet<T> : Set<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
+    public class CiccioSet<T> : SetMoreIList<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
     {
         //private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
 
@@ -44,7 +44,7 @@ namespace CiccioSoft.Collections.Ciccio
             Initialize();
         }
 
-#if NET6_0_OR_GREATER
+#if  NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
 
         public CiccioSet(int capacity) : base(capacity)
         {
@@ -63,7 +63,7 @@ namespace CiccioSoft.Collections.Ciccio
             Initialize();
         }
 
-#if NET6_0_OR_GREATER
+#if  NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
 
         public CiccioSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
         {
@@ -533,138 +533,6 @@ namespace CiccioSoft.Collections.Ciccio
         /// unless those items support INotifyPropertyChanged.
         /// </summary>
         public bool RaisesItemChangedEvents => raiseItemChangedEvents;
-
-        #endregion
-
-        #region IList
-
-        object? IList.this[int index]
-        {
-            get => items.ToList()[index];
-            set => throw new NotSupportedException("Mutating a value collection derived from a hashset is not allowed.");
-        }
-
-        bool IList.IsReadOnly => false;
-
-        bool IList.IsFixedSize => false;
-
-        int IList.Add(object? value)
-        {
-            ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, ExceptionArgument.value);
-
-            T? item = default;
-
-            try
-            {
-                item = (T)value!;
-            }
-            catch (InvalidCastException)
-            {
-                ThrowHelper.ThrowWrongValueTypeArgumentException(value, typeof(T));
-            }
-
-            Add(item);
-
-            return items.ToList().IndexOf(item);
-        }
-
-        bool IList.Contains(object? value)
-        {
-            if (IsCompatibleObject(value))
-            {
-                return Contains((T)value!);
-            }
-            return false;
-        }
-
-        int IList.IndexOf(object? value)
-        {
-            if (IsCompatibleObject(value))
-            {
-                return items.ToList().IndexOf((T)value!);
-            }
-            return -1;
-        }
-
-        void IList.Insert(int index, object? value)
-        {
-            throw new NotSupportedException("Mutating a value collection derived from a hashset is not allowed.");
-        }
-
-        void IList.Remove(object? value)
-        {
-            if (IsCompatibleObject(value))
-            {
-                Remove((T)value!);
-            }
-        }
-
-        void IList.RemoveAt(int index)
-        {
-            throw new NotSupportedException("Mutating a value collection derived from a hashset is not allowed.");
-        }
-
-        #endregion
-
-        #region ICollection
-
-        bool ICollection.IsSynchronized => false;
-
-        object ICollection.SyncRoot => items is ICollection c ? c.SyncRoot : this;
-
-        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(items, array, index);
-
-        #endregion
-
-        //#region Serializable
-
-        ////[OnSerializing]
-        ////private void OnSerializing(StreamingContext context)
-        ////{
-        ////    EnsureMonitorInitialized();
-        ////    _monitor!._busyCount = _blockReentrancyCount;
-        ////}
-
-        ////[OnDeserialized]
-        ////private void OnDeserialized(StreamingContext context)
-        ////{
-        ////    if (_monitor != null)
-        ////    {
-        ////        _blockReentrancyCount = _monitor._busyCount;
-        ////        _monitor._collection = this;
-        ////    }
-        ////}
-
-        //#endregion
-
-        #region Private
-
-        private static bool IsCompatibleObject(object? value)
-        {
-            // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
-            // Note that default(T) is not equal to null for value types except when T is Nullable<U>.
-            return value is T || value == null && default(T) == null;
-        }
-
-        //private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
-
-        //// this class helps prevent reentrant calls
-        //[Serializable]
-        //private sealed class SimpleMonitor : IDisposable
-        //{
-        //    internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
-
-        //    [NonSerialized]
-        //    internal CiccioSet<T> _collection;
-
-        //    public SimpleMonitor(CiccioSet<T> collection)
-        //    {
-        //        Debug.Assert(collection != null);
-        //        _collection = collection;
-        //    }
-
-        //    public void Dispose() => _collection._blockReentrancyCount--;
-        //}
 
         #endregion
     }

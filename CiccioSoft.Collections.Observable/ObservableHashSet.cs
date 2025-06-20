@@ -33,7 +33,7 @@ namespace CiccioSoft.Collections.Observable
         {
         }
 
-#if NET6_0_OR_GREATER
+#if  NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
 
         public ObservableHashSet(int capacity) : base(capacity)
         {
@@ -49,7 +49,7 @@ namespace CiccioSoft.Collections.Observable
         {
         }
 
-#if NET6_0_OR_GREATER
+#if  NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
 
         public ObservableHashSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
         {
