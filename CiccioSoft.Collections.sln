@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CiccioSoft.Collections.Test
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common.Tests", "Common.Tests\Common.Tests.shproj", "{AE02A1A4-33D0-49E5-9DE8-E5C327541E24}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CiccioSoft.Collections.Shared", "CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.shproj", "{9BBBE92C-E58C-40A4-A3B0-FD76EE16B8D4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiccioSoft.Collections.Core", "CiccioSoft.Collections.Core\CiccioSoft.Collections.Core.csproj", "{91B688CA-2665-19ED-1F5F-8AB23A470C54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiccioSoft.Collections.Binding", "CiccioSoft.Collections.Binding\CiccioSoft.Collections.Binding.csproj", "{9B7D5662-932C-B33D-56AA-8481F6D3EB59}"
@@ -18,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiccioSoft.Collections.Ciccio", "CiccioSoft.Collections.Ciccio\CiccioSoft.Collections.Ciccio.csproj", "{BCEDD829-4D72-ACD6-8FFA-3E384260AA5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiccioSoft.Collections.Observable", "CiccioSoft.Collections.Observable\CiccioSoft.Collections.Observable.csproj", "{469B999A-B162-026C-7312-F805732D8689}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CiccioSoft.Collections.CoreLib", "CiccioSoft.Collections.CoreLib\CiccioSoft.Collections.CoreLib.shproj", "{37505167-73C6-4F5F-947C-15AA399E93D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,12 +57,12 @@ Global
 		SolutionGuid = {0186A1BE-204F-4E7D-935A-8EF8409AE4C6}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems*{469b999a-b162-026c-7312-f805732d8689}*SharedItemsImports = 5
-		CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems*{91b688ca-2665-19ed-1f5f-8ab23a470c54}*SharedItemsImports = 5
-		CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems*{9b7d5662-932c-b33d-56aa-8481f6d3eb59}*SharedItemsImports = 5
-		CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems*{9bbbe92c-e58c-40a4-a3b0-fd76ee16b8d4}*SharedItemsImports = 13
+		CiccioSoft.Collections.CoreLib\CiccioSoft.Collections.CoreLib.projitems*{37505167-73c6-4f5f-947c-15aa399e93d8}*SharedItemsImports = 13
+		CiccioSoft.Collections.CoreLib\CiccioSoft.Collections.CoreLib.projitems*{469b999a-b162-026c-7312-f805732d8689}*SharedItemsImports = 5
+		CiccioSoft.Collections.CoreLib\CiccioSoft.Collections.CoreLib.projitems*{91b688ca-2665-19ed-1f5f-8ab23a470c54}*SharedItemsImports = 5
+		CiccioSoft.Collections.CoreLib\CiccioSoft.Collections.CoreLib.projitems*{9b7d5662-932c-b33d-56aa-8481f6d3eb59}*SharedItemsImports = 5
 		Common.Tests\Common.Tests.projitems*{ae02a1a4-33d0-49e5-9de8-e5c327541e24}*SharedItemsImports = 13
-		CiccioSoft.Collections.Shared\CiccioSoft.Collections.Shared.projitems*{bcedd829-4d72-acd6-8ffa-3e384260aa5f}*SharedItemsImports = 5
+		CiccioSoft.Collections.CoreLib\CiccioSoft.Collections.CoreLib.projitems*{bcedd829-4d72-acd6-8ffa-3e384260aa5f}*SharedItemsImports = 5
 		Common.Tests\Common.Tests.projitems*{d4039985-161e-4b6e-be8f-5327e5884548}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
