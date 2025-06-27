@@ -12,9 +12,9 @@ using Xunit;
 namespace CiccioSoft.Collections.Tests.ObservableCollection
 {
     /// <summary>
-    /// Tests the public properties and constructor in ObservableList<T>.
+    /// Tests the public properties and constructor in ObservableCollection<T>.
     /// </summary>
-    public partial class ObservableCollection_Test
+    public partial class ConstructorAndProperty_Tests
     {
         /// <summary>
         /// Tests that the parameterless constructor works.
@@ -42,7 +42,7 @@ namespace CiccioSoft.Collections.Tests.ObservableCollection
         [MemberData(nameof(Collections))]
         public static void IEnumerableConstructorTest_MakesCopy(IEnumerable<string> collection)
         {
-            var oc = new ObservableListSubclass<string>(collection);
+            var oc = new ObservableCollectionSubclass<string>(collection);
             Assert.NotNull(oc.InnerList);
             Assert.NotSame(collection, oc.InnerList);
         }
@@ -139,9 +139,9 @@ namespace CiccioSoft.Collections.Tests.ObservableCollection
             ArgumentNullException argumentNullException = Assert.IsType<ArgumentNullException>(ex.InnerException);
         }
 
-        private partial class ObservableListSubclass<T> : ObservableCollection<T>
+        private partial class ObservableCollectionSubclass<T> : ObservableCollection<T>
         {
-            public ObservableListSubclass(IEnumerable<T> collection) : base(collection) { }
+            public ObservableCollectionSubclass(IEnumerable<T> collection) : base(collection) { }
 
             public List<T> InnerList => (List<T>)base.Items;
         }
@@ -167,14 +167,14 @@ namespace CiccioSoft.Collections.Tests.ObservableCollection
         public static void ListConstructorTest_MakesCopy()
         {
             List<string> collection = new List<string> { "one", "two", "three" };
-            var oc = new ObservableListSubclass<string>(collection);
+            var oc = new ObservableCollectionSubclass<string>(collection);
             Assert.NotNull(oc.InnerList);
             Assert.NotSame(collection, oc.InnerList);
         }
 
-        private partial class ObservableListSubclass<T> : ObservableCollection<T>
+        private partial class ObservableCollectionSubclass<T> : ObservableCollection<T>
         {
-            public ObservableListSubclass(List<T> list) : base(list) { }
+            public ObservableCollectionSubclass(List<T> list) : base(list) { }
         }
     }
 }

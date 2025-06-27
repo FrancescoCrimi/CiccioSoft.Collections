@@ -12,11 +12,11 @@ using Xunit;
 namespace CiccioSoft.Collections.Tests.ObservableCollection
 {
     /// <summary>
-    /// Tests the public methods in ObservableList<T> as well as verifies
+    /// Tests the public methods in ObservableCollection<T> as well as verifies
     /// that the CollectionChanged events and eventargs are fired and populated
     /// properly.
     /// </summary>
-    public static class ObservableCollection_Test_PublicMethods
+    public static class PublicMethods_Test
     {
         /// <summary>
         /// Tests that is possible to Add an item to the collection.
@@ -245,7 +245,7 @@ namespace CiccioSoft.Collections.Tests.ObservableCollection
                 collectionString += item + ", ";
 
             for (int i = 0; i < collection.Count; ++i)
-                Assert.True(collection.Contains(anArray[i]), "ObservableList did not contain the item: " + anArray[i] + " Collection: " + collectionString);
+                Assert.True(collection.Contains(anArray[i]), "ObservableCollection did not contain the item: " + anArray[i] + " Collection: " + collectionString);
 
             string g = "six";
             Assert.False(collection.Contains(g), "Collection contained an item that should not have been there. guid: " + g + " Collection: " + collectionString);

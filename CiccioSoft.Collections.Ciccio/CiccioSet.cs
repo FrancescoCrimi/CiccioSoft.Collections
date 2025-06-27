@@ -17,8 +17,6 @@ namespace CiccioSoft.Collections.Ciccio
     [DebuggerDisplay("Count = {Count}")]
     public class CiccioSet<T> : SetMoreIList<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
     {
-        //private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
-
         [NonSerialized]
         private int _blockReentrancyCount;
 
@@ -340,7 +338,7 @@ namespace CiccioSoft.Collections.Ciccio
         /// </summary>
         /// <remarks>
         /// When overriding this method, either call its base implementation
-        /// or call <see cref="BlockReentrancy"/> to guard against reentrant collection changes.
+        /// to guard against reentrant collection changes.
         /// </remarks>
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {

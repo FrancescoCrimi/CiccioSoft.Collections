@@ -60,6 +60,7 @@ namespace CiccioSoft.Collections.Binding
 
         #endregion
 
+
         #region Protected Override Methods
 
         protected override void ClearItems()
@@ -118,6 +119,7 @@ namespace CiccioSoft.Collections.Binding
 
         #endregion
 
+
         #region ListChanged event
 
         /// <summary>
@@ -157,6 +159,7 @@ namespace CiccioSoft.Collections.Binding
         }
 
         #endregion
+
 
         #region IBindingList interface
 
@@ -240,6 +243,7 @@ namespace CiccioSoft.Collections.Binding
 
         #endregion
 
+
         #region IRaiseItemChangedEvents interface
 
         /// <summary>
@@ -250,6 +254,7 @@ namespace CiccioSoft.Collections.Binding
         bool IRaiseItemChangedEvents.RaisesItemChangedEvents => raiseItemChangedEvents;
 
         #endregion
+
 
         #region PropertyChanged Support
 

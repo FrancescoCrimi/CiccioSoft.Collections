@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 
 namespace CiccioSoft.Collections.Observable
 {
@@ -20,8 +19,6 @@ namespace CiccioSoft.Collections.Observable
     [DebuggerDisplay("Count = {Count}")]
     public class ObservableCollection<T> : Core.List<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
-
         [NonSerialized]
         private int _blockReentrancyCount;
 
@@ -173,7 +170,7 @@ namespace CiccioSoft.Collections.Observable
         /// </summary>
         /// <remarks>
         /// When overriding this method, either call its base implementation
-        /// or call <see cref="BlockReentrancy"/> to guard against reentrant collection changes.
+        /// to guard against reentrant collection changes.
         /// </remarks>
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
@@ -191,25 +188,6 @@ namespace CiccioSoft.Collections.Observable
                     _blockReentrancyCount--;
                 }
             }
-        }
-
-        /// <summary>
-        /// Disallow reentrant attempts to change this collection. E.g. an event handler
-        /// of the CollectionChanged event is not allowed to make changes to this collection.
-        /// </summary>
-        /// <remarks>
-        /// typical usage is to wrap e.g. a OnCollectionChanged call with a using() scope:
-        /// <code>
-        ///         using (BlockReentrancy())
-        ///         {
-        ///             CollectionChanged(this, new NotifyCollectionChangedEventArgs(action, item, index));
-        ///         }
-        /// </code>
-        /// </remarks>
-        protected IDisposable BlockReentrancy()
-        {
-            _blockReentrancyCount++;
-            return EnsureMonitorInitialized();
         }
 
         /// <summary> Check and assert for reentrant attempts to change this collection. </summary>
@@ -256,53 +234,6 @@ namespace CiccioSoft.Collections.Observable
         /// Helper to raise CollectionChanged event with action == Reset to any listeners
         /// </summary>
         private void OnCollectionReset() => OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
-
-        #endregion
-
-
-        #region Serialization
-
-        [OnSerializing]
-        private void OnSerializing(StreamingContext context)
-        {
-            EnsureMonitorInitialized();
-            _monitor!._busyCount = _blockReentrancyCount;
-        }
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context)
-        {
-            if (_monitor != null)
-            {
-                _blockReentrancyCount = _monitor._busyCount;
-                _monitor._collection = this;
-            }
-        }
-
-        #endregion
-
-
-        #region Private Methods
-
-        private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
-
-        // this class helps prevent reentrant calls
-        [Serializable]
-        private sealed class SimpleMonitor : IDisposable
-        {
-            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
-
-            [NonSerialized]
-            internal ObservableCollection<T> _collection;
-
-            public SimpleMonitor(ObservableCollection<T> collection)
-            {
-                Debug.Assert(collection != null);
-                _collection = collection;
-            }
-
-            public void Dispose() => _collection._blockReentrancyCount--;
-        }
 
         #endregion
     }
