@@ -1,15 +1,16 @@
 # set-package-version.ps1
 
 # Versioni hardcoded
-$newPackageVersion = "8.0.0-beta.3"
+$newPackageVersion = "8.0.0-alpha.3"
 $newVersion = "8.0.0"
 
 # Elenco hardcoded dei progetti CiccioSoft.Collections
 $projects = @(
-    "CiccioSoft\CiccioSoft.Collections\CiccioSoft.Collections.csproj",
-    "CiccioSoft\CiccioSoft.Collections.Binding\CiccioSoft.Collections.Binding.csproj",
-    "CiccioSoft\CiccioSoft.Collections.Observable\CiccioSoft.Collections.Observable.csproj",
-    "CiccioSoft\CiccioSoft.Collections.Ciccio\CiccioSoft.Collections.Ciccio.csproj"
+    "CiccioSoft.Collections.Core\CiccioSoft.Collections.Core.csproj",
+    "CiccioSoft.Collections.Binding\CiccioSoft.Collections.Binding.csproj",
+    "CiccioSoft.Collections.Observable\CiccioSoft.Collections.Observable.csproj",
+    "CiccioSoft.Collections.Ciccio\CiccioSoft.Collections.Ciccio.csproj",
+    "CiccioSoft.Collections\CiccioSoft.Collections.csproj"
 )
 
 foreach ($proj in $projects) {

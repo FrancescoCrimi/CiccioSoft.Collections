@@ -7,11 +7,11 @@ output_dir="nupkgs"
 
 # Elenco hardcoded dei progetti da pacchettizzare
 projects=(
-  "CiccioSoft/CiccioSoft.Collections/CiccioSoft.Collections.csproj"
-  "CiccioSoft/CiccioSoft.Collections.Binding/CiccioSoft.Collections.Binding.csproj"
-  "CiccioSoft/CiccioSoft.Collections.Observable/CiccioSoft.Collections.Observable.csproj"
-  "CiccioSoft/CiccioSoft.Collections.Ciccio/CiccioSoft.Collections.Ciccio.csproj"
-  "CiccioSoft/CiccioSoft.Collections.Core/CiccioSoft.Collections.Core.csproj"
+  "CiccioSoft.Collections.Core/CiccioSoft.Collections.Core.csproj"
+  "CiccioSoft.Collections.Binding/CiccioSoft.Collections.Binding.csproj"
+  "CiccioSoft.Collections.Observable/CiccioSoft.Collections.Observable.csproj"
+  "CiccioSoft.Collections.Ciccio/CiccioSoft.Collections.Ciccio.csproj"
+  "CiccioSoft.Collections/CiccioSoft.Collections.csproj"
 )
 
 # Crea la directory di output se non esiste
