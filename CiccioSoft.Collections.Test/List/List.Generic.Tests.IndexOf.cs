@@ -8,7 +8,7 @@ using System.Collections.Tests;
 using System.Linq;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.Collection
+namespace CiccioSoft.Collections.Tests.List
 {
     /// <summary>
     /// Contains tests that ensure the correctness of the List class.
@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Tests.Collection
     {
         #region Helpers
 
-        public delegate int IndexOfDelegate(Collection<T> list, T value);
+        public delegate int IndexOfDelegate(TestList<T> list, T value);
         public enum IndexOfMethod
         {
             IndexOf_T,
@@ -33,7 +33,7 @@ namespace CiccioSoft.Collections.Tests.Collection
             switch (methodType)
             {
                 case (IndexOfMethod.IndexOf_T):
-                    return ((Collection<T> list, T value) => { return list.IndexOf(value); });
+                    return ((TestList<T> list, T value) => { return list.IndexOf(value); });
                 //case (IndexOfMethod.IndexOf_T_int):
                 //    return ((List<T> list, T value) => { return list.IndexOf(value, 0); });
                 //case (IndexOfMethod.IndexOf_T_int_int):
@@ -82,8 +82,8 @@ namespace CiccioSoft.Collections.Tests.Collection
         public void IndexOf_NoDuplicates(IndexOfMethod indexOfMethod, int count, bool frontToBackOrder)
         {
             _ = frontToBackOrder;
-            Collection<T> list = GenericCollectionFactory(count);
-            List<T> expectedList = list.ToList();
+            TestList<T> list = GenericCollectionFactory(count);
+            System.Collections.Generic.List<T> expectedList = list.ToList();
             IndexOfDelegate IndexOf = IndexOfDelegateFromType(indexOfMethod);
 
             Assert.All(Enumerable.Range(0, count), i =>
@@ -97,7 +97,7 @@ namespace CiccioSoft.Collections.Tests.Collection
         public void IndexOf_NonExistingValues(IndexOfMethod indexOfMethod, int count, bool frontToBackOrder)
         {
             _ = frontToBackOrder;
-            Collection<T> list = GenericCollectionFactory(count);
+            TestList<T> list = GenericCollectionFactory(count);
             IEnumerable<T> nonexistentValues = CreateEnumerable(EnumerableType.List, list, count: count, numberOfMatchingElements: 0, numberOfDuplicateElements: 0);
             IndexOfDelegate IndexOf = IndexOfDelegateFromType(indexOfMethod);
 
@@ -113,7 +113,7 @@ namespace CiccioSoft.Collections.Tests.Collection
         {
             _ = frontToBackOrder;
             T defaultValue = default;
-            Collection<T> list = GenericCollectionFactory(count);
+            TestList<T> list = GenericCollectionFactory(count);
             IndexOfDelegate IndexOf = IndexOfDelegateFromType(indexOfMethod);
             while (list.Remove(defaultValue))
                 count--;
@@ -125,8 +125,8 @@ namespace CiccioSoft.Collections.Tests.Collection
         [MemberData(nameof(IndexOfTestData))]
         public void IndexOf_OrderIsCorrect(IndexOfMethod indexOfMethod, int count, bool frontToBackOrder)
         {
-            Collection<T> list = GenericCollectionFactory(count);
-            List<T> withoutDuplicates = list.ToList();
+            TestList<T> list = GenericCollectionFactory(count);
+            System.Collections.Generic.List<T> withoutDuplicates = list.ToList();
             //list.AddRange(list);
             foreach (T? item in withoutDuplicates)
             {

@@ -104,7 +104,7 @@ namespace CiccioSoft.Collections.Tests.Set
         public void HashSet_Generic_Constructor_HashSet_SparselyFilled(int count)
         {
             Set<T> source = new Set<T>(CreateEnumerable(EnumerableType.HashSet, null, count, 0, 0));
-            List<T> sourceElements = source.ToList();
+            System.Collections.Generic.List<T> sourceElements = source.ToList();
             foreach (int i in NonSquares(count))
                 source.Remove(sourceElements[i]);// Unevenly spaced survivors increases chance of catching any spacing-related bugs.
 
@@ -289,7 +289,7 @@ namespace CiccioSoft.Collections.Tests.Set
         [Fact]
         public void SetComparer_SetEqualsTests()
         {
-            List<T> objects = new List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
+            System.Collections.Generic.List<T> objects = new System.Collections.Generic.List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
 
             var set = new Set<HashSet<T>>()
             {
@@ -323,7 +323,7 @@ namespace CiccioSoft.Collections.Tests.Set
         [Fact]
         public void SetComparer_SequenceEqualTests()
         {
-            List<T> objects = new List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
+            System.Collections.Generic.List<T> objects = new System.Collections.Generic.List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
 
             var set = new Set<HashSet<T>>()
             {

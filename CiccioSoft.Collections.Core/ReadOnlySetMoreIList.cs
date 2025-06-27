@@ -22,7 +22,7 @@ namespace CiccioSoft.Collections.Core
 
         object? IList.this[int index]
         {
-            get => _set.ToList()[index];
+            get => Set.ToList()[index];
             set => ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
         }
 
@@ -54,7 +54,7 @@ namespace CiccioSoft.Collections.Core
         {
             if (IsCompatibleObject(value))
             {
-                return _set.ToList().IndexOf((T)value!);
+                return Set.ToList().IndexOf((T)value!);
             }
             return -1;
         }

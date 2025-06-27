@@ -12,7 +12,7 @@ using Xunit;
 namespace CiccioSoft.Collections.Tests.CiccioList
 {
     /// <summary>
-    /// Tests the public properties and constructor in CiccioList<T>.
+    /// Tests the public properties and constructor in NhbCiccioList<T>.
     /// </summary>
     public partial class CiccioList_As_ObservableCollection
     {
@@ -143,7 +143,7 @@ namespace CiccioSoft.Collections.Tests.CiccioList
         {
             public ObservableCollectionSubclass(IEnumerable<T> collection) : base(collection) { }
 
-            public List<T> InnerList => (List<T>)base.items;
+            public List<T> InnerList => (List<T>)base.Items;
         }
 
         /// <summary>

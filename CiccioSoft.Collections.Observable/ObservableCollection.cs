@@ -1,14 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace CiccioSoft.Collections.Observable
@@ -21,8 +18,7 @@ namespace CiccioSoft.Collections.Observable
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    //[System.Runtime.CompilerServices.TypeForwardedFrom("WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")]
-    public class ObservableCollection<T> : Collection<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableCollection<T> : Core.List<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
 
@@ -57,24 +53,10 @@ namespace CiccioSoft.Collections.Observable
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the ObservableCollection class
-        /// that contains elements copied from the specified list
-        /// </summary>
-        /// <param name="list">The list whose elements are copied to the new list.</param>
-        /// <remarks>
-        /// The elements are copied onto the ObservableCollection in the
-        /// same order they are read by the enumerator of the list.
-        /// </remarks>
-        /// <exception cref="ArgumentNullException"> list is a null reference </exception>
-        //public ObservableCollection(List<T> list) : base(new List<T>(list ?? throw new ArgumentNullException(nameof(list))))
-        //{
-        //}
-
         #endregion
 
 
-        #region Overrides Method
+        #region Protected Override Methods
 
         /// <summary>
         /// Called by base class Collection&lt;T&gt; when the list is being cleared;
@@ -138,13 +120,7 @@ namespace CiccioSoft.Collections.Observable
         #endregion
 
 
-        #region PropertyChanged
-
-        /// <summary>
-        /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
-        /// </summary>
-        [field: NonSerialized]
-        protected virtual event PropertyChangedEventHandler? PropertyChanged;
+        #region INotifyPropertyChanged interface
 
         /// <summary>
         /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
@@ -164,6 +140,12 @@ namespace CiccioSoft.Collections.Observable
         }
 
         /// <summary>
+        /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
+        /// </summary>
+        [field: NonSerialized]
+        protected virtual event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
         /// Helper to raise a PropertyChanged event for the Count property
         /// </summary>
         private void OnCountPropertyChanged() => OnPropertyChanged(EventArgsCache.CountPropertyChanged);
@@ -176,7 +158,7 @@ namespace CiccioSoft.Collections.Observable
         #endregion
 
 
-        #region CollectionChanged
+        #region INotifyCollectionChanged interface
 
         /// <summary>
         /// Occurs when the collection changes, either by adding or removing an item.
@@ -210,27 +192,6 @@ namespace CiccioSoft.Collections.Observable
                 }
             }
         }
-
-        /// <summary>
-        /// Helper to raise CollectionChanged event to any listeners
-        /// </summary>
-        private void OnCollectionChanged(NotifyCollectionChangedAction action, object? item, int index)
-        {
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index));
-        }
-
-        /// <summary>
-        /// Helper to raise CollectionChanged event to any listeners
-        /// </summary>
-        private void OnCollectionChanged(NotifyCollectionChangedAction action, object? oldItem, object? newItem, int index)
-        {
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
-        }
-
-        /// <summary>
-        /// Helper to raise CollectionChanged event with action == Reset to any listeners
-        /// </summary>
-        private void OnCollectionReset() => OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
 
         /// <summary>
         /// Disallow reentrant attempts to change this collection. E.g. an event handler
@@ -267,38 +228,69 @@ namespace CiccioSoft.Collections.Observable
             }
         }
 
+        /// <summary>
+        /// Helper to raise CollectionChanged event to any listeners
+        /// </summary>
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object? item, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index));
+        }
+
+        /// <summary>
+        /// Helper to raise CollectionChanged event to any listeners
+        /// </summary>
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object? item, int index, int oldIndex)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index, oldIndex));
+        }
+
+        /// <summary>
+        /// Helper to raise CollectionChanged event to any listeners
+        /// </summary>
+        private void OnCollectionChanged(NotifyCollectionChangedAction action, object? oldItem, object? newItem, int index)
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, newItem, oldItem, index));
+        }
+
+        /// <summary>
+        /// Helper to raise CollectionChanged event with action == Reset to any listeners
+        /// </summary>
+        private void OnCollectionReset() => OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+
+        #endregion
+
+
+        #region Serialization
+
+        [OnSerializing]
+        private void OnSerializing(StreamingContext context)
+        {
+            EnsureMonitorInitialized();
+            _monitor!._busyCount = _blockReentrancyCount;
+        }
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            if (_monitor != null)
+            {
+                _blockReentrancyCount = _monitor._busyCount;
+                _monitor._collection = this;
+            }
+        }
+
+        #endregion
+
+
+        #region Private Methods
+
         private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
-
-        #endregion
-
-
-        #region Serializable
-
-        //[OnSerializing]
-        //private void OnSerializing(StreamingContext context)
-        //{
-        //    EnsureMonitorInitialized();
-        //    _monitor!._busyCount = _blockReentrancyCount;
-        //}
-
-        //[OnDeserialized]
-        //private void OnDeserialized(StreamingContext context)
-        //{
-        //    if (_monitor != null)
-        //    {
-        //        _blockReentrancyCount = _monitor._busyCount;
-        //        _monitor._collection = this;
-        //    }
-        //}
-
-        #endregion
 
         // this class helps prevent reentrant calls
         [Serializable]
-        //[TypeForwardedFrom("WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35")]
         private sealed class SimpleMonitor : IDisposable
         {
-            //internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
+            internal int _busyCount; // Only used during (de)serialization to maintain compatibility with desktop. Do not rename (binary serialization)
 
             [NonSerialized]
             internal ObservableCollection<T> _collection;
@@ -311,5 +303,7 @@ namespace CiccioSoft.Collections.Observable
 
             public void Dispose() => _collection._blockReentrancyCount--;
         }
+
+        #endregion
     }
 }

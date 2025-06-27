@@ -29,7 +29,7 @@ namespace CiccioSoft.Collections.Ciccio
         public ReadOnlyCiccioSet(CiccioSet<T> set) : base(set)
         {
             set.CollectionChanged += new NotifyCollectionChangedEventHandler(HandleCollectionChanged);
-            set.PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
+            ((INotifyPropertyChanged)set).PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
             set.ListChanged += new ListChangedEventHandler(HandleListChanged);
         }
 
@@ -157,7 +157,7 @@ namespace CiccioSoft.Collections.Ciccio
         /// of type ItemChanged as a result of property changes on individual list items
         /// unless those items support INotifyPropertyChanged.
         /// </summary>
-        public bool RaisesItemChangedEvents => ((IRaiseItemChangedEvents)_set).RaisesItemChangedEvents;
+        public bool RaisesItemChangedEvents => ((IRaiseItemChangedEvents)Set).RaisesItemChangedEvents;
 
         #endregion
     }

@@ -1,27 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace CiccioSoft.Collections.Binding
 {
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-#if NET6_0_OR_GREATER
-    public class BindingList<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>
-#else
-    public class BindingList<T>
-#endif
-        : Collection<T>, IList<T>, IList, IReadOnlyList<T>, IBindingList, IRaiseItemChangedEvents
+    public class BindingList<T> : Core.List<T>, IBindingList, IRaiseItemChangedEvents
     {
-        //private int addNewPos = -1; // Do not rename (binary serialization)
         private bool raiseListChangedEvents = true; // Do not rename (binary serialization)
         private bool raiseItemChangedEvents; // Do not rename (binary serialization)
 
@@ -37,17 +28,11 @@ namespace CiccioSoft.Collections.Binding
         [NonSerialized]
         private int _lastChangeIndex = -1;
 
-        //private bool allowNew = true; // Do not rename (binary serialization)
-        //private bool allowEdit = true; // Do not rename (binary serialization)
-        //private bool allowRemove = true; // Do not rename (binary serialization)
-        //private bool userSetAllowNew; // Do not rename (binary serialization)
-
         #region Constructors
 
-        //[RequiresUnreferencedCode("Raises ListChanged events with PropertyDescriptors. PropertyDescriptors require unreferenced code.")]
         public BindingList() => Initialize();
 
-        public BindingList(IEnumerable<T> collection) : base(collection)
+        public BindingList(IEnumerable<T> enumerable) : base(enumerable)
         {
             Initialize();
         }
@@ -57,12 +42,8 @@ namespace CiccioSoft.Collections.Binding
             Initialize();
         }
 
-        //[RequiresUnreferencedCode("Raises ListChanged events with PropertyDescriptors. PropertyDescriptors require unreferenced code.")]
         private void Initialize()
         {
-            // Set the default value of AllowNew based on whether type T has a default constructor
-            //allowNew = ItemTypeHasDefaultConstructor;
-
             // Check for INotifyPropertyChanged
             if (typeof(INotifyPropertyChanged).IsAssignableFrom(typeof(T)))
             {
@@ -70,72 +51,72 @@ namespace CiccioSoft.Collections.Binding
                 raiseItemChangedEvents = true;
 
                 // Loop thru the items already in the collection and hook their change notification.
-                foreach (T item in items)
+                foreach (T item in Items)
                 {
                     HookPropertyChanged(item);
                 }
             }
         }
 
-        //private static bool ItemTypeHasDefaultConstructor
-        //{
-        //    get
-        //    {
-        //        Type itemType = typeof(T);
-
-        //        if (itemType.IsPrimitive)
-        //        {
-        //            return true;
-        //        }
-
-        //        const BindingFlags BindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance;
-        //        return itemType.GetConstructor(BindingFlags, null, Type.EmptyTypes, null) != null;
-        //    }
-        //}
-
         #endregion
 
-        //#region AddingNew event
+        #region Protected Override Methods
 
-        /// <summary>
-        /// Event that allows a custom item to be provided as the new item added to the list by AddNew().
-        /// </summary>
-        //public event AddingNewEventHandler AddingNew
-        //{
-        //    add
-        //    {
-        //        bool allowNewWasTrue = AllowNew;
-        //        _onAddingNew += value;
-        //        if (allowNewWasTrue != AllowNew)
-        //        {
-        //            FireListChanged(ListChangedType.Reset, -1);
-        //        }
-        //    }
-        //    remove
-        //    {
-        //        bool allowNewWasTrue = AllowNew;
-        //        _onAddingNew -= value;
-        //        if (allowNewWasTrue != AllowNew)
-        //        {
-        //            FireListChanged(ListChangedType.Reset, -1);
-        //        }
-        //    }
-        //}
+        protected override void ClearItems()
+        {
+            if (raiseItemChangedEvents)
+            {
+                foreach (T item in Items)
+                {
+                    UnhookPropertyChanged(item);
+                }
+            }
 
-        /// <summary>
-        /// Raises the AddingNew event.
-        /// </summary>
-        //protected virtual void OnAddingNew(AddingNewEventArgs e) => _onAddingNew?.Invoke(this, e);
+            base.ClearItems();
+            FireListChanged(ListChangedType.Reset, -1);
+        }
 
-        // Private helper method
-        //private object? FireAddingNew()
-        //{
-        //    AddingNewEventArgs e = new AddingNewEventArgs(null);
-        //    OnAddingNew(e);
-        //    return e.NewObject;
-        //}
+        protected override void InsertItem(int index, T item)
+        {
+            base.InsertItem(index, item);
 
-        //#endregion
+            if (raiseItemChangedEvents)
+            {
+                HookPropertyChanged(item);
+            }
+
+            FireListChanged(ListChangedType.ItemAdded, index);
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            if (raiseItemChangedEvents)
+            {
+                UnhookPropertyChanged(this[index]);
+            }
+
+            base.RemoveItem(index);
+            FireListChanged(ListChangedType.ItemDeleted, index);
+        }
+
+        protected override void SetItem(int index, T item)
+        {
+            if (raiseItemChangedEvents)
+            {
+                UnhookPropertyChanged(this[index]);
+            }
+
+            base.SetItem(index, item);
+
+            if (raiseItemChangedEvents)
+            {
+                HookPropertyChanged(item);
+            }
+
+            FireListChanged(ListChangedType.ItemChanged, index);
+        }
+
+        #endregion
 
         #region ListChanged event
 
@@ -176,102 +157,6 @@ namespace CiccioSoft.Collections.Binding
         }
 
         #endregion
-
-        #region Collection<T> overrides
-
-        // Collection<T> funnels all list changes through the four virtual methods below.
-        // We override these so that we can commit any pending new item and fire the proper ListChanged events.
-
-        protected override void ClearItems()
-        {
-            if (raiseItemChangedEvents)
-            {
-                foreach (T item in items)
-                {
-                    UnhookPropertyChanged(item);
-                }
-            }
-
-            base.ClearItems();
-            FireListChanged(ListChangedType.Reset, -1);
-        }
-
-        protected override void InsertItem(int index, T item)
-        {
-            base.InsertItem(index, item);
-
-            if (raiseItemChangedEvents)
-            {
-                HookPropertyChanged(item);
-            }
-
-            FireListChanged(ListChangedType.ItemAdded, index);
-        }
-
-        protected override void RemoveItem(int index)
-        {
-            // Need to all RemoveItem if this on the AddNew item
-            //if (!allowRemove && !(addNewPos >= 0 && addNewPos == index))
-            //{
-            //    throw new NotSupportedException();
-            //}
-
-            //EndNew(addNewPos);
-
-            if (raiseItemChangedEvents)
-            {
-                UnhookPropertyChanged(this[index]);
-            }
-
-            base.RemoveItem(index);
-            FireListChanged(ListChangedType.ItemDeleted, index);
-        }
-
-        protected override void SetItem(int index, T item)
-        {
-            if (raiseItemChangedEvents)
-            {
-                UnhookPropertyChanged(this[index]);
-            }
-
-            base.SetItem(index, item);
-
-            if (raiseItemChangedEvents)
-            {
-                HookPropertyChanged(item);
-            }
-
-            FireListChanged(ListChangedType.ItemChanged, index);
-        }
-
-        #endregion
-
-        //#region ICancelAddNew interface
-
-        /// <summary>
-        /// If item added using AddNew() is still cancellable, then remove that item from the list.
-        /// </summary>
-        //public virtual void CancelNew(int itemIndex)
-        //{
-        //    if (addNewPos >= 0 && addNewPos == itemIndex)
-        //    {
-        //        RemoveItem(addNewPos);
-        //        addNewPos = -1;
-        //    }
-        //}
-
-        /// <summary>
-        /// If item added using AddNew() is still cancellable, then commit that item.
-        /// </summary>
-        //public virtual void EndNew(int itemIndex)
-        //{
-        //    if (addNewPos >= 0 && addNewPos == itemIndex)
-        //    {
-        //        addNewPos = -1;
-        //    }
-        //}
-
-        //#endregion
 
         #region IBindingList interface
 
@@ -355,7 +240,18 @@ namespace CiccioSoft.Collections.Binding
 
         #endregion
 
-        #region Property Change Support
+        #region IRaiseItemChangedEvents interface
+
+        /// <summary>
+        /// Returns false to indicate that BindingList&lt;T&gt; does NOT raise ListChanged events
+        /// of type ItemChanged as a result of property changes on individual list items
+        /// unless those items support INotifyPropertyChanged.
+        /// </summary>
+        bool IRaiseItemChangedEvents.RaisesItemChangedEvents => raiseItemChangedEvents;
+
+        #endregion
+
+        #region PropertyChanged Support
 
         private void HookPropertyChanged(T item)
         {
@@ -442,17 +338,6 @@ namespace CiccioSoft.Collections.Binding
                 }
             }
         }
-
-        #endregion
-
-        #region IRaiseItemChangedEvents interface
-
-        /// <summary>
-        /// Returns false to indicate that BindingList&lt;T&gt; does NOT raise ListChanged events
-        /// of type ItemChanged as a result of property changes on individual list items
-        /// unless those items support INotifyPropertyChanged.
-        /// </summary>
-        bool IRaiseItemChangedEvents.RaisesItemChangedEvents => raiseItemChangedEvents;
 
         #endregion
     }

@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Core
     [DebuggerDisplay("Count = {Count}")]
     public class Collection<T> : IList<T>, IList, IReadOnlyList<T>
     {
-        protected readonly List<T> items;
+        private readonly IList<T> items;
 
         #region Constructors
 
@@ -26,53 +26,16 @@ namespace CiccioSoft.Collections.Core
         /// </summary>
         public Collection()
         {
-            items = new List<T>();
+            items = new System.Collections.Generic.List<T>();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "Collection{T}" /> class that contains elements copied from the specified collection and has sufficient capacity to accommodate the number of elements copied.
-        /// </summary>
-        /// <param name = "collection" > The collection whose elements are copied to the new list.</param>
-        /// <exception cref = "ArgumentNullException" >
-        /// <paramref name="collection" /> is <see langword = "null" />
-        /// </exception>
-        public Collection(IEnumerable<T> collection)
+        public Collection(IList<T> list)
         {
-            items = new List<T>(collection);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "Collection{T}" /> class that is empty and has the specified initial capacity.
-        /// </summary>
-        /// <param name = "capacity" > The number of elements that the new list can initially store.</param>
-        /// <exception cref = "ArgumentOutOfRangeException" >
-        /// <paramref name = "capacity" /> is less than 0.
-        /// </exception>
-        public Collection(int capacity)
-        {
-            items = new List<T>(capacity);
-        }
-
-        #endregion
-
-        #region Public Property
-
-        /// <summary>
-        /// Gets or sets the total number of elements the internal data structure can hold without resizing.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <see cref="Collection{T}.Capacity" /> is set to a value that is less than <see cref="Collection{T}.Count" />.
-        /// </exception>
-        /// <exception cref="OutOfMemoryException">
-        /// There is not enough memory available on the system.
-        /// </exception>
-        /// <returns>
-        /// The number of elements that the <see cref="Collection{T}" /> can contain before resizing is required.
-        /// </returns>
-        public int Capacity
-        {
-            get => items.Capacity;
-            set => items.Capacity = value;
+            if (list == null)
+            {
+                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.list);
+            }
+            items = list;
         }
 
         #endregion
@@ -92,7 +55,13 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
-        #region Virtual Method 
+        #region Protected Properties
+
+        protected IList<T> Items => items;
+
+        #endregion
+
+        #region Protected Virtual Methods
 
         protected virtual void ClearItems()
         {
@@ -124,7 +93,7 @@ namespace CiccioSoft.Collections.Core
             get => items[index];
             set
             {
-                if (((ICollection<T>)items).IsReadOnly)
+                if (items.IsReadOnly)
                 {
                     ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
                 }
@@ -139,11 +108,19 @@ namespace CiccioSoft.Collections.Core
         }
 
         /// <inheritdoc/>
-        public int IndexOf(T item) => items.IndexOf(item);
+        public int IndexOf(T item)
+        {
+            return items.IndexOf(item);
+        }
 
         /// <inheritdoc/>
         public void Insert(int index, T item)
         {
+            if (items.IsReadOnly)
+            {
+                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            }
+
             if ((uint)index > (uint)items.Count)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException();
@@ -155,6 +132,11 @@ namespace CiccioSoft.Collections.Core
         /// <inheritdoc/>
         public void RemoveAt(int index)
         {
+            if (items.IsReadOnly)
+            {
+                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            }
+
             if ((uint)index >= (uint)items.Count)
             {
                 ThrowHelper.ThrowArgumentOutOfRange_IndexMustBeLessException();
@@ -171,11 +153,16 @@ namespace CiccioSoft.Collections.Core
         public int Count => items.Count;
 
         /// <inheritdoc/>
-        public bool IsReadOnly => false;
+        bool ICollection<T>.IsReadOnly => items.IsReadOnly;
 
         /// <inheritdoc/>
         public void Add(T item)
         {
+            if (items.IsReadOnly)
+            {
+                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            }
+
             int index = items.Count;
             InsertItem(index, item);
         }
@@ -183,22 +170,60 @@ namespace CiccioSoft.Collections.Core
         /// <inheritdoc/>
         public void Clear()
         {
+            if (items.IsReadOnly)
+            {
+                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            }
+
             ClearItems();
         }
 
         /// <inheritdoc/>
-        public bool Contains(T item) => items.Contains(item);
+        public bool Contains(T item)
+        {
+            return items.Contains(item);
+        }
 
         /// <inheritdoc/>
-        public void CopyTo(T[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
+        public void CopyTo(T[] array, int index)
+        {
+            items.CopyTo(array, index);
+        }
 
         /// <inheritdoc/>
         public bool Remove(T item)
         {
+            if (items.IsReadOnly)
+            {
+                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            }
+
             int index = items.IndexOf(item);
             if (index < 0) return false;
             RemoveItem(index);
             return true;
+        }
+
+        #endregion
+
+        #region IEnumerable
+
+        /// <inheritdoc/>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return items.GetEnumerator();
+        }
+
+        ///// <inheritdoc/>
+        //IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        //{
+        //    return ((IEnumerable<T>)items).GetEnumerator();
+        //}
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)items).GetEnumerator();
         }
 
         #endregion
@@ -229,11 +254,32 @@ namespace CiccioSoft.Collections.Core
         }
 
         /// <inheritdoc/>
-        bool IList.IsFixedSize => ((IList)items).IsFixedSize;
+        bool IList.IsFixedSize
+        {
+            get
+            {
+                // There is no IList<T>.IsFixedSize, so we must assume that only
+                // readonly collections are fixed size, if our internal item
+                // collection does not implement IList.  Note that Array implements
+                // IList, and therefore T[] and U[] will be fixed-size.
+                if (items is IList list)
+                {
+                    return list.IsFixedSize;
+                }
+                return items.IsReadOnly;
+            }
+        }
+
+        /// <inheritdoc/>
+        bool IList.IsReadOnly => items.IsReadOnly;
 
         /// <inheritdoc/>
         int IList.Add(object? value)
         {
+            if (items.IsReadOnly)
+            {
+                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            }
             ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, ExceptionArgument.value);
 
             T? item = default;
@@ -249,18 +295,36 @@ namespace CiccioSoft.Collections.Core
 
             Add(item);
 
-            return Count - 1;
+            return this.Count - 1;
         }
 
         /// <inheritdoc/>
-        bool IList.Contains(object? value) => ((IList)items).Contains(value);
+        bool IList.Contains(object? value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                return Contains((T)value!);
+            }
+            return false;
+        }
 
         /// <inheritdoc/>
-        int IList.IndexOf(object? value) => ((IList)items).IndexOf(value);
+        int IList.IndexOf(object? value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                return IndexOf((T)value!);
+            }
+            return -1;
+        }
 
         /// <inheritdoc/>
         void IList.Insert(int index, object? value)
         {
+            if (items.IsReadOnly)
+            {
+                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            }
             ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, ExceptionArgument.value);
 
             T? item = default;
@@ -280,6 +344,11 @@ namespace CiccioSoft.Collections.Core
         /// <inheritdoc/>
         void IList.Remove(object? value)
         {
+            if (items.IsReadOnly)
+            {
+                ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+            }
+
             if (IsCompatibleObject(value))
             {
                 Remove((T)value!);
@@ -294,40 +363,89 @@ namespace CiccioSoft.Collections.Core
         bool ICollection.IsSynchronized => false;
 
         /// <inheritdoc/>
-        object ICollection.SyncRoot => ((ICollection)items).SyncRoot;
+        object ICollection.SyncRoot => items is ICollection coll ? coll.SyncRoot : this;
 
         /// <inheritdoc/>
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)items).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index)
+        {
+            if (array == null)
+            {
+                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.array);
+            }
+
+            if (array.Rank != 1)
+            {
+                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_RankMultiDimNotSupported);
+            }
+
+            if (array.GetLowerBound(0) != 0)
+            {
+                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_NonZeroLowerBound);
+            }
+
+            if (index < 0)
+            {
+                ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException();
+            }
+
+            if (array.Length - index < Count)
+            {
+                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_ArrayPlusOffTooSmall);
+            }
+
+            if (array is T[] tArray)
+            {
+                items.CopyTo(tArray, index);
+            }
+            else
+            {
+                //
+                // Catch the obvious case assignment will fail.
+                // We can't find all possible problems by doing the check though.
+                // For example, if the element type of the Array is derived from T,
+                // we can't figure out if we can successfully copy the element beforehand.
+                //
+                Type targetType = array.GetType().GetElementType()!;
+                Type sourceType = typeof(T);
+                if (!(targetType.IsAssignableFrom(sourceType) || sourceType.IsAssignableFrom(targetType)))
+                {
+                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
+                }
+
+                //
+                // We can't cast array of value type to object[], so we don't support
+                // widening of primitive types here.
+                //
+                object?[]? objects = array as object[];
+                if (objects == null)
+                {
+                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
+                }
+
+                int count = items.Count;
+                try
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        objects[index++] = items[i];
+                    }
+                }
+                catch (ArrayTypeMismatchException)
+                {
+                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
+                }
+            }
+        }
 
         #endregion
 
-        #region IReadOnlyList<T>
-
-        /// <inheritdoc/>
-        T IReadOnlyList<T>.this[int index] => items[index];
-
-        #endregion
-
-        #region IEnumerable
-
-        /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)items).GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
-
-        #endregion
-
-        #region Private Method
+        #region Private Methods
 
         private static bool IsCompatibleObject(object? value)
         {
             // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
             // Note that default(T) is not equal to null for value types except when T is Nullable<U>.
-            return value is T || value == null && default(T) == null;
+            return (value is T) || (value == null && default(T) == null);
         }
 
         #endregion

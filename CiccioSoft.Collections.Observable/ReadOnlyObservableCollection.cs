@@ -26,11 +26,8 @@ namespace CiccioSoft.Collections.Observable
         /// </summary>
         public ReadOnlyObservableCollection(ObservableCollection<T> list) : base(list)
         {
-            list.CollectionChanged += new NotifyCollectionChangedEventHandler(HandleCollectionChanged);
-            ((INotifyPropertyChanged)list).PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
-            //((INotifyCollectionChanged)Items).CollectionChanged += new NotifyCollectionChangedEventHandler(HandleCollectionChanged);
-            //((INotifyPropertyChanged)Items).PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
-
+            ((INotifyCollectionChanged)Items).CollectionChanged += new NotifyCollectionChangedEventHandler(HandleCollectionChanged);
+            ((INotifyPropertyChanged)Items).PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
         }
 
         ///// <summary>Gets an empty <see cref="ReadOnlyObservableCollection{T}"/>.</summary>

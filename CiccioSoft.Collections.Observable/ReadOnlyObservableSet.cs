@@ -26,8 +26,8 @@ namespace CiccioSoft.Collections.Observable
         /// </summary>
         public ReadOnlyObservableSet(ObservableHashSet<T> set) : base(set)
         {
-            set.CollectionChanged += new NotifyCollectionChangedEventHandler(HandleCollectionChanged);
-            set.PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
+            ((INotifyCollectionChanged)Set).CollectionChanged += new NotifyCollectionChangedEventHandler(HandleCollectionChanged);
+            ((INotifyPropertyChanged)Set).PropertyChanged += new PropertyChangedEventHandler(HandlePropertyChanged);
         }
 
         ///// <summary>Gets an empty <see cref="ReadOnlyObservableSet{T}"/>.</summary>

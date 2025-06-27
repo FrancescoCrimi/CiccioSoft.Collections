@@ -12,7 +12,7 @@ using Xunit;
 namespace CiccioSoft.Collections.Tests.CiccioList
 {
     /// <summary>
-    /// Tests the public methods in CiccioList<T> as well as verifies
+    /// Tests the public methods in NhbCiccioList<T> as well as verifies
     /// that the CollectionChanged events and eventargs are fired and populated
     /// properly.
     /// </summary>
@@ -245,7 +245,7 @@ namespace CiccioSoft.Collections.Tests.CiccioList
                 collectionString += item + ", ";
 
             for (int i = 0; i < collection.Count; ++i)
-                Assert.True(collection.Contains(anArray[i]), "CiccioList did not contain the item: " + anArray[i] + " Collection: " + collectionString);
+                Assert.True(collection.Contains(anArray[i]), "NhbCiccioList did not contain the item: " + anArray[i] + " Collection: " + collectionString);
 
             string g = "six";
             Assert.False(collection.Contains(g), "Collection contained an item that should not have been there. guid: " + g + " Collection: " + collectionString);

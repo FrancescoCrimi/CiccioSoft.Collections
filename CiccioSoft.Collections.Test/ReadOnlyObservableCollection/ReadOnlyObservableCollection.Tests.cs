@@ -35,13 +35,13 @@ namespace CiccioSoft.Collections.Tests.ReadOnlyObservableCollection
             AssertExtensions.Throws<ArgumentNullException>("list", () => new ReadOnlyObservableCollection<string>(null));
         }
 
-        //[Fact]
-        //public static void Empty_Idempotent()
-        //{
-        //    Assert.NotNull(ReadOnlyObservableCollection<int>.Empty);
-        //    Assert.Equal(0, ReadOnlyObservableCollection<int>.Empty.Count);
-        //    Assert.Same(ReadOnlyObservableCollection<int>.Empty, ReadOnlyObservableCollection<int>.Empty);
-        //}
+        [Fact]
+        public static void Empty_Idempotent()
+        {
+            Assert.NotNull(ReadOnlyObservableCollection<int>.Empty);
+            Assert.Equal(0, ReadOnlyObservableCollection<int>.Empty.Count);
+            Assert.Same(ReadOnlyObservableCollection<int>.Empty, ReadOnlyObservableCollection<int>.Empty);
+        }
 
         [Fact]
         public static void GetItemTests()

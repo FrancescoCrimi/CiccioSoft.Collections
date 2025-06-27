@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Tests;
 using Xunit;
 
-namespace CiccioSoft.Collections.Tests.Collection
+namespace CiccioSoft.Collections.Tests.List
 {
     /// <summary>
     /// Contains tests that ensure the correctness of the List class.
@@ -34,17 +34,17 @@ namespace CiccioSoft.Collections.Tests.Collection
 
         #endregion
 
-        #region Collection<T> Helper Methods
+        #region WrappedList<T> Helper Methods
 
-        protected virtual Collection<T> GenericCollectionFactory()
+        protected virtual TestList<T> GenericCollectionFactory()
         {
-            return new Collection<T>();
+            return new TestList<T>();
         }
 
-        protected virtual Collection<T> GenericCollectionFactory(int count)
+        protected virtual TestList<T> GenericCollectionFactory(int count)
         {
             IEnumerable<T> toCreateFrom = CreateEnumerable(EnumerableType.List, null, count, 0, 0);
-            return new Collection<T>(toCreateFrom);
+            return new TestList<T>(toCreateFrom);
         }
 
         //protected void VerifyList(List<T> list, List<T> expectedItems)
@@ -69,5 +69,13 @@ namespace CiccioSoft.Collections.Tests.Collection
         //    AssertExtensions.Throws<ArgumentException>(null, () => list.CopyTo(0, new T[0], 0, count + 1));
         //    AssertExtensions.Throws<ArgumentException>(null, () => list.CopyTo(count, new T[0], 0, 1));
         //}
+    }
+
+    [Serializable]
+    public class TestList<T> : Core.List<T>
+    {
+        public TestList() : base() { }
+        public TestList(int capacity) : base(capacity) { }
+        public TestList(IEnumerable<T> collection) : base(collection) { }
     }
 }

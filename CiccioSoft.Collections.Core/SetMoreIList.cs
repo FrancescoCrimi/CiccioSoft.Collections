@@ -2,40 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CiccioSoft.Collections.Core
 {
     public abstract class SetMoreIList<T> : Set<T>, IList
     {
-        protected SetMoreIList()
-        {
-        }
+        #region Constructors
 
-        protected SetMoreIList(IEqualityComparer<T>? comparer) : base(comparer)
-        {
-        }
+        protected SetMoreIList() { }
+
+        protected SetMoreIList(IEqualityComparer<T>? comparer) : base(comparer) { }
 
 #if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-        protected SetMoreIList(int capacity) : base(capacity)
-        {
-        }
+        protected SetMoreIList(int capacity) : base(capacity) { }
 #endif
 
-        protected SetMoreIList(IEnumerable<T> collection) : base(collection)
-        {
-        }
+        protected SetMoreIList(IEnumerable<T> collection) : base(collection) { }
 
-        protected SetMoreIList(IEnumerable<T> collection, IEqualityComparer<T>? comparer) : base(collection, comparer)
-        {
-        }
+        protected SetMoreIList(IEnumerable<T> collection, IEqualityComparer<T>? comparer) : base(collection, comparer) { }
 
 #if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-        protected SetMoreIList(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
-        {
-        }
+        protected SetMoreIList(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer) { }
 #endif
+
+        #endregion
 
         #region IList Non Generic Members
 

@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace CiccioSoft.Collections.Core
@@ -15,29 +16,41 @@ namespace CiccioSoft.Collections.Core
     public class ReadOnlySet<T> : IReadOnlySet<T>, ISet<T>, ICollection
     {
         /// <summary>The wrapped set.</summary>
-        protected readonly Set<T> _set;
+        private readonly ISet<T> _set;
 
         #region Constructors
 
         /// <summary>Initializes a new instance of the <see cref="ReadOnlySet{T}"/> class that is a wrapper around the specified set.</summary>
         /// <param name="set">The set to wrap.</param>
-        public ReadOnlySet(Set<T> set)
+        public ReadOnlySet(ISet<T> set)
         {
             _set = set ?? throw new ArgumentNullException(nameof(set));
         }
 
         #endregion
 
-        #region ISet<T>
+        #region Public Properties
+
+        /// <summary>Gets an empty <see cref="ReadOnlySet{T}"/>.</summary>
+        public static ReadOnlySet<T> Empty { get; } = new ReadOnlySet<T>(new HashSet<T>());
+
+        #endregion
+
+        #region Protected Properties
+
+        /// <summary>Gets the set that is wrapped by this <see cref="ReadOnlySet{T}"/> object.</summary>
+        protected ISet<T> Set => _set;
+
+        #endregion
+
+        #region IReadOnlySet<T> ISet<T> ICollection<T>
 
         /// <inheritdoc/>
-        bool ISet<T>.Add(T item) => throw new NotSupportedException();
+        public bool Contains(T item) => _set.Contains(item);
 
-        /// <inheritdoc/>
-        void ISet<T>.ExceptWith(IEnumerable<T> other) => throw new NotSupportedException();
+        #endregion
 
-        /// <inheritdoc/>
-        void ISet<T>.IntersectWith(IEnumerable<T> other) => throw new NotSupportedException();
+        #region IReadOnlySet<T> ISet<T>
 
         /// <inheritdoc/>
         public bool IsProperSubsetOf(IEnumerable<T> other) => _set.IsProperSubsetOf(other);
@@ -57,6 +70,26 @@ namespace CiccioSoft.Collections.Core
         /// <inheritdoc/>
         public bool SetEquals(IEnumerable<T> other) => _set.SetEquals(other);
 
+        #endregion
+
+        #region IReadOnlyCollection<T> ICollection<T> ICollection
+
+        /// <inheritdoc/>
+        public int Count => _set.Count;
+
+        #endregion
+
+        #region ISet<T>
+
+        /// <inheritdoc/>
+        bool ISet<T>.Add(T item) => throw new NotSupportedException();
+
+        /// <inheritdoc/>
+        void ISet<T>.ExceptWith(IEnumerable<T> other) => throw new NotSupportedException();
+
+        /// <inheritdoc/>
+        void ISet<T>.IntersectWith(IEnumerable<T> other) => throw new NotSupportedException();
+
         /// <inheritdoc/>
         void ISet<T>.SymmetricExceptWith(IEnumerable<T> other) => throw new NotSupportedException();
 
@@ -68,9 +101,6 @@ namespace CiccioSoft.Collections.Core
         #region ICollection<T>
 
         /// <inheritdoc/>
-        public int Count => _set.Count;
-
-        /// <inheritdoc/>
         bool ICollection<T>.IsReadOnly => true;
 
         /// <inheritdoc/>
@@ -78,9 +108,6 @@ namespace CiccioSoft.Collections.Core
 
         /// <inheritdoc/>
         void ICollection<T>.Clear() => throw new NotSupportedException();
-
-        /// <inheritdoc/>
-        public bool Contains(T item) => _set.Contains(item);
 
         /// <inheritdoc/>
         void ICollection<T>.CopyTo(T[] array, int arrayIndex) => _set.CopyTo(array, arrayIndex);
@@ -93,7 +120,7 @@ namespace CiccioSoft.Collections.Core
         #region ICollection
 
         /// <inheritdoc/>
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)_set).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index) => CollectionHelpers.CopyTo(_set, array, index);
 
         /// <inheritdoc/>
         bool ICollection.IsSynchronized => false;
@@ -106,10 +133,9 @@ namespace CiccioSoft.Collections.Core
         #region IEnumerable
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _set.GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)_set).GetEnumerator();
+        public IEnumerator<T> GetEnumerator() => _set.Count == 0
+            ? ((IEnumerable<T>)Array.Empty<T>()).GetEnumerator()
+            : _set.GetEnumerator();
 
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_set).GetEnumerator();

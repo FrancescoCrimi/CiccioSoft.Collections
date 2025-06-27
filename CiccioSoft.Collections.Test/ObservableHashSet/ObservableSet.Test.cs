@@ -54,7 +54,7 @@ namespace CiccioSoft.Collections.Tests.ObservableHashSet
             var adding = Array.Empty<string>();
 
             //hashSet.PropertyChanging += (s, a) => AssertCountChanging(hashSet, s, a, currentCount, ref countChanging);
-            hashSet.PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
+            ((INotifyPropertyChanged)hashSet).PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
             hashSet.CollectionChanged += (s, a) =>
             {
                 Assert.Equal(NotifyCollectionChangedAction.Add, a.Action);
@@ -100,7 +100,7 @@ namespace CiccioSoft.Collections.Tests.ObservableHashSet
             var countChange = -testData.Count;
 
             //hashSet.PropertyChanging += (s, a) => AssertCountChanging(hashSet, s, a, currentCount, ref countChanging);
-            hashSet.PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
+            ((INotifyPropertyChanged)hashSet).PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
             hashSet.CollectionChanged += (s, a) =>
             {
                 Assert.Equal(NotifyCollectionChangedAction.Replace, a.Action);
@@ -183,7 +183,7 @@ namespace CiccioSoft.Collections.Tests.ObservableHashSet
             var removing = Array.Empty<string>();
 
             //hashSet.PropertyChanging += (s, a) => AssertCountChanging(hashSet, s, a, currentCount, ref countChanging);
-            hashSet.PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
+            ((INotifyPropertyChanged)hashSet).PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
             hashSet.CollectionChanged += (s, a) =>
             {
                 Assert.Equal(NotifyCollectionChangedAction.Remove, a.Action);
@@ -232,7 +232,7 @@ namespace CiccioSoft.Collections.Tests.ObservableHashSet
             var adding = new[] { "Brendan", "Nate" };
 
             //hashSet.PropertyChanging += (s, a) => AssertCountChanging(hashSet, s, a, currentCount, ref countChanging);
-            hashSet.PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
+            ((INotifyPropertyChanged)hashSet).PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
             hashSet.CollectionChanged += (s, a) =>
             {
                 Assert.Equal(NotifyCollectionChangedAction.Replace, a.Action);
@@ -274,7 +274,7 @@ namespace CiccioSoft.Collections.Tests.ObservableHashSet
             var removing = new[] { "Brendan", "Nate" };
 
             //hashSet.PropertyChanging += (s, a) => AssertCountChanging(hashSet, s, a, currentCount, ref countChanging);
-            hashSet.PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
+            ((INotifyPropertyChanged)hashSet).PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
             hashSet.CollectionChanged += (s, a) =>
             {
                 Assert.Equal(NotifyCollectionChangedAction.Replace, a.Action);
@@ -316,7 +316,7 @@ namespace CiccioSoft.Collections.Tests.ObservableHashSet
             var removing = new[] { "Carmack", "Palmer" };
 
             //hashSet.PropertyChanging += (s, a) => AssertCountChanging(hashSet, s, a, currentCount, ref countChanging);
-            hashSet.PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
+            ((INotifyPropertyChanged)hashSet).PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
             hashSet.CollectionChanged += (s, a) =>
             {
                 Assert.Equal(NotifyCollectionChangedAction.Replace, a.Action);
@@ -359,7 +359,7 @@ namespace CiccioSoft.Collections.Tests.ObservableHashSet
             var adding = new[] { "Abrash" };
 
             //hashSet.PropertyChanging += (s, a) => AssertCountChanging(hashSet, s, a, currentCount, ref countChanging);
-            hashSet.PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
+            ((INotifyPropertyChanged)hashSet).PropertyChanged += (s, a) => AssertCountChanged(hashSet, s, a, ref currentCount, countChange, ref countChanged);
             hashSet.CollectionChanged += (s, a) =>
             {
                 Assert.Equal(NotifyCollectionChangedAction.Replace, a.Action);

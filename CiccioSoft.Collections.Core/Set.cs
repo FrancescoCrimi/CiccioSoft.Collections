@@ -16,7 +16,7 @@ namespace CiccioSoft.Collections.Core
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class Set<T> : ISet<T>, ICollection<T>, IReadOnlySet<T>, IReadOnlyCollection<T>, ICollection
+    public class Set<T> : ISet<T>, IReadOnlySet<T>, ICollection
     {
         protected HashSet<T> items;
 
@@ -64,7 +64,7 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
-        #region Virtual Methods
+        #region Protected Virtual Methods
 
         protected virtual bool AddItem(T item)
             => items.Add(item);

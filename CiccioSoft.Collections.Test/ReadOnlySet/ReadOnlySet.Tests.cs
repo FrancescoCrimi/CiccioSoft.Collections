@@ -24,13 +24,13 @@ namespace CiccioSoft.Collections.Tests.ReadOnlySet
             Assert.Same(set, new DerivedReadOnlySet<int>(set).Set);
         }
 
-        //[Fact]
-        //public void Empty_EmptyAndIdempotent()
-        //{
-        //    Assert.Same(ReadOnlySet<int>.Empty, ReadOnlySet<int>.Empty);
-        //    Assert.Empty(ReadOnlySet<int>.Empty);
-        //    Assert.Same(ReadOnlySet<int>.Empty.GetEnumerator(), ReadOnlySet<int>.Empty.GetEnumerator());
-        //}
+        [Fact]
+        public void Empty_EmptyAndIdempotent()
+        {
+            Assert.Same(ReadOnlySet<int>.Empty, ReadOnlySet<int>.Empty);
+            Assert.Empty(ReadOnlySet<int>.Empty);
+            Assert.Same(ReadOnlySet<int>.Empty.GetEnumerator(), ReadOnlySet<int>.Empty.GetEnumerator());
+        }
 
         [Fact]
         public void MembersDelegateToWrappedSet()
@@ -127,7 +127,7 @@ namespace CiccioSoft.Collections.Tests.ReadOnlySet
         {
             public DerivedReadOnlySet(Set<T> set) : base(set) { }
 
-            public new ISet<T> Set => base._set;
+            public new ISet<T> Set => base.Set;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace CiccioSoft.Collections.Observable
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ObservableHashSet<T> : Set<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableHashSet<T> : Set<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         //private SimpleMonitor? _monitor; // Lazily allocated only when a subclass calls BlockReentrancy() or during serialization. Do not rename (binary serialization)
 
@@ -59,7 +59,8 @@ namespace CiccioSoft.Collections.Observable
 
         #endregion
 
-        #region Overrides Method
+
+        #region Protected Override Methods
 
         protected override bool AddItem(T item)
         {
@@ -92,6 +93,23 @@ namespace CiccioSoft.Collections.Observable
 
             OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
+        }
+
+        protected override bool RemoveItem(T item)
+        {
+            if (!items.Contains(item))
+            {
+                return false;
+            }
+
+            CheckReentrancy();
+
+            items.Remove(item);
+
+            OnCollectionChanged(NotifyCollectionChangedAction.Remove, item);
+            OnCountPropertyChanged();
+
+            return true;
         }
 
         protected override void ExceptWithItems(IEnumerable<T> other)
@@ -128,23 +146,6 @@ namespace CiccioSoft.Collections.Observable
 
             OnCollectionChanged(EventArgsCache.NoItems, removed);
             OnCountPropertyChanged();
-        }
-
-        protected override bool RemoveItem(T item)
-        {
-            if (!items.Contains(item))
-            {
-                return false;
-            }
-
-            CheckReentrancy();
-
-            items.Remove(item);
-
-            OnCollectionChanged(NotifyCollectionChangedAction.Remove, item);
-            OnCountPropertyChanged();
-
-            return true;
         }
 
         protected override void SymmetricExceptWithItems(IEnumerable<T> other)
@@ -188,13 +189,17 @@ namespace CiccioSoft.Collections.Observable
 
         #endregion
 
-        #region PropertyChanged
+
+        #region INotifyPropertyChanged interface
 
         /// <summary>
         /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
         /// </summary>
-        [field: NonSerialized]
-        public event PropertyChangedEventHandler? PropertyChanged;
+        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
+        {
+            add => PropertyChanged += value;
+            remove => PropertyChanged -= value;
+        }
 
         /// <summary>
         /// Raises a PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
@@ -205,27 +210,58 @@ namespace CiccioSoft.Collections.Observable
         }
 
         /// <summary>
+        /// PropertyChanged event (per <see cref="INotifyPropertyChanged" />).
+        /// </summary>
+        [field: NonSerialized]
+        protected virtual event PropertyChangedEventHandler? PropertyChanged;
+
+        /// <summary>
         /// Helper to raise a PropertyChanged event for the Count property
         /// </summary>
-        private void OnCountPropertyChanged()
-        {
-            OnPropertyChanged(EventArgsCache.CountPropertyChanged);
-        }
+        private void OnCountPropertyChanged() => OnPropertyChanged(EventArgsCache.CountPropertyChanged);
 
         #endregion
 
-        #region CollectionChanged
+
+        #region INotifyCollectionChanged interface
 
         /// <summary>
         /// Occurs when the collection changes, either by adding or removing an item.
         /// </summary>
         [field: NonSerialized]
-        public event NotifyCollectionChangedEventHandler? CollectionChanged;
+        public virtual event NotifyCollectionChangedEventHandler? CollectionChanged;
+
+        /// <summary>
+        /// Raise CollectionChanged event to any listeners.
+        /// Properties/methods modifying this ObservableCollection will raise
+        /// a collection changed event through this virtual method.
+        /// </summary>
+        /// <remarks>
+        /// When overriding this method, either call its base implementation
+        /// or call <see cref="BlockReentrancy"/> to guard against reentrant collection changes.
+        /// </remarks>
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            NotifyCollectionChangedEventHandler? handler = CollectionChanged;
+            if (handler != null)
+            {
+                // Not calling BlockReentrancy() here to avoid the SimpleMonitor allocation.
+                _blockReentrancyCount++;
+                try
+                {
+                    handler(this, e);
+                }
+                finally
+                {
+                    _blockReentrancyCount--;
+                }
+            }
+        }
 
         /// <summary> Check and assert for reentrant attempts to change this collection. </summary>
         /// <exception cref="InvalidOperationException"> raised when changing the collection
         /// while another collection change is still being notified to other listeners </exception>
-        private void CheckReentrancy()
+        protected void CheckReentrancy()
         {
             if (_blockReentrancyCount > 0)
             {
@@ -235,26 +271,6 @@ namespace CiccioSoft.Collections.Observable
                 // (e.g. Selector.SelectedItems).
                 if (CollectionChanged?.GetInvocationList().Length > 1)
                     throw new InvalidOperationException("Cannot change ObservableCollection during a CollectionChanged event.");
-            }
-        }
-
-        /// <summary>
-        /// Raise CollectionChanged event to any listeners.
-        /// </summary>
-        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            if (CollectionChanged != null)
-            {
-                // Not calling BlockReentrancy() here to avoid the SimpleMonitor allocation.
-                _blockReentrancyCount++;
-                try
-                {
-                    CollectionChanged.Invoke(this, e);
-                }
-                finally
-                {
-                    _blockReentrancyCount--;
-                }
             }
         }
 
@@ -270,7 +286,8 @@ namespace CiccioSoft.Collections.Observable
 
         #endregion
 
-        #region Serializable
+
+        #region Serialization
 
         //[OnSerializing]
         //private void OnSerializing(StreamingContext context)
@@ -291,7 +308,8 @@ namespace CiccioSoft.Collections.Observable
 
         #endregion
 
-        #region Private
+
+        #region Private Methods
 
         //private SimpleMonitor EnsureMonitorInitialized() => _monitor ??= new SimpleMonitor(this);
 

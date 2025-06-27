@@ -10,6 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CiccioSoft\Collections\EventArgsCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Array.Enumerators.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections\Generic\ICollectionDebugView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\SR.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\SR.generated.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\ThrowHelper.cs" />
   </ItemGroup>
 </Project>

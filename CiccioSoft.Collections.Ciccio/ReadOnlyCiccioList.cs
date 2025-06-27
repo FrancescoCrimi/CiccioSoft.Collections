@@ -28,7 +28,7 @@ namespace CiccioSoft.Collections.Ciccio
         public ReadOnlyCiccioList(CiccioList<T> list) : base(list)
         {
             list.CollectionChanged += HandleCollectionChanged;
-            list.PropertyChanged += HandlePropertyChanged;
+            ((INotifyPropertyChanged)list).PropertyChanged += HandlePropertyChanged;
             list.ListChanged += HandleListChanged;
         }
 
@@ -156,7 +156,7 @@ namespace CiccioSoft.Collections.Ciccio
         /// of type ItemChanged as a result of property changes on individual list items
         /// unless those items support INotifyPropertyChanged.
         /// </summary>
-        public bool RaisesItemChangedEvents => ((IRaiseItemChangedEvents)_list).RaisesItemChangedEvents;
+        public bool RaisesItemChangedEvents => ((IRaiseItemChangedEvents)Items).RaisesItemChangedEvents;
 
         #endregion
     }

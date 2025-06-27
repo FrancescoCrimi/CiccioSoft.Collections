@@ -13,26 +13,41 @@ namespace CiccioSoft.Collections.Core
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyCollection<T> : IList<T>, IList, IReadOnlyList<T>
     {
-        protected readonly Collection<T> _list; // Do not rename (binary serialization)
+        private readonly IList<T> list; // Do not rename (binary serialization)
 
         #region Constructors
 
-        public ReadOnlyCollection(Collection<T> list)
+        public ReadOnlyCollection(IList<T> list)
         {
-            _list = list ?? throw new ArgumentNullException(nameof(list))!;
+            this.list = list ?? throw new ArgumentNullException(nameof(list));
         }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>Gets an empty <see cref="ReadOnlyCollection{T}"/>.</summary>
+        /// <value>An empty <see cref="ReadOnlyCollection{T}"/>.</value>
+        /// <remarks>The returned instance is immutable and will always be empty.</remarks>
+        public static ReadOnlyCollection<T> Empty { get; } = new ReadOnlyCollection<T>(Array.Empty<T>());
+
+        #endregion
+
+        #region Protected Properties
+
+        protected IList<T> Items => list;
 
         #endregion
 
         #region IReadOnlyList<T>
 
-        public T this[int index] => _list[index];
+        public T this[int index] => list[index];
 
         #endregion
 
-        #region IReadOnlyCollection<T>
+        #region IReadOnlyCollection<T> ICollection<T> ICollection
 
-        public int Count => _list.Count;
+        public int Count => list.Count;
 
         #endregion
 
@@ -40,13 +55,13 @@ namespace CiccioSoft.Collections.Core
 
         T IList<T>.this[int index]
         {
-            get => _list[index];
+            get => list[index];
             set => ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
         }
 
         public int IndexOf(T value)
         {
-            return _list.IndexOf(value);
+            return list.IndexOf(value);
         }
 
         void IList<T>.Insert(int index, T value)
@@ -77,12 +92,12 @@ namespace CiccioSoft.Collections.Core
 
         public bool Contains(T value)
         {
-            return _list.Contains(value);
+            return list.Contains(value);
         }
 
         public void CopyTo(T[] array, int index)
         {
-            _list.CopyTo(array, index);
+            list.CopyTo(array, index);
         }
 
         bool ICollection<T>.Remove(T value)
@@ -95,15 +110,15 @@ namespace CiccioSoft.Collections.Core
 
         #region IList
 
-        object? IList.this[int index]
-        {
-            get => _list[index];
-            set => ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
-        }
-
         bool IList.IsFixedSize => true;
 
         bool IList.IsReadOnly => true;
+
+        object? IList.this[int index]
+        {
+            get => list[index];
+            set => ThrowHelper.ThrowNotSupportedException(ExceptionResource.NotSupported_ReadOnlyCollection);
+        }
 
         int IList.Add(object? value)
         {
@@ -155,22 +170,91 @@ namespace CiccioSoft.Collections.Core
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => _list is ICollection coll ? coll.SyncRoot : this;
+        object ICollection.SyncRoot => list is ICollection coll ? coll.SyncRoot : this;
 
-        void ICollection.CopyTo(Array array, int index) => ((ICollection)_list).CopyTo(array, index);
+        void ICollection.CopyTo(Array array, int index)
+        {
+            if (array == null)
+            {
+                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.array);
+            }
+
+            if (array.Rank != 1)
+            {
+                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_RankMultiDimNotSupported);
+            }
+
+            if (array.GetLowerBound(0) != 0)
+            {
+                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_NonZeroLowerBound);
+            }
+
+            if (index < 0)
+            {
+                ThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException();
+            }
+
+            if (array.Length - index < Count)
+            {
+                ThrowHelper.ThrowArgumentException(ExceptionResource.Arg_ArrayPlusOffTooSmall);
+            }
+
+            if (array is T[] items)
+            {
+                list.CopyTo(items, index);
+            }
+            else
+            {
+                //
+                // Catch the obvious case assignment will fail.
+                // We can't find all possible problems by doing the check though.
+                // For example, if the element type of the Array is derived from T,
+                // we can't figure out if we can successfully copy the element beforehand.
+                //
+                Type targetType = array.GetType().GetElementType()!;
+                Type sourceType = typeof(T);
+                if (!(targetType.IsAssignableFrom(sourceType) || sourceType.IsAssignableFrom(targetType)))
+                {
+                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
+                }
+
+                //
+                // We can't cast array of value type to object[], so we don't support
+                // widening of primitive types here.
+                //
+                object?[]? objects = array as object[];
+                if (objects == null)
+                {
+                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
+                }
+
+                int count = list.Count;
+                try
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        objects[index++] = list[i];
+                    }
+                }
+                catch (ArrayTypeMismatchException)
+                {
+                    ThrowHelper.ThrowArgumentException_Argument_IncompatibleArrayType();
+                }
+            }
+        }
 
         #endregion
 
         #region IEnumerable
 
         /// <inheritdoc/>
-        public IEnumerator<T> GetEnumerator() => _list.GetEnumerator();
+        public IEnumerator<T> GetEnumerator() => list.GetEnumerator();
+        //public IEnumerator<T> GetEnumerator() => list.Count == 0
+        //    ? SZGenericArrayEnumerator<T>.Empty
+        //    : ((IEnumerable<T>)list).GetEnumerator();
 
         /// <inheritdoc/>
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IEnumerable<T>)_list).GetEnumerator();
-
-        /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_list).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)list).GetEnumerator();
 
         #endregion
 

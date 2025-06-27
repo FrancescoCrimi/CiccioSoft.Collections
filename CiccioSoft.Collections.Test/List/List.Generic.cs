@@ -5,7 +5,7 @@ using CiccioSoft.Collections.Core;
 using System;
 using System.Collections.Generic;
 
-namespace CiccioSoft.Collections.Tests.Collection
+namespace CiccioSoft.Collections.Tests.List
 {
     public class Collection_Generic_Tests_string : Collection_Generic_Tests<string>
     {
@@ -51,7 +51,7 @@ namespace CiccioSoft.Collections.Tests.Collection
             return GenericCollectionFactory().AsReadOnly();
         }
 
-        protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new Collection<ModifyEnumerable>();
+        protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new TestList<ModifyEnumerable>();
 
 #if NET8_0_OR_GREATER
         protected override bool Enumerator_Empty_Current_UndefinedOperation_Throws => true;
@@ -78,7 +78,7 @@ namespace CiccioSoft.Collections.Tests.Collection
             return GenericCollectionFactory().AsReadOnly();
         }
 
-        protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new Collection<ModifyEnumerable>();
+        protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new TestList<ModifyEnumerable>();
 
 #if NET8_0_OR_GREATER
         protected override bool Enumerator_Empty_Current_UndefinedOperation_Throws => true;

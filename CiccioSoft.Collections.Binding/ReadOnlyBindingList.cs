@@ -100,7 +100,7 @@ namespace CiccioSoft.Collections.Binding
         /// of type ItemChanged as a result of property changes on individual list items
         /// unless those items support INotifyPropertyChanged.
         /// </summary>
-        public bool RaisesItemChangedEvents => ((IRaiseItemChangedEvents)_list).RaisesItemChangedEvents;
+        public bool RaisesItemChangedEvents => ((IRaiseItemChangedEvents)Items).RaisesItemChangedEvents;
 
         #endregion
     }

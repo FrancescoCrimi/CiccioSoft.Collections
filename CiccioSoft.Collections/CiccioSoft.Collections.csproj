@@ -15,13 +15,14 @@
 		<PackageTags>INotifyCollectionChanged; IBindingList; IList&lt;T&gt;; ISet&lt;T&gt;; ObservableCollection&lt;T&gt;; BindingList&lt;T&gt;; WinForms; WPF; UWP; CiccioSoft; Collections</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IsPackable>true</IsPackable>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<!--<DefineConstants>CORECLR;NETCOREAPP</DefineConstants>-->
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CiccioSoft.Collections.Binding" Version="8.0.0-alpha.2" />
-		<PackageReference Include="CiccioSoft.Collections.Observable" Version="8.0.0-alpha.2" />
-		<PackageReference Include="CiccioSoft.Collections.Ciccio" Version="8.0.0-alpha.2" />
+		<ProjectReference Include="..\CiccioSoft.Collections.Binding\CiccioSoft.Collections.Binding.csproj" />
+		<ProjectReference Include="..\CiccioSoft.Collections.Observable\CiccioSoft.Collections.Observable.csproj" />
+		<ProjectReference Include="..\CiccioSoft.Collections.Ciccio\CiccioSoft.Collections.Ciccio.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
