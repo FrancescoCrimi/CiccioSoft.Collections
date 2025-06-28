@@ -11,7 +11,7 @@ namespace CiccioSoft.Collections.Core
     {
         #region Constructors
 
-        public ReadOnlySetMoreIList(Set<T> set) : base(set)
+        public ReadOnlySetMoreIList(HashSet<T> set) : base(set)
         {
         }
 

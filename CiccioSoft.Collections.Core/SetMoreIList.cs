@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CiccioSoft.Collections.Core
 {
-    public abstract class SetMoreIList<T> : Set<T>, IList
+    public abstract class SetMoreIList<T> : HashSet<T>, IList
     {
         #region Constructors
 

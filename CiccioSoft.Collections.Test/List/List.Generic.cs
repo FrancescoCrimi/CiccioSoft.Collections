@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace CiccioSoft.Collections.Tests.List
 {
-    public class Collection_Generic_Tests_string : Collection_Generic_Tests<string>
+    public class Collection_Generic_Tests_string : List_Generic_Tests<string>
     {
         protected override string CreateT(int seed)
         {
@@ -19,7 +19,7 @@ namespace CiccioSoft.Collections.Tests.List
         }
     }
 
-    public class Collection_Generic_Tests_int : Collection_Generic_Tests<int>
+    public class Collection_Generic_Tests_int : List_Generic_Tests<int>
     {
         protected override int CreateT(int seed)
         {
@@ -28,7 +28,7 @@ namespace CiccioSoft.Collections.Tests.List
         }
     }
 
-    public class Collection_Generic_Tests_string_ReadOnly : Collection_Generic_Tests<string>
+    public class Collection_Generic_Tests_string_ReadOnly : List_Generic_Tests<string>
     {
         protected override string CreateT(int seed)
         {
@@ -43,12 +43,12 @@ namespace CiccioSoft.Collections.Tests.List
 
         protected override IList<string> GenericIListFactory(int setLength)
         {
-            return GenericCollectionFactory(setLength).AsReadOnly();
+            return GenericListFactory(setLength).AsReadOnly();
         }
 
         protected override IList<string> GenericIListFactory()
         {
-            return GenericCollectionFactory().AsReadOnly();
+            return GenericListFactory().AsReadOnly();
         }
 
         protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new TestList<ModifyEnumerable>();
@@ -58,7 +58,7 @@ namespace CiccioSoft.Collections.Tests.List
 #endif
     }
 
-    public class Collection_Generic_Tests_int_ReadOnly : Collection_Generic_Tests<int>
+    public class Collection_Generic_Tests_int_ReadOnly : List_Generic_Tests<int>
     {
         protected override int CreateT(int seed)
         {
@@ -70,12 +70,12 @@ namespace CiccioSoft.Collections.Tests.List
 
         protected override IList<int> GenericIListFactory(int setLength)
         {
-            return GenericCollectionFactory(setLength).AsReadOnly();
+            return GenericListFactory(setLength).AsReadOnly();
         }
 
         protected override IList<int> GenericIListFactory()
         {
-            return GenericCollectionFactory().AsReadOnly();
+            return GenericListFactory().AsReadOnly();
         }
 
         protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new TestList<ModifyEnumerable>();

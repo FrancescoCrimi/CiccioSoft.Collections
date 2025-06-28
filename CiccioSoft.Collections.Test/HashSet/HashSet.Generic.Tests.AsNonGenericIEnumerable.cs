@@ -1,19 +1,18 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Tests;
 
-namespace CiccioSoft.Collections.Tests.Set
+namespace CiccioSoft.Collections.Tests.HashSet
 {
-    public class Set_IEnumerable_NonGeneric_Tests : IEnumerable_NonGeneric_Tests
+    public class HashSet_IEnumerable_NonGeneric_Tests : IEnumerable_NonGeneric_Tests
     {
         protected override IEnumerable NonGenericIEnumerableFactory(int count)
         {
-            var set = new Set<string>();
+            var set = new Core.HashSet<string>();
             int seed = 12354;
             while (set.Count < count)
                 set.Add(CreateT(set, seed++));
@@ -38,7 +37,7 @@ namespace CiccioSoft.Collections.Tests.Set
             {
                 yield return (IEnumerable enumerable) =>
                 {
-                    Set<string> casted = ((Set<string>)enumerable);
+                    Core.HashSet<string> casted = ((Core.HashSet<string>)enumerable);
                     if (casted.Count > 0)
                     {
                         casted.Clear();
@@ -49,7 +48,7 @@ namespace CiccioSoft.Collections.Tests.Set
             }
         }
 
-        protected string CreateT(Set<string> set, int seed)
+        protected string CreateT(Core.HashSet<string> set, int seed)
         {
             int stringLength = seed % 10 + 5;
             Random rand = new Random(seed);

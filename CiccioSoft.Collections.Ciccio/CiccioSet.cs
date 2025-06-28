@@ -145,7 +145,7 @@ namespace CiccioSoft.Collections.Ciccio
 
         protected override void ExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.ExceptWith(other);
             if (copy.Count == items.Count)
             {
@@ -173,7 +173,7 @@ namespace CiccioSoft.Collections.Ciccio
 
         protected override void IntersectWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.IntersectWith(other);
             if (copy.Count == items.Count)
             {
@@ -226,7 +226,7 @@ namespace CiccioSoft.Collections.Ciccio
 
         protected override void SymmetricExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.SymmetricExceptWith(other);
             var removed = items.Where(i => !copy.Contains(i)).ToList();
             var added = copy.Where(i => !items.Contains(i)).ToList();
@@ -261,7 +261,7 @@ namespace CiccioSoft.Collections.Ciccio
 
         protected override void UnionWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.UnionWith(other);
             if (copy.Count == items.Count)
             {

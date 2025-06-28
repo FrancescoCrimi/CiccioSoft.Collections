@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,10 +11,30 @@ using System.Linq;
 
 namespace CiccioSoft.Collections.Observable
 {
+    /// <summary>
+    /// Represents a hash set collection that provides notifications when its contents change.
+    /// <para>
+    /// <see cref="ObservableHashSet{T}"/> extends <see cref="Core.HashSet{T}"/> and implements
+    /// <see cref="INotifyCollectionChanged"/> and <see cref="INotifyPropertyChanged"/>,
+    /// making it suitable for data binding scenarios where consumers need to react to
+    /// additions, removals, or other modifications in real time.
+    /// </para>
+    /// <para>
+    /// All mutating operations (such as Add, Remove, Union, Intersect, etc.) raise the
+    /// appropriate <c>CollectionChanged</c> and <c>PropertyChanged</c> events, allowing
+    /// observers to track changes to the set.
+    /// </para>
+    /// <para>
+    /// The implementation of this class is inspired by the ObservableHashSet from the
+    /// Entity Framework Core project:
+    /// https://github.com/dotnet/efcore/blob/main/src/EFCore/ChangeTracking/ObservableHashSet.cs
+    /// </para>
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the set.</typeparam>
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ObservableHashSet<T> : Set<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableHashSet<T> : Core.HashSet<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         [NonSerialized]
         private int _blockReentrancyCount;
@@ -111,7 +130,7 @@ namespace CiccioSoft.Collections.Observable
 
         protected override void ExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.ExceptWith(other);
             if (copy.Count == items.Count)
             {
@@ -129,7 +148,7 @@ namespace CiccioSoft.Collections.Observable
 
         protected override void IntersectWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.IntersectWith(other);
             if (copy.Count == items.Count)
             {
@@ -147,7 +166,7 @@ namespace CiccioSoft.Collections.Observable
 
         protected override void SymmetricExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.SymmetricExceptWith(other);
             var removed = items.Where(i => !copy.Contains(i)).ToList();
             var added = copy.Where(i => !items.Contains(i)).ToList();
@@ -168,7 +187,7 @@ namespace CiccioSoft.Collections.Observable
 
         protected override void UnionWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.UnionWith(other);
             if (copy.Count == items.Count)
             {

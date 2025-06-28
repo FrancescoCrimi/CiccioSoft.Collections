@@ -1,7 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.Tests;
@@ -13,7 +12,7 @@ namespace CiccioSoft.Collections.Tests.List
     /// <summary>
     /// Contains tests that ensure the correctness of the List class.
     /// </summary>
-    public abstract partial class Collection_Generic_Tests<T> : IList_Generic_Tests<T>
+    public abstract partial class List_Generic_Tests<T> : IList_Generic_Tests<T>
     {
         [Fact]
         public void Constructor_Default()

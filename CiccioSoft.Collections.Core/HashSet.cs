@@ -10,41 +10,51 @@ using System.Diagnostics;
 namespace CiccioSoft.Collections.Core
 {
     /// <summary>
-    /// Provides the base class for a generic set of values.
+    /// Thin wrapper around <see cref="System.Collections.Generic.HashSet{T}"/> that exposes
+    /// only <see cref="ISet{T}"/> and <see cref="IReadOnlySet{T}"/> interfaces.
+    /// Designed as a base class for custom generic set collections, providing controlled
+    /// access to the underlying set implementation.
+    /// <para>
+    /// This class is inspired by <see cref="System.Collections.ObjectModel.Collection{T}"/>
+    /// from the .NET runtime and by the ObservableHashSet implementation from
+    /// <see href="https://github.com/dotnet/efcore/blob/main/src/EFCore/ChangeTracking/ObservableHashSet.cs">
+    /// Entity Framework Core</see>.
+    /// </para>
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of elements in the set.</typeparam>
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class Set<T> : ISet<T>, IReadOnlySet<T>, ICollection
+    public class HashSet<T> : ISet<T>, IReadOnlySet<T>, ICollection
     {
-        protected HashSet<T> items;
+        protected System.Collections.Generic.HashSet<T> items;
 
         #region Constructors
 
-        public Set()
-            => items = new HashSet<T>();
+        public HashSet()
+            => items = new System.Collections.Generic.HashSet<T>();
 
-        public Set(IEqualityComparer<T>? comparer)
-            => items = new HashSet<T>(comparer);
+        public HashSet(IEqualityComparer<T>? comparer)
+            => items = new System.Collections.Generic.HashSet<T>(comparer);
 
 #if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-        public Set(int capacity)
-            => items = new HashSet<T>(capacity);
+        public HashSet(int capacity)
+            => items = new System.Collections.Generic.HashSet<T>(capacity);
 #endif
 
-        public Set(IEnumerable<T> collection)
-            => items = new HashSet<T>(collection);
+        public HashSet(IEnumerable<T> collection)
+            => items = new System.Collections.Generic.HashSet<T>(collection);
 
-        public Set(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
-            => items = new HashSet<T>(collection, comparer);
+        public HashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+            => items = new System.Collections.Generic.HashSet<T>(collection, comparer);
 
 #if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-        public Set(int capacity, IEqualityComparer<T>? comparer)
-            => items = new HashSet<T>(capacity, comparer);
+        public HashSet(int capacity, IEqualityComparer<T>? comparer)
+            => items = new System.Collections.Generic.HashSet<T>(capacity, comparer);
 #endif
 
         #endregion
+
 
         #region Public Property
 
@@ -55,6 +65,7 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region Public Method
 
         public ReadOnlySet<T> AsReadOnly()
@@ -63,6 +74,7 @@ namespace CiccioSoft.Collections.Core
         }
 
         #endregion
+
 
         #region Protected Virtual Methods
 
@@ -88,6 +100,7 @@ namespace CiccioSoft.Collections.Core
             => items.UnionWith(other);
 
         #endregion
+
 
         #region ISet<T>
 
@@ -135,6 +148,7 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region ICollection<T>
 
         /// <inheritdoc/>
@@ -160,6 +174,7 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region ICollection
 
         /// <inheritdoc/>
@@ -172,6 +187,7 @@ namespace CiccioSoft.Collections.Core
         object ICollection.SyncRoot => items is ICollection c ? c.SyncRoot : this;
 
         #endregion
+
 
         #region IEnumerable
 

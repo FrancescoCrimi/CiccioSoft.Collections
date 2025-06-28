@@ -32,7 +32,7 @@ namespace CiccioSoft.Collections.Core
         #region Public Properties
 
         /// <summary>Gets an empty <see cref="ReadOnlySet{T}"/>.</summary>
-        public static ReadOnlySet<T> Empty { get; } = new ReadOnlySet<T>(new HashSet<T>());
+        public static ReadOnlySet<T> Empty { get; } = new ReadOnlySet<T>(new System.Collections.Generic.HashSet<T>());
 
         #endregion
 

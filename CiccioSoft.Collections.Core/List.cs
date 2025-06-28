@@ -9,7 +9,14 @@ using System.Diagnostics;
 namespace CiccioSoft.Collections.Core
 {
     /// <summary>
-    /// Provides the base class for a generic collection.
+    /// Thin wrapper around <see cref="System.Collections.Generic.List{T}"/> exposing
+    /// only <see cref="IList{T}"/>, <see cref="IList"/>, and <see cref="IReadOnlyList{T}"/>.
+    /// Designed as a base class for custom generic collections, providing controlled
+    /// access to the underlying list.
+    /// <para>
+    /// This class is inspired by <see cref="System.Collections.ObjectModel.Collection{T}"/>
+    /// from the .NET runtime.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of elements in the collection.</typeparam>
     [Serializable]
@@ -22,7 +29,7 @@ namespace CiccioSoft.Collections.Core
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Collection{T}" /> class that is empty and has the default initial capacity.
+        /// Initializes a new instance of the <see cref = "List{T}" /> class that is empty and has the default initial capacity.
         /// </summary>
         public List()
         {
@@ -30,7 +37,7 @@ namespace CiccioSoft.Collections.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Collection{T}" /> class that contains elements copied from the specified collection and has sufficient capacity to accommodate the number of elements copied.
+        /// Initializes a new instance of the <see cref = "List{T}" /> class that contains elements copied from the specified collection and has sufficient capacity to accommodate the number of elements copied.
         /// </summary>
         /// <param name = "collection" > The collection whose elements are copied to the new list.</param>
         /// <exception cref = "ArgumentNullException" >
@@ -42,7 +49,7 @@ namespace CiccioSoft.Collections.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Collection{T}" /> class that is empty and has the specified initial capacity.
+        /// Initializes a new instance of the <see cref = "List{T}" /> class that is empty and has the specified initial capacity.
         /// </summary>
         /// <param name = "capacity" > The number of elements that the new list can initially store.</param>
         /// <exception cref = "ArgumentOutOfRangeException" >
@@ -55,19 +62,20 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region Public Property
 
         /// <summary>
         /// Gets or sets the total number of elements the internal data structure can hold without resizing.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// <see cref="Collection{T}.Capacity" /> is set to a value that is less than <see cref="Collection{T}.Count" />.
+        /// <see cref="List{T}.Capacity" /> is set to a value that is less than <see cref="List{T}.Count" />.
         /// </exception>
         /// <exception cref="OutOfMemoryException">
         /// There is not enough memory available on the system.
         /// </exception>
         /// <returns>
-        /// The number of elements that the <see cref="Collection{T}" /> can contain before resizing is required.
+        /// The number of elements that the <see cref="List{T}" /> can contain before resizing is required.
         /// </returns>
         public int Capacity
         {
@@ -77,13 +85,14 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region Public Method
 
         /// <summary>
         /// Returns a read-only <see cref="ReadOnlyCollection{T}" /> wrapper for the current collection.
         /// </summary>
         /// <returns>
-        /// An object that acts as a read-only wrapper around the current <see cref="Collection{T}" />.
+        /// An object that acts as a read-only wrapper around the current <see cref="List{T}" />.
         /// </returns>
         public ReadOnlyCollection<T> AsReadOnly()
         {
@@ -92,11 +101,13 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region Protected Properties
 
         protected IList<T> Items => items;
 
         #endregion
+
 
         #region Protected Virtual Methods
 
@@ -109,6 +120,7 @@ namespace CiccioSoft.Collections.Core
         protected virtual void SetItem(int index, T item) => items[index] = item;
 
         #endregion
+
 
         #region IList<T>
 
@@ -159,6 +171,7 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region ICollection<T>
 
         /// <inheritdoc/>
@@ -194,6 +207,7 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region IEnumerable
 
         /// <inheritdoc/>
@@ -215,6 +229,7 @@ namespace CiccioSoft.Collections.Core
         }
 
         #endregion
+
 
         #region IList
 
@@ -301,6 +316,7 @@ namespace CiccioSoft.Collections.Core
 
         #endregion
 
+
         #region ICollection
 
         /// <inheritdoc/>
@@ -313,6 +329,7 @@ namespace CiccioSoft.Collections.Core
         void ICollection.CopyTo(Array array, int index) => ((ICollection)items).CopyTo(array, index);
 
         #endregion
+
 
         #region Private Methods
 

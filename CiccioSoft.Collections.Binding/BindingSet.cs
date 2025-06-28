@@ -10,6 +10,15 @@ using System.Linq;
 
 namespace CiccioSoft.Collections.Binding
 {
+    /// <summary>
+    /// Provides a generic set collection that supports data binding and change notification
+    /// for use in data-bound controls.
+    /// <para>
+    /// This class does not implement <see cref="ICancelAddNew"/> and does not support
+    /// <c>AddNew</c>; calling <c>AddNew</c> will throw a <see cref="NotSupportedException"/>.
+    /// As a result, it does not use reflection to create new items.
+    /// </para>
+    /// </summary>
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
@@ -129,7 +138,7 @@ namespace CiccioSoft.Collections.Binding
 
         protected override void ExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.ExceptWith(other);
             if (copy.Count == items.Count)
             {
@@ -152,7 +161,7 @@ namespace CiccioSoft.Collections.Binding
 
         protected override void IntersectWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.IntersectWith(other);
             if (copy.Count == items.Count)
             {
@@ -195,7 +204,7 @@ namespace CiccioSoft.Collections.Binding
 
         protected override void SymmetricExceptWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.SymmetricExceptWith(other);
             var removed = items.Where(i => !copy.Contains(i)).ToList();
             var added = copy.Where(i => !items.Contains(i)).ToList();
@@ -225,7 +234,7 @@ namespace CiccioSoft.Collections.Binding
 
         protected override void UnionWithItems(IEnumerable<T> other)
         {
-            var copy = new HashSet<T>(items, items.Comparer);
+            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
             copy.UnionWith(other);
             if (copy.Count == items.Count)
             {

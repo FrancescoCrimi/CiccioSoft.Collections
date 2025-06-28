@@ -12,7 +12,7 @@ namespace CiccioSoft.Collections.Tests.List
     /// <summary>
     /// Contains tests that ensure the correctness of the List class.
     /// </summary>
-    public abstract partial class Collection_Generic_Tests<T> : IList_Generic_Tests<T>
+    public abstract partial class List_Generic_Tests<T> : IList_Generic_Tests<T>
     {
         #region IList<T> Helper Methods
 
@@ -24,24 +24,24 @@ namespace CiccioSoft.Collections.Tests.List
 
         protected override IList<T> GenericIListFactory()
         {
-            return GenericCollectionFactory();
+            return GenericListFactory();
         }
 
         protected override IList<T> GenericIListFactory(int count)
         {
-            return GenericCollectionFactory(count);
+            return GenericListFactory(count);
         }
 
         #endregion
 
-        #region WrappedList<T> Helper Methods
+        #region List<T> Helper Methods
 
-        protected virtual TestList<T> GenericCollectionFactory()
+        protected virtual TestList<T> GenericListFactory()
         {
             return new TestList<T>();
         }
 
-        protected virtual TestList<T> GenericCollectionFactory(int count)
+        protected virtual TestList<T> GenericListFactory(int count)
         {
             IEnumerable<T> toCreateFrom = CreateEnumerable(EnumerableType.List, null, count, 0, 0);
             return new TestList<T>(toCreateFrom);

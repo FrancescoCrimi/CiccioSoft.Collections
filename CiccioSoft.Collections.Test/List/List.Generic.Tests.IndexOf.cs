@@ -13,7 +13,7 @@ namespace CiccioSoft.Collections.Tests.List
     /// <summary>
     /// Contains tests that ensure the correctness of the List class.
     /// </summary>
-    public abstract partial class Collection_Generic_Tests<T> : IList_Generic_Tests<T>
+    public abstract partial class List_Generic_Tests<T> : IList_Generic_Tests<T>
     {
         #region Helpers
 
@@ -82,7 +82,7 @@ namespace CiccioSoft.Collections.Tests.List
         public void IndexOf_NoDuplicates(IndexOfMethod indexOfMethod, int count, bool frontToBackOrder)
         {
             _ = frontToBackOrder;
-            TestList<T> list = GenericCollectionFactory(count);
+            TestList<T> list = GenericListFactory(count);
             System.Collections.Generic.List<T> expectedList = list.ToList();
             IndexOfDelegate IndexOf = IndexOfDelegateFromType(indexOfMethod);
 
@@ -97,7 +97,7 @@ namespace CiccioSoft.Collections.Tests.List
         public void IndexOf_NonExistingValues(IndexOfMethod indexOfMethod, int count, bool frontToBackOrder)
         {
             _ = frontToBackOrder;
-            TestList<T> list = GenericCollectionFactory(count);
+            TestList<T> list = GenericListFactory(count);
             IEnumerable<T> nonexistentValues = CreateEnumerable(EnumerableType.List, list, count: count, numberOfMatchingElements: 0, numberOfDuplicateElements: 0);
             IndexOfDelegate IndexOf = IndexOfDelegateFromType(indexOfMethod);
 
@@ -113,7 +113,7 @@ namespace CiccioSoft.Collections.Tests.List
         {
             _ = frontToBackOrder;
             T defaultValue = default;
-            TestList<T> list = GenericCollectionFactory(count);
+            TestList<T> list = GenericListFactory(count);
             IndexOfDelegate IndexOf = IndexOfDelegateFromType(indexOfMethod);
             while (list.Remove(defaultValue))
                 count--;
@@ -125,7 +125,7 @@ namespace CiccioSoft.Collections.Tests.List
         [MemberData(nameof(IndexOfTestData))]
         public void IndexOf_OrderIsCorrect(IndexOfMethod indexOfMethod, int count, bool frontToBackOrder)
         {
-            TestList<T> list = GenericCollectionFactory(count);
+            TestList<T> list = GenericListFactory(count);
             System.Collections.Generic.List<T> withoutDuplicates = list.ToList();
             //list.AddRange(list);
             foreach (T? item in withoutDuplicates)

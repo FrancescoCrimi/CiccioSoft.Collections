@@ -8,6 +8,15 @@ using System.Diagnostics;
 
 namespace CiccioSoft.Collections.Binding
 {
+    /// <summary>
+    /// Provides a generic collection that supports data binding, change notification,
+    /// and sorting for use in data-bound controls.
+    /// <para>
+    /// This class does not implement <see cref="ICancelAddNew"/> and does not support
+    /// <c>AddNew</c>; calling <c>AddNew</c> will throw a <see cref="NotSupportedException"/>.
+    /// As a result, it does not use reflection to create new items.
+    /// </para>
+    /// </summary>
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
