@@ -51,7 +51,7 @@ namespace CiccioSoft.Collections.Tests.List
             return GenericListFactory().AsReadOnly();
         }
 
-        protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new TestList<ModifyEnumerable>();
+        protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new Core.List<ModifyEnumerable>();
 
 #if NET8_0_OR_GREATER
         protected override bool Enumerator_Empty_Current_UndefinedOperation_Throws => true;
@@ -78,7 +78,7 @@ namespace CiccioSoft.Collections.Tests.List
             return GenericListFactory().AsReadOnly();
         }
 
-        protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new TestList<ModifyEnumerable>();
+        protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new Core.List<ModifyEnumerable>();
 
 #if NET8_0_OR_GREATER
         protected override bool Enumerator_Empty_Current_UndefinedOperation_Throws => true;

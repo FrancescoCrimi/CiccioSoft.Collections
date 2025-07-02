@@ -19,6 +19,7 @@ The suite targets **.NET 8**, **.NET 6**, **.NET Framework 4.7.2**, and **.NET S
 | [CiccioSoft.Collections.Binding](https://www.nuget.org/packages/CiccioSoft.Collections.Binding/) | Generic `IBindingList` implementations for `IList<T>` and `ISet<T>`. | WinForms data-binding |
 | [CiccioSoft.Collections.Observable](https://www.nuget.org/packages/CiccioSoft.Collections.Observable/) | Observable generic collections implementing `INotifyCollectionChanged` and `INotifyPropertyChanged`. | WPF, UWP, WinUI 3, and other XAML-based UIs |
 | [CiccioSoft.Collections.Ciccio](https://www.nuget.org/packages/CiccioSoft.Collections.Ciccio/) | Collections implementing both `IBindingList` and `INotifyCollectionChanged` for multi-UI backends. | Shared backend for WinForms and XAML-based UIs |
+| [CiccioSoft.Collections.Core](https://www.nuget.org/packages/CiccioSoft.Collections.Core/) | Core abstractions, utilities, and base classes for custom collections. | Library authors, advanced scenarios |
 | [CiccioSoft.Collections](https://www.nuget.org/packages/CiccioSoft.Collections/) | **Metapackage**: Installs all core packages for compatibility with previous versions. | Legacy/transition projects |
 
 ---

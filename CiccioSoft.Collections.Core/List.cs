@@ -22,7 +22,7 @@ namespace CiccioSoft.Collections.Core
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public abstract class List<T> : IList<T>, IList, IReadOnlyList<T>
+    public class List<T> : IList<T>, IList, IReadOnlyList<T>
     {
         private readonly System.Collections.Generic.List<T> items;
 
@@ -43,9 +43,9 @@ namespace CiccioSoft.Collections.Core
         /// <exception cref = "ArgumentNullException" >
         /// <paramref name="collection" /> is <see langword = "null" />
         /// </exception>
-        public List(IEnumerable<T> enumerable)
+        public List(IEnumerable<T> collection)
         {
-            items = new System.Collections.Generic.List<T>(enumerable);
+            items = new System.Collections.Generic.List<T>(collection);
         }
 
         /// <summary>

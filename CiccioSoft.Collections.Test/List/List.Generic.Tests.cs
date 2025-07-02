@@ -1,7 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
+//using CiccioSoft.Collections.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.Tests;
@@ -36,15 +36,15 @@ namespace CiccioSoft.Collections.Tests.List
 
         #region List<T> Helper Methods
 
-        protected virtual TestList<T> GenericListFactory()
+        protected virtual Core.List<T> GenericListFactory()
         {
-            return new TestList<T>();
+            return new Core.List<T>();
         }
 
-        protected virtual TestList<T> GenericListFactory(int count)
+        protected virtual Core.List<T> GenericListFactory(int count)
         {
             IEnumerable<T> toCreateFrom = CreateEnumerable(EnumerableType.List, null, count, 0, 0);
-            return new TestList<T>(toCreateFrom);
+            return new Core.List<T>(toCreateFrom);
         }
 
         //protected void VerifyList(List<T> list, List<T> expectedItems)
@@ -71,11 +71,11 @@ namespace CiccioSoft.Collections.Tests.List
         //}
     }
 
-    [Serializable]
-    public class TestList<T> : Core.List<T>
-    {
-        public TestList() : base() { }
-        public TestList(int capacity) : base(capacity) { }
-        public TestList(IEnumerable<T> collection) : base(collection) { }
-    }
+    //[Serializable]
+    //public class TestList<T> : Core.List<T>
+    //{
+    //    public TestList() : base() { }
+    //    public TestList(int capacity) : base(capacity) { }
+    //    public TestList(IEnumerable<T> collection) : base(collection) { }
+    //}
 }

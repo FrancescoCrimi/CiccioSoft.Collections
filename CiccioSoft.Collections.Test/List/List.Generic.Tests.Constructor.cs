@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Tests.List
         [Fact]
         public void Constructor_Default()
         {
-            TestList<T> list = new TestList<T>();
+            Core.List<T> list = new Core.List<T>();
             Assert.Equal(0, list.Capacity); //"Expected capacity of list to be the same as given."
             Assert.Equal(0, list.Count); //"Do not expect anything to be in the list."
             Assert.False(((IList<T>)list).IsReadOnly); //"List should not be readonly"
@@ -32,7 +32,7 @@ namespace CiccioSoft.Collections.Tests.List
         [InlineData(100)]
         public void Constructor_Capacity(int capacity)
         {
-            TestList<T> list = new TestList<T>(capacity);
+            Core.List<T> list = new Core.List<T>(capacity);
             Assert.Equal(capacity, list.Capacity); //"Expected capacity of list to be the same as given."
             Assert.Equal(0, list.Count); //"Do not expect anything to be in the list."
             Assert.False(((IList<T>)list).IsReadOnly); //"List should not be readonly"
@@ -43,7 +43,7 @@ namespace CiccioSoft.Collections.Tests.List
         [InlineData(int.MinValue)]
         public void Constructor_NegativeCapacity_ThrowsArgumentOutOfRangeException(int capacity)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new TestList<T>(capacity));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Core.List<T>(capacity));
         }
 
         [Theory]
@@ -53,7 +53,7 @@ namespace CiccioSoft.Collections.Tests.List
             _ = listLength;
             _ = numberOfMatchingElements;
             IEnumerable<T> enumerable = CreateEnumerable(enumerableType, null, enumerableLength, 0, numberOfDuplicateElements);
-            TestList<T> list = new TestList<T>(enumerable);
+            Core.List<T> list = new Core.List<T>(enumerable);
             System.Collections.Generic.List<T> expected = enumerable.ToList();
 
             Assert.Equal(enumerableLength, list.Count); //"Number of items in list do not match the number of items given."
@@ -67,7 +67,7 @@ namespace CiccioSoft.Collections.Tests.List
         [Fact]
         public void Constructo_NullIEnumerable_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => { TestList<T> _list = new TestList<T>(null); }); //"Expected ArgumentnUllException for null items"
+            Assert.Throws<ArgumentNullException>(() => { Core.List<T> _list = new Core.List<T>(null); }); //"Expected ArgumentnUllException for null items"
         }
     }
 }
