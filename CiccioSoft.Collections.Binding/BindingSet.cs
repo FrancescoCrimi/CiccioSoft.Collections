@@ -48,13 +48,11 @@ namespace CiccioSoft.Collections.Binding
             Initialize();
         }
 
-#if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-
+#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public BindingSet(int capacity) : base(capacity)
         {
             Initialize();
         }
-
 #endif
 
         public BindingSet(IEnumerable<T> enumerable) : base(enumerable)
@@ -67,13 +65,11 @@ namespace CiccioSoft.Collections.Binding
             Initialize();
         }
 
-#if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-
+#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public BindingSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
         {
             Initialize();
         }
-
 #endif
 
         private void Initialize()

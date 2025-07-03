@@ -44,13 +44,11 @@ namespace CiccioSoft.Collections.Ciccio
             Initialize();
         }
 
-#if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-
+#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public CiccioSet(int capacity) : base(capacity)
         {
             Initialize();
         }
-
 #endif
 
         public CiccioSet(IEnumerable<T> collection) : base(collection)
@@ -63,13 +61,11 @@ namespace CiccioSoft.Collections.Ciccio
             Initialize();
         }
 
-#if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-
+#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public CiccioSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
         {
             Initialize();
         }
-
 #endif
 
         private void Initialize()

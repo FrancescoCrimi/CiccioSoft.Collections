@@ -29,11 +29,11 @@ namespace System
         public static bool IsNetCore => Environment.Version.Major >= 5 || RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase);
         public static bool IsMonoRuntime => Type.GetType("Mono.RuntimeStructs") != null;
         public static bool IsNotMonoRuntime => !IsMonoRuntime;
-        public static bool IsMonoInterpreter => GetIsRunningOnMonoInterpreter();
+        //public static bool IsMonoInterpreter => GetIsRunningOnMonoInterpreter();
         public static bool IsMonoAOT => Environment.GetEnvironmentVariable("MONO_AOT_MODE") == "aot";
         public static bool IsNotMonoAOT => Environment.GetEnvironmentVariable("MONO_AOT_MODE") != "aot";
         public static bool IsNativeAot => IsNotMonoRuntime && !IsReflectionEmitSupported;
-        public static bool IsNotNativeAot => !IsNativeAot;
+        //public static bool IsNotNativeAot => !IsNativeAot;
         public static bool IsFreeBSD => RuntimeInformation.IsOSPlatform(OSPlatform.Create("FREEBSD"));
         public static bool IsNetBSD => RuntimeInformation.IsOSPlatform(OSPlatform.Create("NETBSD"));
         public static bool IsAndroid => RuntimeInformation.IsOSPlatform(OSPlatform.Create("ANDROID"));
@@ -69,8 +69,8 @@ namespace System
         public static bool IsX64Process => RuntimeInformation.ProcessArchitecture == Architecture.X64;
         public static bool IsX86Process => RuntimeInformation.ProcessArchitecture == Architecture.X86;
         public static bool IsNotX86Process => !IsX86Process;
-        public static bool IsArgIteratorSupported => IsMonoRuntime || (IsWindows && IsNotArmProcess && !IsNativeAot);
-        public static bool IsArgIteratorNotSupported => !IsArgIteratorSupported;
+        //public static bool IsArgIteratorSupported => IsMonoRuntime || (IsWindows && IsNotArmProcess && !IsNativeAot);
+        //public static bool IsArgIteratorNotSupported => !IsArgIteratorSupported;
         public static bool Is32BitProcess => IntPtr.Size == 4;
         public static bool Is64BitProcess => IntPtr.Size == 8;
         public static bool IsNotWindows => !IsWindows;
@@ -92,7 +92,7 @@ namespace System
 
         //public static bool IsNotPrivilegedProcess => !IsPrivilegedProcess;
 
-        public static bool IsMarshalGetExceptionPointersSupported => !IsMonoRuntime && !IsNativeAot;
+        //public static bool IsMarshalGetExceptionPointersSupported => !IsMonoRuntime && !IsNativeAot;
 
         private static readonly Lazy<bool> s_isCheckedRuntime = new Lazy<bool>(() => AssemblyConfigurationEquals("Checked"));
         private static readonly Lazy<bool> s_isReleaseRuntime = new Lazy<bool>(() => AssemblyConfigurationEquals("Release"));
@@ -109,12 +109,12 @@ namespace System
         public static bool IsCaseInsensitiveOS => IsWindows || IsOSX || IsMacCatalyst;
         public static bool IsCaseSensitiveOS => !IsCaseInsensitiveOS;
 
-#if NETCOREAPP
-        public static bool FileCreateCaseSensitive => IsCaseSensitiveOS && !RuntimeInformation.RuntimeIdentifier.StartsWith("iossimulator")
-                                                                        && !RuntimeInformation.RuntimeIdentifier.StartsWith("tvossimulator");
-#else
-        public static bool FileCreateCaseSensitive => IsCaseSensitiveOS;
-#endif
+//#if NETCOREAPP
+//        public static bool FileCreateCaseSensitive => IsCaseSensitiveOS && !RuntimeInformation.RuntimeIdentifier.StartsWith("iossimulator")
+//                                                                        && !RuntimeInformation.RuntimeIdentifier.StartsWith("tvossimulator");
+//#else
+//        public static bool FileCreateCaseSensitive => IsCaseSensitiveOS;
+//#endif
 
         public static bool IsThreadingSupported => (!IsWasi && !IsBrowser) || IsWasmThreadingSupported;
         public static bool IsWasmThreadingSupported => IsBrowser && IsEnvironmentVariableTrue("IsBrowserThreadingSupported");
@@ -152,7 +152,7 @@ namespace System
 
         public static bool IsAsyncFileIOSupported => !IsBrowser && !IsWasi;
 
-        public static bool IsLineNumbersSupported => !IsNativeAot;
+        //public static bool IsLineNumbersSupported => !IsNativeAot;
 
         //public static bool IsInContainer => GetIsInContainer();
         //public static bool IsNotInContainer => !IsInContainer;
@@ -182,11 +182,11 @@ namespace System
         public static bool IsReflectionEmitSupported => true;
 #endif
 
-        public static bool IsInvokingStaticConstructorsSupported => !IsNativeAot;
-        public static bool IsInvokingFinalizersSupported => !IsNativeAot;
-        public static bool IsTypeEquivalenceSupported => !IsNativeAot && !IsMonoRuntime && IsWindows;
+        //public static bool IsInvokingStaticConstructorsSupported => !IsNativeAot;
+        //public static bool IsInvokingFinalizersSupported => !IsNativeAot;
+        //public static bool IsTypeEquivalenceSupported => !IsNativeAot && !IsMonoRuntime && IsWindows;
 
-        public static bool IsMetadataUpdateSupported => !IsNativeAot;
+        //public static bool IsMetadataUpdateSupported => !IsNativeAot;
 
         // System.Security.Cryptography.Xml.XmlDsigXsltTransform.GetOutput() relies on XslCompiledTransform which relies
         // heavily on Reflection.Emit
@@ -194,14 +194,14 @@ namespace System
 
         public static bool IsPreciseGcSupported => !IsMonoRuntime;
 
-        public static bool IsRareEnumsSupported => !IsNativeAot;
+        //public static bool IsRareEnumsSupported => !IsNativeAot;
 
         public static bool IsNotIntMaxValueArrayIndexSupported => s_largeArrayIsNotSupported.Value;
 
-        public static bool IsAssemblyLoadingSupported => !IsNativeAot;
-        public static bool IsNonBundledAssemblyLoadingSupported => IsAssemblyLoadingSupported && !IsMonoAOT;
-        public static bool IsMethodBodySupported => !IsNativeAot;
-        public static bool IsDebuggerTypeProxyAttributeSupported => !IsNativeAot;
+        //public static bool IsAssemblyLoadingSupported => !IsNativeAot;
+        //public static bool IsNonBundledAssemblyLoadingSupported => IsAssemblyLoadingSupported && !IsMonoAOT;
+        //public static bool IsMethodBodySupported => !IsNativeAot;
+        //public static bool IsDebuggerTypeProxyAttributeSupported => !IsNativeAot;
         public static bool HasAssemblyFiles => !string.IsNullOrEmpty(typeof(PlatformDetection).Assembly.Location);
         public static bool HasHostExecutable => HasAssemblyFiles; // single-file don't have a host
         public static bool IsSingleFile => !HasAssemblyFiles;
@@ -260,8 +260,8 @@ namespace System
         public static bool UsesMobileAppleCrypto => IsMacCatalyst || IsiOS || IstvOS;
 
         // Changed to `true` when trimming
-        public static bool IsBuiltWithAggressiveTrimming => IsNativeAot;
-        public static bool IsNotBuiltWithAggressiveTrimming => !IsBuiltWithAggressiveTrimming;
+        //public static bool IsBuiltWithAggressiveTrimming => IsNativeAot;
+        //public static bool IsNotBuiltWithAggressiveTrimming => !IsBuiltWithAggressiveTrimming;
 
         //// Windows - Schannel supports alpn from win8.1/2012 R2 and higher.
         //// Linux - OpenSsl supports alpn from openssl 1.0.2 and higher.

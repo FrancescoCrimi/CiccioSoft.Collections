@@ -37,7 +37,7 @@ namespace CiccioSoft.Collections.Core
         public HashSet(IEqualityComparer<T>? comparer)
             => items = new System.Collections.Generic.HashSet<T>(comparer);
 
-#if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public HashSet(int capacity)
             => items = new System.Collections.Generic.HashSet<T>(capacity);
 #endif
@@ -48,7 +48,7 @@ namespace CiccioSoft.Collections.Core
         public HashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             => items = new System.Collections.Generic.HashSet<T>(collection, comparer);
 
-#if NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public HashSet(int capacity, IEqualityComparer<T>? comparer)
             => items = new System.Collections.Generic.HashSet<T>(capacity, comparer);
 #endif
@@ -72,6 +72,18 @@ namespace CiccioSoft.Collections.Core
         {
             return new ReadOnlySet<T>(this);
         }
+
+
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        /// <summary>
+        /// Ensures that this hash set can hold the specified number of elements without growing.
+        /// </summary>
+        /// <param name="capacity">The minimum capacity to ensure.</param>
+        /// <returns>The new capacity of this instance.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than zero.</exception>
+        public int EnsureCapacity(int capacity)
+            => items.EnsureCapacity(capacity);
+#endif
 
         #endregion
 

@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-#if (NETSTANDARD2_0 || NET461_OR_GREATER)
+#if (!NETCOREAPP3_1_OR_GREATER)
 
 namespace System.Collections.Generic
 {
