@@ -4,9 +4,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections.Core
+namespace CiccioSoft.Collections
 {
     /// <summary>
     /// Thin wrapper around <see cref="System.Collections.Generic.List{T}"/> exposing

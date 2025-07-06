@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -34,6 +35,7 @@ namespace CiccioSoft.Collections.Observable.Tests
             AssertExtensions.Throws<ArgumentNullException>("list", () => new ReadOnlyObservableCollection<string>(null));
         }
 
+#if NET8_0_OR_GREATER
         [Fact]
         public static void Empty_Idempotent()
         {
@@ -41,6 +43,7 @@ namespace CiccioSoft.Collections.Observable.Tests
             Assert.Equal(0, ReadOnlyObservableCollection<int>.Empty.Count);
             Assert.Same(ReadOnlyObservableCollection<int>.Empty, ReadOnlyObservableCollection<int>.Empty);
         }
+#endif
 
         [Fact]
         public static void GetItemTests()
@@ -206,6 +209,7 @@ namespace CiccioSoft.Collections.Observable.Tests
             helper.VerifyReadOnlyCollection(readOnlyCol, anArray);
         }
 
+#if NET6_0_OR_GREATER
         [Fact]
         //[ActiveIssue("https://github.com/dotnet/runtime/issues/57588", typeof(PlatformDetection), nameof(PlatformDetection.IsBuiltWithAggressiveTrimming), nameof(PlatformDetection.IsBrowser))]
         public static void DebuggerAttribute_Tests()
@@ -225,6 +229,7 @@ namespace CiccioSoft.Collections.Observable.Tests
             TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => DebuggerAttributes.ValidateDebuggerTypeProxyProperties(typeof(ReadOnlyObservableCollection<int>), null));
             ArgumentNullException argumentNullException = Assert.IsType<ArgumentNullException>(ex.InnerException);
         }
+#endif
     }
 
     internal class IReadOnlyList_T_Test<T>

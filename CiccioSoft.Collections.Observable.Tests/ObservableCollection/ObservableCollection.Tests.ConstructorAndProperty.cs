@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -118,11 +119,12 @@ namespace CiccioSoft.Collections.Observable.Tests
             Assert.False(((ICollection<Guid>)col).IsReadOnly);
         }
 
+#if NET6_0_OR_GREATER
         [Fact]
         //[ActiveIssue("https://github.com/dotnet/runtime/issues/57588", typeof(PlatformDetection), nameof(PlatformDetection.IsBuiltWithAggressiveTrimming), nameof(PlatformDetection.IsBrowser))]
         public static void DebuggerAttributeTests()
         {
-            ObservableCollection<int> col = new ObservableCollection<int>(new[] {1, 2, 3, 4});
+            ObservableCollection<int> col = new ObservableCollection<int>(new[] { 1, 2, 3, 4 });
             DebuggerAttributes.ValidateDebuggerDisplayReferences(col);
             DebuggerAttributeInfo info = DebuggerAttributes.ValidateDebuggerTypeProxyProperties(col);
             PropertyInfo itemProperty = info.Properties.Single(pr => pr.GetCustomAttribute<DebuggerBrowsableAttribute>().State == DebuggerBrowsableState.RootHidden);
@@ -137,12 +139,13 @@ namespace CiccioSoft.Collections.Observable.Tests
             TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => DebuggerAttributes.ValidateDebuggerTypeProxyProperties(typeof(ObservableCollection<int>), null));
             ArgumentNullException argumentNullException = Assert.IsType<ArgumentNullException>(ex.InnerException);
         }
+#endif
 
         private partial class ObservableCollectionSubclass<T> : ObservableCollection<T>
         {
             public ObservableCollectionSubclass(IEnumerable<T> collection) : base(collection) { }
 
-            public List<T> InnerList => (List<T>)base.Items;
+            public System.Collections.Generic.List<T> InnerList => (System.Collections.Generic.List<T>)base.Items;
         }
 
         /// <summary>
@@ -173,7 +176,7 @@ namespace CiccioSoft.Collections.Observable.Tests
 
         private partial class ObservableCollectionSubclass<T> : ObservableCollection<T>
         {
-            public ObservableCollectionSubclass(List<T> list) : base(list) { }
+            public ObservableCollectionSubclass(System.Collections.Generic.List<T> list) : base(list) { }
         }
     }
 }

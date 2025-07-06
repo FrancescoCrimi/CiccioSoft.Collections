@@ -1,9 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -23,10 +23,15 @@ namespace CiccioSoft.Collections.Binding
         /// Initializes a new instance of ReadOnlyBindingList that
         /// wraps the given BindingList.
         /// </summary>
-        public ReadOnlyBindingList(BindingList<T> list) : base(list)
+        public ReadOnlyBindingList(BindingList<T> bindingList) : base(bindingList)
         {
-            list.ListChanged += new ListChangedEventHandler(HandleListChanged);
+            bindingList.ListChanged += new ListChangedEventHandler(HandleListChanged);
         }
+
+        //public ReadOnlyBindingList(System.ComponentModel.BindingList<T> bindingList) : base(bindingList)
+        //{
+        //    bindingList.ListChanged += new ListChangedEventHandler(HandleListChanged);
+        //}
 
         #endregion
 

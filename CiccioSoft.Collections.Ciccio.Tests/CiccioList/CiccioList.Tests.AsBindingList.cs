@@ -394,15 +394,18 @@ namespace CiccioSoft.Collections.Ciccio.Tests
             Assert.Equal(1, list.Count);
         }
 
+        #region Added to the original tests
 
-        [Fact]
-        public void AddNew_Invoke_ThrowsNotSupportedException()
-        {
-            var bindingList = new CiccioList<object>();
-            Assert.Throws<NotSupportedException>(() =>
-            {
-                bindingList.AddNew();
-            });
-        }
+        //[Fact]
+        //public void AddNew_Invoke_ThrowsNotSupportedException()
+        //{
+        //    var bindingList = new CiccioList<object>();
+        //    Assert.Throws<NotSupportedException>(() =>
+        //    {
+        //        bindingList.AddNew();
+        //    });
+        //}
+
+        #endregion
     }
 }

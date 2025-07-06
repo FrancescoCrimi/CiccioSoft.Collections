@@ -19,7 +19,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void Ctor_SetProperty_Roundtrips()
         {
-            var set = new Core.HashSet<int>();
+            var set = new CiccioSoft.Collections.HashSet<int>();
             Assert.Same(set, new DerivedReadOnlySet<int>(set).Set);
         }
 
@@ -34,7 +34,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void MembersDelegateToWrappedSet()
         {
-            var set = new ReadOnlySet<int>(new Core.HashSet<int>() { 1, 2, 3 });
+            var set = new ReadOnlySet<int>(new CiccioSoft.Collections.HashSet<int>() { 1, 2, 3 });
 
             Assert.True(set.Contains(2));
             Assert.False(set.Contains(4));
@@ -74,7 +74,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void ChangesToUnderlyingSetReflected()
         {
-            var set = new Core.HashSet<int> { 1, 2, 3 };
+            var set = new CiccioSoft.Collections.HashSet<int> { 1, 2, 3 };
             var readOnlySet = new ReadOnlySet<int>(set);
 
             set.Add(4);
@@ -89,14 +89,14 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void IsReadOnly_True()
         {
-            var set = new ReadOnlySet<int>(new Core.HashSet<int> { 1, 2, 3 });
+            var set = new ReadOnlySet<int>(new CiccioSoft.Collections.HashSet<int> { 1, 2, 3 });
             Assert.True(((ICollection<int>)set).IsReadOnly);
         }
 
         [Fact]
         public void MutationThrows_CollectionUnmodified()
         {
-            var set = new Core.HashSet<int> { 1, 2, 3 };
+            var set = new CiccioSoft.Collections.HashSet<int> { 1, 2, 3 };
             var readOnlySet = new ReadOnlySet<int>(set);
 
             Assert.Throws<NotSupportedException>(() => ((ICollection<int>)readOnlySet).Add(4));
@@ -115,7 +115,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void ICollection_Synchronization()
         {
-            var set = new Core.HashSet<int> { 1, 2, 3 };
+            var set = new CiccioSoft.Collections.HashSet<int> { 1, 2, 3 };
             var roset = new ReadOnlySet<int>(set);
 
             Assert.False(((ICollection)roset).IsSynchronized);
@@ -124,7 +124,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         private class DerivedReadOnlySet<T> : ReadOnlySet<T>
         {
-            public DerivedReadOnlySet(Core.HashSet<T> set) : base(set) { }
+            public DerivedReadOnlySet(CiccioSoft.Collections.HashSet<T> set) : base(set) { }
 
             public new ISet<T> Set => base.Set;
         }

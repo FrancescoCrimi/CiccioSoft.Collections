@@ -1,18 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 
 namespace CiccioSoft.Collections.Binding
 {
     /// <summary>
-    /// Provides a generic set collection that supports data binding and change notification
-    /// for use in data-bound controls.
+    /// Provides a generic collection that supports data binding, change notification,
+    /// and sorting for use in data-bound controls.
     /// <para>
     /// This class does not implement <see cref="ICancelAddNew"/> and does not support
     /// <c>AddNew</c>; calling <c>AddNew</c> will throw a <see cref="NotSupportedException"/>.
@@ -22,7 +20,7 @@ namespace CiccioSoft.Collections.Binding
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class BindingSet<T> : SetMoreIList<T>, IBindingList, IRaiseItemChangedEvents
+    public class BindingList<T> : CiccioSoft.Collections.List<T>, IBindingList, IRaiseItemChangedEvents
     {
         private bool raiseListChangedEvents = true; // Do not rename (binary serialization)
         private bool raiseItemChangedEvents; // Do not rename (binary serialization)
@@ -41,36 +39,17 @@ namespace CiccioSoft.Collections.Binding
 
         #region Constructors
 
-        public BindingSet() => Initialize();
+        public BindingList() => Initialize();
 
-        public BindingSet(IEqualityComparer<T>? comparer) : base(comparer)
+        public BindingList(IEnumerable<T> enumerable) : base(enumerable)
         {
             Initialize();
         }
 
-#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        public BindingSet(int capacity) : base(capacity)
+        public BindingList(int capacity) : base(capacity)
         {
             Initialize();
         }
-#endif
-
-        public BindingSet(IEnumerable<T> enumerable) : base(enumerable)
-        {
-            Initialize();
-        }
-
-        public BindingSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer) : base(collection, comparer)
-        {
-            Initialize();
-        }
-
-#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-        public BindingSet(int capacity, IEqualityComparer<T>? comparer) : base(capacity, comparer)
-        {
-            Initialize();
-        }
-#endif
 
         private void Initialize()
         {
@@ -81,7 +60,7 @@ namespace CiccioSoft.Collections.Binding
                 raiseItemChangedEvents = true;
 
                 // Loop thru the items already in the collection and hook their change notification.
-                foreach (T item in items)
+                foreach (T item in Items)
                 {
                     HookPropertyChanged(item);
                 }
@@ -93,162 +72,58 @@ namespace CiccioSoft.Collections.Binding
 
         #region Protected Override Methods
 
-        protected override bool AddItem(T item)
+        protected override void ClearItems()
         {
-            if (items.Contains(item))
+            if (raiseItemChangedEvents)
             {
-                return false;
+                foreach (T item in Items)
+                {
+                    UnhookPropertyChanged(item);
+                }
             }
 
-            items.Add(item);
+            base.ClearItems();
+            FireListChanged(ListChangedType.Reset, -1);
+        }
 
-            int index = items.ToList().IndexOf(item);
+        protected override void InsertItem(int index, T item)
+        {
+            base.InsertItem(index, item);
+
             if (raiseItemChangedEvents)
             {
                 HookPropertyChanged(item);
             }
+
             FireListChanged(ListChangedType.ItemAdded, index);
-
-            return true;
         }
 
-        protected override void ClearItems()
+        protected override void RemoveItem(int index)
         {
-            if (items.Count == 0)
-            {
-                return;
-            }
-
             if (raiseItemChangedEvents)
             {
-                foreach (T item in items)
-                {
-                    UnhookPropertyChanged(item);
-                }
+                UnhookPropertyChanged(this[index]);
             }
 
-            items.Clear();
-
-            FireListChanged(ListChangedType.Reset, -1);
-        }
-
-        protected override void ExceptWithItems(IEnumerable<T> other)
-        {
-            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
-            copy.ExceptWith(other);
-            if (copy.Count == items.Count)
-            {
-                return;
-            }
-            var removed = items.Where(i => !copy.Contains(i)).ToList();
-
-            if (raiseItemChangedEvents)
-            {
-                foreach (T item in removed)
-                {
-                    UnhookPropertyChanged(item);
-                }
-            }
-
-            items = copy;
-
-            FireListChanged(ListChangedType.Reset, -1);
-        }
-
-        protected override void IntersectWithItems(IEnumerable<T> other)
-        {
-            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
-            copy.IntersectWith(other);
-            if (copy.Count == items.Count)
-            {
-                return;
-            }
-            var removed = items.Where(i => !copy.Contains(i)).ToList();
-
-            if (raiseItemChangedEvents)
-            {
-                foreach (T item in removed)
-                {
-                    UnhookPropertyChanged(item);
-                }
-            }
-
-            items = copy;
-
-            FireListChanged(ListChangedType.Reset, -1);
-        }
-
-        protected override bool RemoveItem(T item)
-        {
-            if (!items.Contains(item))
-            {
-                return false;
-            }
-
-            if (raiseItemChangedEvents)
-            {
-                UnhookPropertyChanged(item);
-            }
-            int index = items.ToList().IndexOf(item);
-
-            items.Remove(item);
-
+            base.RemoveItem(index);
             FireListChanged(ListChangedType.ItemDeleted, index);
-
-            return true;
         }
 
-        protected override void SymmetricExceptWithItems(IEnumerable<T> other)
+        protected override void SetItem(int index, T item)
         {
-            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
-            copy.SymmetricExceptWith(other);
-            var removed = items.Where(i => !copy.Contains(i)).ToList();
-            var added = copy.Where(i => !items.Contains(i)).ToList();
-
-            if (removed.Count == 0
-                && added.Count == 0)
+            if (raiseItemChangedEvents)
             {
-                return;
+                UnhookPropertyChanged(this[index]);
             }
+
+            base.SetItem(index, item);
 
             if (raiseItemChangedEvents)
             {
-                foreach (T item in added)
-                {
-                    HookPropertyChanged(item);
-                }
-                foreach (T item in removed)
-                {
-                    UnhookPropertyChanged(item);
-                }
+                HookPropertyChanged(item);
             }
 
-            items = copy;
-
-            FireListChanged(ListChangedType.Reset, -1);
-        }
-
-        protected override void UnionWithItems(IEnumerable<T> other)
-        {
-            var copy = new System.Collections.Generic.HashSet<T>(items, items.Comparer);
-            copy.UnionWith(other);
-            if (copy.Count == items.Count)
-            {
-                return;
-            }
-            var added = copy.Where(i => !items.Contains(i)).ToList();
-
-            if (raiseItemChangedEvents)
-            {
-                foreach (T item in added)
-                {
-                    HookPropertyChanged(item);
-                }
-            }
-
-            items = copy;
-
-            FireListChanged(ListChangedType.Reset, -1);
+            FireListChanged(ListChangedType.ItemChanged, index);
         }
 
         #endregion
@@ -442,9 +317,9 @@ namespace CiccioSoft.Collections.Binding
                     // somehow the item has been removed from our list without our knowledge.
                     int pos = _lastChangeIndex;
 
-                    if (pos < 0 || pos >= Count || !items.ToList()[pos]!.Equals(item))
+                    if (pos < 0 || pos >= Count || !this[pos]!.Equals(item))
                     {
-                        pos = items.ToList().IndexOf(item);
+                        pos = IndexOf(item);
                         _lastChangeIndex = pos;
                     }
 

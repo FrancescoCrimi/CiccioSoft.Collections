@@ -31,7 +31,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<T> GenericISetFactory()
         {
-            return new Core.HashSet<T>();
+            return new CiccioSoft.Collections.HashSet<T>();
         }
 
         #endregion
@@ -51,7 +51,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void HashSet_Generic_Constructor()
         {
-            Core.HashSet<T> set = new Core.HashSet<T>();
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>();
             Assert.Empty(set);
         }
 
@@ -59,7 +59,7 @@ namespace CiccioSoft.Collections.Core.Tests
         public void HashSet_Generic_Constructor_IEqualityComparer()
         {
             IEqualityComparer<T> comparer = GetIEqualityComparer();
-            Core.HashSet<T> set = new Core.HashSet<T>(comparer);
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(comparer);
             if (comparer == null)
                 Assert.Equal(EqualityComparer<T>.Default, set.Comparer);
             else
@@ -70,7 +70,7 @@ namespace CiccioSoft.Collections.Core.Tests
         public void HashSet_Generic_Constructor_NullIEqualityComparer()
         {
             IEqualityComparer<T> comparer = null;
-            Core.HashSet<T> set = new Core.HashSet<T>(comparer);
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(comparer);
             if (comparer == null)
                 Assert.Equal(EqualityComparer<T>.Default, set.Comparer);
             else
@@ -84,7 +84,7 @@ namespace CiccioSoft.Collections.Core.Tests
             _ = setLength;
             _ = numberOfMatchingElements;
             IEnumerable<T> enumerable = CreateEnumerable(enumerableType, null, enumerableLength, 0, numberOfDuplicateElements);
-            Core.HashSet<T> set = new Core.HashSet<T>(enumerable);
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(enumerable);
             Assert.True(set.SetEquals(enumerable));
         }
 
@@ -93,8 +93,8 @@ namespace CiccioSoft.Collections.Core.Tests
         public void HashSet_Generic_Constructor_IEnumerable_WithManyDuplicates(int count)
         {
             IEnumerable<T> items = CreateEnumerable(EnumerableType.List, null, count, 0, 0);
-            Core.HashSet<T> hashSetFromDuplicates = new Core.HashSet<T>(Enumerable.Range(0, 40).SelectMany(i => items).ToArray());
-            Core.HashSet<T> hashSetFromNoDuplicates = new Core.HashSet<T>(items);
+            CiccioSoft.Collections.HashSet<T> hashSetFromDuplicates = new CiccioSoft.Collections.HashSet<T>(Enumerable.Range(0, 40).SelectMany(i => items).ToArray());
+            CiccioSoft.Collections.HashSet<T> hashSetFromNoDuplicates = new CiccioSoft.Collections.HashSet<T>(items);
             Assert.True(hashSetFromNoDuplicates.SetEquals(hashSetFromDuplicates));
         }
 
@@ -102,21 +102,21 @@ namespace CiccioSoft.Collections.Core.Tests
         [MemberData(nameof(ValidCollectionSizes))]
         public void HashSet_Generic_Constructor_HashSet_SparselyFilled(int count)
         {
-            Core.HashSet<T> source = new Core.HashSet<T>(CreateEnumerable(EnumerableType.HashSet, null, count, 0, 0));
+            CiccioSoft.Collections.HashSet<T> source = new CiccioSoft.Collections.HashSet<T>(CreateEnumerable(EnumerableType.HashSet, null, count, 0, 0));
             System.Collections.Generic.List<T> sourceElements = source.ToList();
             foreach (int i in NonSquares(count))
                 source.Remove(sourceElements[i]);// Unevenly spaced survivors increases chance of catching any spacing-related bugs.
 
 
-            Core.HashSet<T> set = new Core.HashSet<T>(source, base.GetIEqualityComparer());
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(source, base.GetIEqualityComparer());
             Assert.True(set.SetEquals(source));
         }
 
         [Fact]
         public void HashSet_Generic_Constructor_IEnumerable_Null()
         {
-            Assert.Throws<ArgumentNullException>(() => new Core.HashSet<T>((IEnumerable<T>)null));
-            Assert.Throws<ArgumentNullException>(() => new Core.HashSet<T>((IEnumerable<T>)null, EqualityComparer<T>.Default));
+            Assert.Throws<ArgumentNullException>(() => new CiccioSoft.Collections.HashSet<T>((IEnumerable<T>)null));
+            Assert.Throws<ArgumentNullException>(() => new CiccioSoft.Collections.HashSet<T>((IEnumerable<T>)null, EqualityComparer<T>.Default));
         }
 
         [Theory]
@@ -127,7 +127,7 @@ namespace CiccioSoft.Collections.Core.Tests
             _ = numberOfMatchingElements;
             _ = numberOfDuplicateElements;
             IEnumerable<T> enumerable = CreateEnumerable(enumerableType, null, enumerableLength, 0, 0);
-            Core.HashSet<T> set = new Core.HashSet<T>(enumerable, base.GetIEqualityComparer());
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(enumerable, base.GetIEqualityComparer());
             Assert.True(set.SetEquals(enumerable));
         }
 
@@ -290,25 +290,25 @@ namespace CiccioSoft.Collections.Core.Tests
         {
             System.Collections.Generic.List<T> objects = new System.Collections.Generic.List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
 
-            var set = new Core.HashSet<System.Collections.Generic.HashSet<T>>()
+            var set = new CiccioSoft.Collections.HashSet<System.Collections.Generic.HashSet<T>>()
             {
                 new System.Collections.Generic.HashSet<T> { objects[0], objects[1], objects[2] },
                 new System.Collections.Generic.HashSet<T> { objects[3], objects[4], objects[5] }
             };
 
-            var noComparerSet = new Core.HashSet<System.Collections.Generic.HashSet<T>>()
+            var noComparerSet = new CiccioSoft.Collections.HashSet<System.Collections.Generic.HashSet<T>>()
             {
                 new System.Collections.Generic.HashSet<T> { objects[0], objects[1], objects[2] },
                 new System.Collections.Generic.HashSet<T> { objects[3], objects[4], objects[5] }
             };
 
-            var comparerSet1 = new Core.HashSet<System.Collections.Generic.HashSet<T>>(System.Collections.Generic.HashSet<T>.CreateSetComparer())
+            var comparerSet1 = new CiccioSoft.Collections.HashSet<System.Collections.Generic.HashSet<T>>(System.Collections.Generic.HashSet<T>.CreateSetComparer())
             {
                 new System.Collections.Generic.HashSet<T> { objects[0], objects[1], objects[2] },
                 new System.Collections.Generic.HashSet<T> { objects[3], objects[4], objects[5] }
             };
 
-            var comparerSet2 = new Core.HashSet<System.Collections.Generic.HashSet<T>>(System.Collections.Generic.HashSet<T>.CreateSetComparer())
+            var comparerSet2 = new CiccioSoft.Collections.HashSet<System.Collections.Generic.HashSet<T>>(System.Collections.Generic.HashSet<T>.CreateSetComparer())
             {
                 new System.Collections.Generic.HashSet<T> { objects[3], objects[4], objects[5] },
                 new System.Collections.Generic.HashSet<T> { objects[0], objects[1], objects[2] }
@@ -324,19 +324,19 @@ namespace CiccioSoft.Collections.Core.Tests
         {
             System.Collections.Generic.List<T> objects = new System.Collections.Generic.List<T>() { CreateT(1), CreateT(2), CreateT(3), CreateT(4), CreateT(5), CreateT(6) };
 
-            var set = new Core.HashSet<System.Collections.Generic.HashSet<T>>()
+            var set = new CiccioSoft.Collections.HashSet<System.Collections.Generic.HashSet<T>>()
             {
                 new System.Collections.Generic.HashSet<T> { objects[0], objects[1], objects[2] },
                 new System.Collections.Generic.HashSet<T> { objects[3], objects[4], objects[5] }
             };
 
-            var noComparerSet = new Core.HashSet<System.Collections.Generic.HashSet<T>>()
+            var noComparerSet = new CiccioSoft.Collections.HashSet<System.Collections.Generic.HashSet<T>>()
             {
                 new System.Collections.Generic.HashSet<T> { objects[0], objects[1], objects[2] },
                 new System.Collections.Generic.HashSet<T> { objects[3], objects[4], objects[5] }
             };
 
-            var comparerSet = new Core.HashSet<System.Collections.Generic.HashSet<T>>(System.Collections.Generic.HashSet<T>.CreateSetComparer())
+            var comparerSet = new CiccioSoft.Collections.HashSet<System.Collections.Generic.HashSet<T>>(System.Collections.Generic.HashSet<T>.CreateSetComparer())
             {
                 new System.Collections.Generic.HashSet<T> { objects[0], objects[1], objects[2] },
                 new System.Collections.Generic.HashSet<T> { objects[3], objects[4], objects[5] }
@@ -352,18 +352,18 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void CanBeCastedToISet()
         {
-            Core.HashSet<T> set = new Core.HashSet<T>();
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>();
             ISet<T> iset = (set as ISet<T>);
             Assert.NotNull(iset);
         }
 
-#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 
         [Theory]
         [MemberData(nameof(ValidCollectionSizes))]
         public void HashSet_Generic_Constructor_int(int capacity)
         {
-            Core.HashSet<T> set = new Core.HashSet<T>(capacity);
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(capacity);
             Assert.Equal(0, set.Count);
         }
 
@@ -371,7 +371,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [MemberData(nameof(ValidCollectionSizes))]
         public void HashSet_Generic_Constructor_int_AddUpToAndBeyondCapacity(int capacity)
         {
-            Core.HashSet<T> set = new Core.HashSet<T>(capacity);
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(capacity);
 
             AddToCollection(set, capacity);
             Assert.Equal(capacity, set.Count);
@@ -386,7 +386,7 @@ namespace CiccioSoft.Collections.Core.Tests
         {
             // Highest pre-computed number + 1.
             const int Capacity = 7199370;
-            var set = new Core.HashSet<T>(Capacity);
+            var set = new CiccioSoft.Collections.HashSet<T>(Capacity);
 
             // Assert that the HashTable's capacity is set to the descendant prime number of the given one.
             const int NextPrime = 7199371;
@@ -397,8 +397,8 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void HashSet_Generic_Constructor_int_Negative_ThrowsArgumentOutOfRangeException()
         {
-            AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new Core.HashSet<T>(-1));
-            AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new Core.HashSet<T>(int.MinValue));
+            AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new CiccioSoft.Collections.HashSet<T>(-1));
+            AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new CiccioSoft.Collections.HashSet<T>(int.MinValue));
         }
 
         [Theory]
@@ -406,7 +406,7 @@ namespace CiccioSoft.Collections.Core.Tests
         public void HashSet_Generic_Constructor_int_IEqualityComparer(int capacity)
         {
             IEqualityComparer<T> comparer = GetIEqualityComparer();
-            Core.HashSet<T> set = new Core.HashSet<T>(capacity, comparer);
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(capacity, comparer);
             Assert.Equal(0, set.Count);
             if (comparer == null)
                 Assert.Equal(EqualityComparer<T>.Default, set.Comparer);
@@ -419,7 +419,7 @@ namespace CiccioSoft.Collections.Core.Tests
         public void HashSet_Generic_Constructor_int_IEqualityComparer_AddUpToAndBeyondCapacity(int capacity)
         {
             IEqualityComparer<T> comparer = GetIEqualityComparer();
-            Core.HashSet<T> set = new Core.HashSet<T>(capacity, comparer);
+            CiccioSoft.Collections.HashSet<T> set = new CiccioSoft.Collections.HashSet<T>(capacity, comparer);
 
             AddToCollection(set, capacity);
             Assert.Equal(capacity, set.Count);
@@ -432,8 +432,8 @@ namespace CiccioSoft.Collections.Core.Tests
         public void HashSet_Generic_Constructor_int_IEqualityComparer_Negative_ThrowsArgumentOutOfRangeException()
         {
             IEqualityComparer<T> comparer = GetIEqualityComparer();
-            AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new Core.HashSet<T>(-1, comparer));
-            AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new Core.HashSet<T>(int.MinValue, comparer));
+            AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new CiccioSoft.Collections.HashSet<T>(-1, comparer));
+            AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => new CiccioSoft.Collections.HashSet<T>(int.MinValue, comparer));
         }
 
 #endif
@@ -654,7 +654,7 @@ namespace CiccioSoft.Collections.Core.Tests
         public void Remove_NonDefaultComparer_ComparerUsed(int capacity)
         {
             var c = new TrackingEqualityComparer<T>();
-            var set = new Core.HashSet<T>(capacity, c);
+            var set = new CiccioSoft.Collections.HashSet<T>(capacity, c);
 
             AddToCollection(set, capacity);
             T first = set.First();

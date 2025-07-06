@@ -51,7 +51,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<int> GenericISetFactory()
         {
-            return new Core.HashSet<int>(new WrapStructural_Int());
+            return new CiccioSoft.Collections.HashSet<int>(new WrapStructural_Int());
         }
     }
 
@@ -75,7 +75,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<SimpleInt> GenericISetFactory()
         {
-            return new Core.HashSet<SimpleInt>(new WrapStructural_SimpleInt());
+            return new CiccioSoft.Collections.HashSet<SimpleInt>(new WrapStructural_SimpleInt());
         }
     }
 
@@ -90,7 +90,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<EquatableBackwardsOrder> GenericISetFactory()
         {
-            return new Core.HashSet<EquatableBackwardsOrder>();
+            return new CiccioSoft.Collections.HashSet<EquatableBackwardsOrder>();
         }
     }
 
@@ -110,7 +110,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<int> GenericISetFactory()
         {
-            return new Core.HashSet<int>(new Comparer_SameAsDefaultComparer());
+            return new CiccioSoft.Collections.HashSet<int>(new Comparer_SameAsDefaultComparer());
         }
     }
 
@@ -130,7 +130,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<int> GenericISetFactory()
         {
-            return new Core.HashSet<int>(new Comparer_HashCodeAlwaysReturnsZero());
+            return new CiccioSoft.Collections.HashSet<int>(new Comparer_HashCodeAlwaysReturnsZero());
         }
     }
 
@@ -155,7 +155,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<int> GenericISetFactory()
         {
-            return new Core.HashSet<int>(new Comparer_ModOfInt(15000));
+            return new CiccioSoft.Collections.HashSet<int>(new Comparer_ModOfInt(15000));
         }
     }
 
@@ -175,7 +175,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<int> GenericISetFactory()
         {
-            return new Core.HashSet<int>(new Comparer_AbsOfInt());
+            return new CiccioSoft.Collections.HashSet<int>(new Comparer_AbsOfInt());
         }
     }
 
@@ -195,7 +195,7 @@ namespace CiccioSoft.Collections.Core.Tests
 
         protected override ISet<int> GenericISetFactory()
         {
-            return new Core.HashSet<int>(new BadIntEqualityComparer());
+            return new CiccioSoft.Collections.HashSet<int>(new BadIntEqualityComparer());
         }
     }
 }

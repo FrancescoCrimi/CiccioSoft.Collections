@@ -142,7 +142,7 @@ namespace CiccioSoft.Collections.Ciccio.Tests
         {
             public ObservableCollectionSubclass(IEnumerable<T> collection) : base(collection) { }
 
-            public List<T> InnerList => (List<T>)base.Items;
+            public System.Collections.Generic.List<T> InnerList => (System.Collections.Generic.List<T>)base.Items;
         }
 
         /// <summary>

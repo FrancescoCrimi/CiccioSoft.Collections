@@ -4,7 +4,9 @@
 
 #if (!NETCOREAPP3_1_OR_GREATER)
 
-namespace System.Collections.Generic
+using System.Collections.Generic;
+
+namespace CiccioSoft.Collections
 {
     /// <summary>
     /// Provides a readonly abstraction of a set.

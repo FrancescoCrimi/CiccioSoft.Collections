@@ -12,7 +12,7 @@ namespace CiccioSoft.Collections.Ciccio
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class CiccioList<T> : Core.List<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
+    public class CiccioList<T> : CiccioSoft.Collections.List<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
     {
         [NonSerialized]
         private int _blockReentrancyCount;

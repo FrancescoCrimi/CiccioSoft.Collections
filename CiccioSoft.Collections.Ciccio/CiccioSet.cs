@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CiccioSoft.Collections.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace CiccioSoft.Collections.Ciccio
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class CiccioSet<T> : SetMoreIList<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
+    public class CiccioSet<T> : HashSet<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
     {
         [NonSerialized]
         private int _blockReentrancyCount;
@@ -505,6 +504,79 @@ namespace CiccioSoft.Collections.Ciccio
         #endregion
 
 
+        #region IList Non Generic interface
+
+        object? IList.this[int index]
+        {
+            get => items.ToList()[index];
+            set => throw new NotSupportedException("Mutating a value collection derived from a hashset is not allowed.");
+        }
+
+        bool IList.IsFixedSize => false;
+
+        bool IList.IsReadOnly => false;
+
+        int IList.Add(object? value)
+        {
+            ThrowHelper.IfNullAndNullsAreIllegalThenThrow<T>(value, ExceptionArgument.value);
+
+            T? item = default;
+
+            try
+            {
+                item = (T)value!;
+            }
+            catch (InvalidCastException)
+            {
+                ThrowHelper.ThrowWrongValueTypeArgumentException(value, typeof(T));
+            }
+
+            Add(item);
+
+            return items.ToList().IndexOf(item);
+        }
+
+        void IList.Clear() => ClearItems();
+
+        bool IList.Contains(object? value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                return Contains((T)value!);
+            }
+            return false;
+        }
+
+        int IList.IndexOf(object? value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                return items.ToList().IndexOf((T)value!);
+            }
+            return -1;
+        }
+
+        void IList.Insert(int index, object? value)
+        {
+            throw new NotSupportedException("Mutating a value collection derived from a hashset is not allowed.");
+        }
+
+        void IList.Remove(object? value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                Remove((T)value!);
+            }
+        }
+
+        void IList.RemoveAt(int index)
+        {
+            throw new NotSupportedException("Mutating a value collection derived from a hashset is not allowed.");
+        }
+
+        #endregion
+
+
         #region IRaiseItemChangedEvents interface
 
         /// <summary>
@@ -603,6 +675,18 @@ namespace CiccioSoft.Collections.Ciccio
                     }
                 }
             }
+        }
+
+        #endregion
+
+
+        #region Private Methods
+
+        private static bool IsCompatibleObject(object? value)
+        {
+            // Non-null values are fine.  Only accept nulls if T is a class or Nullable<U>.
+            // Note that default(T) is not equal to null for value types except when T is Nullable<U>.
+            return value is T || value == null && default(T) == null;
         }
 
         #endregion

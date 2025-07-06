@@ -38,6 +38,7 @@ namespace CiccioSoft.Collections.Core.Tests
             Assert.Equal(s_intArray.Length, collection.Count);
         }
 
+#if NET8_0_OR_GREATER
         [Fact]
         public static void Empty_Idempotent()
         {
@@ -45,6 +46,7 @@ namespace CiccioSoft.Collections.Core.Tests
             Assert.Equal(0, ReadOnlyCollection<int>.Empty.Count);
             Assert.Same(ReadOnlyCollection<int>.Empty, ReadOnlyCollection<int>.Empty);
         }
+#endif
 
         [Fact]
         public static void Item_Get()
@@ -62,7 +64,9 @@ namespace CiccioSoft.Collections.Core.Tests
             var collection = new Collection<int>(s_intArray);
             AssertExtensions.Throws<ArgumentOutOfRangeException>("index", () => collection[-1]);
             AssertExtensions.Throws<ArgumentOutOfRangeException>("index", () => collection[s_intArray.Length]);
+#if NET8_0_OR_GREATER
             AssertExtensions.Throws<ArgumentOutOfRangeException>("index", () => ReadOnlyCollection<int>.Empty[0]);
+#endif
         }
 
         [Fact]
@@ -71,8 +75,10 @@ namespace CiccioSoft.Collections.Core.Tests
             var collection = new ReadOnlyCollection<int>(s_intArray);
             Assert.True(((IList)collection).IsReadOnly);
             Assert.True(((IList<int>)collection).IsReadOnly);
+#if NET8_0_OR_GREATER
             Assert.True(((IList)ReadOnlyCollection<int>.Empty).IsReadOnly);
             Assert.True(((IList<int>)ReadOnlyCollection<int>.Empty).IsReadOnly);
+#endif
         }
 
         [Fact]

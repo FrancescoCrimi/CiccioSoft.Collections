@@ -34,7 +34,7 @@ namespace CiccioSoft.Collections.Observable
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ObservableHashSet<T> : Core.HashSet<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableHashSet<T> : CiccioSoft.Collections.HashSet<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         [NonSerialized]
         private int _blockReentrancyCount;
@@ -70,7 +70,6 @@ namespace CiccioSoft.Collections.Observable
 #endif
 
         #endregion
-
 
         #region Protected Override Methods
 
@@ -201,7 +200,6 @@ namespace CiccioSoft.Collections.Observable
 
         #endregion
 
-
         #region INotifyPropertyChanged interface
 
         /// <summary>
@@ -233,7 +231,6 @@ namespace CiccioSoft.Collections.Observable
         private void OnCountPropertyChanged() => OnPropertyChanged(EventArgsCache.CountPropertyChanged);
 
         #endregion
-
 
         #region INotifyCollectionChanged interface
 

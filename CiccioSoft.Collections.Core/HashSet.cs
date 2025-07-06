@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections.Core
+namespace CiccioSoft.Collections
 {
     /// <summary>
     /// Thin wrapper around <see cref="System.Collections.Generic.HashSet{T}"/> that exposes
@@ -37,7 +37,7 @@ namespace CiccioSoft.Collections.Core
         public HashSet(IEqualityComparer<T>? comparer)
             => items = new System.Collections.Generic.HashSet<T>(comparer);
 
-#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public HashSet(int capacity)
             => items = new System.Collections.Generic.HashSet<T>(capacity);
 #endif
@@ -48,7 +48,7 @@ namespace CiccioSoft.Collections.Core
         public HashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             => items = new System.Collections.Generic.HashSet<T>(collection, comparer);
 
-#if NET472_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#if NETCOREAPP2_1_OR_GREATER || NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         public HashSet(int capacity, IEqualityComparer<T>? comparer)
             => items = new System.Collections.Generic.HashSet<T>(capacity, comparer);
 #endif

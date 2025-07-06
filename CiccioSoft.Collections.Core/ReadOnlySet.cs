@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections.Core
+namespace CiccioSoft.Collections
 {
     /// <summary>Represents a read-only, generic set of values.</summary>
     /// <typeparam name="T">The type of values in the set.</typeparam>
