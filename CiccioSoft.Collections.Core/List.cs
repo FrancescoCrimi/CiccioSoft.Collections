@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections
+namespace CiccioSoft.Collections.Core
 {
     /// <summary>
     /// Thin wrapper around <see cref="System.Collections.Generic.List{T}"/> exposing
@@ -15,7 +15,7 @@ namespace CiccioSoft.Collections
     /// Designed as a base class for custom generic collections, providing controlled
     /// access to the underlying list.
     /// <para>
-    /// This class is inspired by <see cref="System.Collections.ObjectModel.Collection{T}"/>
+    /// This class is inspired by <see cref="Collection{T}"/>
     /// from the .NET runtime.
     /// </para>
     /// </summary>
@@ -23,7 +23,7 @@ namespace CiccioSoft.Collections
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class List<T> : IList<T>, IList, IReadOnlyList<T>
+    public abstract class List<T> : IList<T>, IList, IReadOnlyList<T>
     {
         private readonly System.Collections.Generic.List<T> items;
 

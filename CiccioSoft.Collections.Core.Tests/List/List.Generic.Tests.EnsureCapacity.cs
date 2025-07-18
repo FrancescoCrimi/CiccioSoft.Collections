@@ -21,7 +21,7 @@ namespace CiccioSoft.Collections.Core.Tests
         public void EnsureCapacity_RequestingLargerCapacity_DoesNotInvalidateEnumeration(int count)
         {
             List<T> list = GenericListFactory(count);
-            IEnumerator<T> copiedListEnumerator = new List<T>(list).GetEnumerator();
+            IEnumerator<T> copiedListEnumerator = new GenericList<T>(list).GetEnumerator();
             IEnumerator<T> enumerator = list.GetEnumerator();
             var capacity = list.Capacity;
 
@@ -37,7 +37,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void EnsureCapacity_NotInitialized_RequestedZero_ReturnsZero()
         {
-            var list = new List<T>();
+            var list = new GenericList<T>();
             Assert.Equal(0, list.EnsureCapacity(0));
             Assert.Equal(0, list.Capacity);
         }
@@ -45,7 +45,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void EnsureCapacity_NegativeCapacityRequested_Throws()
         {
-            var list = new List<T>();
+            var list = new GenericList<T>();
             AssertExtensions.Throws<ArgumentOutOfRangeException>("capacity", () => list.EnsureCapacity(-1));
         }
 
@@ -68,7 +68,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [InlineData(5)]
         public void EnsureCapacity_RequestedCapacitySmallerThanOrEqualToCurrent_CapacityUnchanged(int currentCapacity)
         {
-            var list = new List<T>(currentCapacity);
+            var list = new GenericList<T>(currentCapacity);
 
             for (int requestCapacity = 0; requestCapacity <= currentCapacity; requestCapacity++)
             {
@@ -110,7 +110,7 @@ namespace CiccioSoft.Collections.Core.Tests
         public void EnsureCapacity_RequestingLargerCapacity_DoesNotImpactListContent(int count)
         {
             List<T> list = GenericListFactory(count);
-            var copiedList = new List<T>(list);
+            var copiedList = new GenericList<T>(list);
 
             list.EnsureCapacity(list.Capacity + 1);
             Assert.Equal(copiedList, list);

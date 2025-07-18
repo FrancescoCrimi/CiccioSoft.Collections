@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections
+namespace CiccioSoft.Collections.Core
 {
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]

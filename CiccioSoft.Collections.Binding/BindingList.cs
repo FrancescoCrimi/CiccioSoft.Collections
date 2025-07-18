@@ -20,7 +20,7 @@ namespace CiccioSoft.Collections.Binding
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class BindingList<T> : CiccioSoft.Collections.List<T>, IBindingList, IRaiseItemChangedEvents
+    public class BindingList<T> : Core.List<T>, IBindingList, IRaiseItemChangedEvents
     {
         private bool raiseListChangedEvents = true; // Do not rename (binary serialization)
         private bool raiseItemChangedEvents; // Do not rename (binary serialization)

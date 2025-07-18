@@ -14,7 +14,7 @@ namespace CiccioSoft.Collections.Ciccio
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class CiccioSet<T> : HashSet<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
+    public class CiccioSet<T> : Core.HashSet<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
     {
         [NonSerialized]
         private int _blockReentrancyCount;

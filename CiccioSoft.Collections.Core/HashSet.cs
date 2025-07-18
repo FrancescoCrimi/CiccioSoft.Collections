@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace CiccioSoft.Collections
+namespace CiccioSoft.Collections.Core
 {
     /// <summary>
     /// Thin wrapper around <see cref="System.Collections.Generic.HashSet{T}"/> that exposes
@@ -25,7 +25,7 @@ namespace CiccioSoft.Collections
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class HashSet<T> : ISet<T>, IReadOnlySet<T>, ICollection
+    public abstract class HashSet<T> : ISet<T>, IReadOnlySet<T>, ICollection
     {
         protected System.Collections.Generic.HashSet<T> items;
 

@@ -35,15 +35,15 @@ namespace CiccioSoft.Collections.Core.Tests
 
         #region List<T> Helper Methods
 
-        protected virtual CiccioSoft.Collections.List<T> GenericListFactory()
+        protected virtual GenericList<T> GenericListFactory()
         {
-            return new CiccioSoft.Collections.List<T>();
+            return new GenericList<T>();
         }
 
-        protected virtual CiccioSoft.Collections.List<T> GenericListFactory(int count)
+        protected virtual GenericList<T> GenericListFactory(int count)
         {
             IEnumerable<T> toCreateFrom = CreateEnumerable(EnumerableType.List, null, count, 0, 0);
-            return new CiccioSoft.Collections.List<T>(toCreateFrom);
+            return new GenericList<T>(toCreateFrom);
         }
 
         //protected void VerifyList(List<T> list, List<T> expectedItems)

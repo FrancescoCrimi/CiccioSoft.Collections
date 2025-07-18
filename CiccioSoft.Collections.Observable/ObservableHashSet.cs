@@ -34,7 +34,7 @@ namespace CiccioSoft.Collections.Observable
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ObservableHashSet<T> : CiccioSoft.Collections.HashSet<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableHashSet<T> : CiccioSoft.Collections.Core.HashSet<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         [NonSerialized]
         private int _blockReentrancyCount;

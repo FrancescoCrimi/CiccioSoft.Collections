@@ -22,7 +22,7 @@ namespace CiccioSoft.Collections.Binding
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class BindingHashSet<T> : HashSet<T>, IBindingList, IRaiseItemChangedEvents
+    public class BindingHashSet<T> : Core.HashSet<T>, IBindingList, IRaiseItemChangedEvents
     {
         private bool raiseListChangedEvents = true; // Do not rename (binary serialization)
         private bool raiseItemChangedEvents; // Do not rename (binary serialization)

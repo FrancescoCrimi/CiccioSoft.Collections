@@ -145,7 +145,7 @@ namespace CiccioSoft.Collections.Observable.Tests
         {
             public ObservableCollectionSubclass(IEnumerable<T> collection) : base(collection) { }
 
-            public System.Collections.Generic.List<T> InnerList => (System.Collections.Generic.List<T>)base.Items;
+            public List<T> InnerList => (List<T>)base.Items;
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace CiccioSoft.Collections.Observable.Tests
 
         private partial class ObservableCollectionSubclass<T> : ObservableCollection<T>
         {
-            public ObservableCollectionSubclass(System.Collections.Generic.List<T> list) : base(list) { }
+            public ObservableCollectionSubclass(List<T> list) : base(list) { }
         }
     }
 }

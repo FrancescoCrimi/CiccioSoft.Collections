@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void Constructor_Default()
         {
-            CiccioSoft.Collections.List<T> list = new CiccioSoft.Collections.List<T>();
+            GenericList<T> list = new GenericList<T>();
             Assert.Equal(0, list.Capacity); //"Expected capacity of list to be the same as given."
             Assert.Equal(0, list.Count); //"Do not expect anything to be in the list."
             Assert.False(((IList<T>)list).IsReadOnly); //"List should not be readonly"
@@ -32,7 +32,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [InlineData(100)]
         public void Constructor_Capacity(int capacity)
         {
-            CiccioSoft.Collections.List<T> list = new CiccioSoft.Collections.List<T>(capacity);
+            GenericList<T> list = new GenericList<T>(capacity);
             Assert.Equal(capacity, list.Capacity); //"Expected capacity of list to be the same as given."
             Assert.Equal(0, list.Count); //"Do not expect anything to be in the list."
             Assert.False(((IList<T>)list).IsReadOnly); //"List should not be readonly"
@@ -43,7 +43,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [InlineData(int.MinValue)]
         public void Constructor_NegativeCapacity_ThrowsArgumentOutOfRangeException(int capacity)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new CiccioSoft.Collections.List<T>(capacity));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new GenericList<T>(capacity));
         }
 
         [Theory]
@@ -53,7 +53,7 @@ namespace CiccioSoft.Collections.Core.Tests
             _ = listLength;
             _ = numberOfMatchingElements;
             IEnumerable<T> enumerable = CreateEnumerable(enumerableType, null, enumerableLength, 0, numberOfDuplicateElements);
-            CiccioSoft.Collections.List<T> list = new CiccioSoft.Collections.List<T>(enumerable);
+            GenericList<T> list = new GenericList<T>(enumerable);
             System.Collections.Generic.List<T> expected = enumerable.ToList();
 
             Assert.Equal(enumerableLength, list.Count); //"Number of items in list do not match the number of items given."
@@ -67,7 +67,7 @@ namespace CiccioSoft.Collections.Core.Tests
         [Fact]
         public void Constructo_NullIEnumerable_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => { CiccioSoft.Collections.List<T> _list = new CiccioSoft.Collections.List<T>(null); }); //"Expected ArgumentnUllException for null items"
+            Assert.Throws<ArgumentNullException>(() => { GenericList<T> _list = new GenericList<T>(null); }); //"Expected ArgumentnUllException for null items"
         }
     }
 }

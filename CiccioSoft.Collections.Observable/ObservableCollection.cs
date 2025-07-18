@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Observable
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ObservableCollection<T> : CiccioSoft.Collections.List<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableCollection<T> : Core.List<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         [NonSerialized]
         private int _blockReentrancyCount;

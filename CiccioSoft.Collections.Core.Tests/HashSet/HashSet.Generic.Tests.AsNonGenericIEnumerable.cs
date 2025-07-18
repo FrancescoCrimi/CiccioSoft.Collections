@@ -12,7 +12,7 @@ namespace CiccioSoft.Collections.Core.Tests
     {
         protected override IEnumerable NonGenericIEnumerableFactory(int count)
         {
-            var set = new CiccioSoft.Collections.HashSet<string>();
+            var set = new GenericHashSet<string>();
             int seed = 12354;
             while (set.Count < count)
                 set.Add(CreateT(set, seed++));
@@ -37,7 +37,7 @@ namespace CiccioSoft.Collections.Core.Tests
             {
                 yield return (IEnumerable enumerable) =>
                 {
-                    CiccioSoft.Collections.HashSet<string> casted = ((CiccioSoft.Collections.HashSet<string>)enumerable);
+                    GenericHashSet<string> casted = ((GenericHashSet<string>)enumerable);
                     if (casted.Count > 0)
                     {
                         casted.Clear();
@@ -48,7 +48,7 @@ namespace CiccioSoft.Collections.Core.Tests
             }
         }
 
-        protected string CreateT(CiccioSoft.Collections.HashSet<string> set, int seed)
+        protected string CreateT(GenericHashSet<string> set, int seed)
         {
             int stringLength = seed % 10 + 5;
             Random rand = new Random(seed);

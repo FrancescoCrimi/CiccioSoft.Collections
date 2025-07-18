@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 
-namespace CiccioSoft.Collections
+namespace CiccioSoft.Collections.Core
 {
     /// <summary>
     /// Provides a readonly abstraction of a set.
