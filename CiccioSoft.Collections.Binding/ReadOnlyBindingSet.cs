@@ -16,7 +16,7 @@ namespace CiccioSoft.Collections.Binding
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ReadOnlyBindingSet<T> : Core.ReadOnlySet<T>, ICollection<T>, ISet<T>, IReadOnlyCollection<T>, IReadOnlySet<T>, IBindingList, IRaiseItemChangedEvents
+    public class ReadOnlyBindingSet<T> : Core.ReadOnlySet<T>, IBindingList, IRaiseItemChangedEvents
     {
         private readonly IBindingList _inner;
         private readonly object _evtLock = new();

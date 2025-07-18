@@ -17,7 +17,7 @@ namespace CiccioSoft.Collections.Ciccio
     [Serializable]
     [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
     [DebuggerDisplay("Count = {Count}")]
-    public class ReadOnlyCiccioList<T> : ReadOnlyCollection<T>, IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
+    public class ReadOnlyCiccioList<T> : ReadOnlyCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged, IBindingList, IRaiseItemChangedEvents
     {
         #region Constructors
 
